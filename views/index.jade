@@ -1,0 +1,9 @@
+html(ng-app="angularjsNodejsTutorial")
+  head
+    title Integrating AngularJS with NodeJS
+    script(src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular.js")
+    script(src="javascripts/app.js" type="text/javascript")
+  body
+    div(ng-controller="myController")
+      ul(ng-repeat="item in data")
+        li Name:{{item.name}}, City: {{item.city}}
