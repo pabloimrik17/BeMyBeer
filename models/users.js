@@ -1,53 +1,29 @@
-/**
- * Created by Etherless-Nxzt on 18/12/2016.
- */
-//llamamos al paquete mysql que hemos instalado
-var mysql = require('mysql'),
-//creamos la conexion a nuestra base de datos con los datos de acceso de cada uno
-    connection = mysql.createConnection(
-        {
-            host: 'localhost',
-            user: 'root',
-            password: '',
-            database: 'node_users'
-        }
-    );
+var dataBaseModel  = require("./database");
 
-//creamos un objeto para ir almacenando todo lo que necesitemos
 var userModel = {};
 
 //obtenemos todos los usuarios
-userModel.getUsers = function(callback)
-{
-    if (connection)
-    {
-        connection.query('SELECT * FROM users ORDER BY id', function(error, rows) {
-            if(error)
-            {
+userModel.getUsers = function(callback) {
+    if (dataBaseModel) {
+        dataBaseModel.query('SELECT * FROM user ORDER BY id', function(error, rows) {
+            if(error) {
                 callback(1000)
             }
-            else
-            {
+            else {
                 callback(null, rows);
             }
         });
     }
-}
+};
 
-//obtenemos un usuario por su id
-userModel.getUser = function(id,callback)
-{
-    if (connection)
-    {
-        var sql = 'SELECT * FROM users WHERE id = ' + connection.escape(id);
-        connection.query(sql, function(error, row)
-        {
-            if(error)
-            {
+userModel.getUser = function(id,callback) {
+    if (dataBaseModel) {
+        var sql = 'SELECT * FROM user WHERE id = ?';
+        dataBaseModel.query(sql, id, function(error, row) {
+            if(error) {
                 throw error;
             }
-            else
-            {
+            else {
                 callback(null, row);
             }
         });
@@ -55,18 +31,13 @@ userModel.getUser = function(id,callback)
 }
 
 //añadir un nuevo usuario
-userModel.insertUser = function(userData,callback)
-{
-    if (connection)
-    {
-        connection.query('INSERT INTO users SET ?', userData, function(error, result)
-        {
-            if(error)
-            {
+userModel.insertUser = function(userData,callback) {
+    if (dataBaseModel) {
+        dataBaseModel.query('INSERT INTO users SET ?', userData, function(error, result) {
+            if(error) {
                 throw error;
             }
-            else
-            {
+            else {
                 //devolvemos la última id insertada
                 callback(null,{"insertId" : result.insertId});
             }
@@ -75,25 +46,18 @@ userModel.insertUser = function(userData,callback)
 }
 
 //actualizar un usuario
-userModel.updateUser = function(userData, callback)
-{
-    //console.log(userData); return;
-    if(connection)
-    {
+userModel.updateUser = function(userData, callback) {
+    if(dataBaseModel) {
         var sql = 'UPDATE users SET username = ? ,' +
             'email = ?email '+
             'WHERE id = ?';
 
         var values = [userData.username, userData.email, userData.id];
-        console.log(sql, values)
-        connection.query(sql, values, function(error, result)
-        {
-            if(error)
-            {
+        dataBaseModel.query(sql, values, function(error, result) {
+            if(error) {
                 throw error;
             }
-            else
-            {
+            else {
                 callback(null,{"msg":"success"});
             }
         });
@@ -101,36 +65,28 @@ userModel.updateUser = function(userData, callback)
 }
 
 //eliminar un usuario pasando la id a eliminar
-userModel.deleteUser = function(id, callback)
-{
-    if(connection)
-    {
-        var sqlExists = 'SELECT * FROM users WHERE id = ' + connection.escape(id);
-        connection.query(sqlExists, function(err, row)
-        {
+userModel.deleteUser = function(id, callback) {
+    if(dataBaseModel) {
+        var sqlExists = 'SELECT * FROM users WHERE id = ?';
+        dataBaseModel.query(sqlExists, id, function(err, row) {
             //si existe la id del usuario a eliminar
-            if(row)
-            {
-                var sql = 'DELETE FROM users WHERE id = ' + connection.escape(id);
-                connection.query(sql, function(error, result)
-                {
-                    if(error)
-                    {
+            if(row) {
+                var sql = 'DELETE FROM users WHERE id = ?';
+                dataBaseModel.query(sql, id, function(error, result) {
+                    if(error) {
                         throw error;
                     }
-                    else
-                    {
+                    else {
                         callback(null,{"msg":"deleted"});
                     }
                 });
             }
-            else
-            {
+            else {
                 callback(null,{"msg":"notExist"});
             }
         });
     }
-}
+};
 
 //exportamos el objeto para tenerlo disponible en la zona de rutas
 module.exports = userModel;
