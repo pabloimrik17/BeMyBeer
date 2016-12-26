@@ -1,11 +1,11 @@
-var dataBaseModel  = require("./database");
+var dataBaseModel  = require("./../dbModel/database");
 
 var categoryModel = {};
 
 categoryModel.getCategory = function(id, cb) {
     if(dataBaseModel) {
         var query = "SELECT * " +
-                    "FROM category " +
+                    "FROM categoryList " +
                     "WHERE id = ?";
         dataBaseModel.query(query, id, function(err, result) {
             if(err) {
@@ -20,7 +20,7 @@ categoryModel.getCategory = function(id, cb) {
 categoryModel.getAllCategories = function(id, cb) {
     if(dataBaseModel) {
         var query = "SELECT * " +
-                    "FROM category";
+                    "FROM categoryList";
         dataBaseModel.query(query, function(err, result) {
             if(err) {
                 cb(1001, "Error al obtener todas las categorias");
@@ -34,7 +34,7 @@ categoryModel.getAllCategories = function(id, cb) {
 categoryModel.getCategoriesByParent = function(idParent, cb) {
     if(dataBaseModel) {
         var query = "SELECT * " +
-                    "FROM category " +
+                    "FROM categoryList " +
                     "WHERE idParent = ?";
         dataBaseModel.query(query, idParent, function(err, result) {
             if(err) {
@@ -50,7 +50,7 @@ categoryModel.getCategoriesByParent = function(idParent, cb) {
 
 categoryModel.insertCategory = function(categoryData, cb) {
     if(dataBaseModel) {
-        var query = "INSERT INTO category " +
+        var query = "INSERT INTO categoryList " +
                     "SET ?";
         dataBaseModel.query(query, categoryData, function(err, result) {
             if(err) {
@@ -64,7 +64,7 @@ categoryModel.insertCategory = function(categoryData, cb) {
 
 categoryModel.updateCategory = function(categoryData, cb) {
     if(dataBaseModel) {
-        var query = "UPDATE category " +
+        var query = "UPDATE categoryList " +
                     "SET name = ?, " +
                     "idParent = ?";
         var values = [categoryData.name, categoryData.idParent];
@@ -80,7 +80,7 @@ categoryModel.updateCategory = function(categoryData, cb) {
 
 categoryModel.deleteCategory = function(id, cb) {
     if(dataBaseModel) {
-        var query = "DELETE FROM category" +
+        var query = "DELETE FROM categoryList" +
                     "WHERE id = ?";
         dataBaseModel.query(query, id, function(err, result) {
             if(err) {

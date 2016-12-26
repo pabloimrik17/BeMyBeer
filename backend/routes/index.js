@@ -2,9 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 //obtenemos el modelo UserModel con toda la funcionalidad
-var UserModel = require('../models/users');
+var UserModel = require('./login');
 
-
+router.get("/", function(req, res){
+    res.render("layout")
+})
 
 router.get("/user/update/:id", function(req, res){
     var id = req.params.id;

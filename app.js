@@ -4,14 +4,18 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+var index = require('./backend/routes/index');
+var users = require('./backend/routes/login');
+var beer = require('./backend/routes/beer');
+var category = require('./backend/routes/category');
+var login = require('./backend/routes/login');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, "frontend"));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
@@ -23,7 +27,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // === RUTAS ===
-app.use('/users', users);
+app.use('/login', login);
+app.use('/category', category);
+app.use('/beer', beer);
+app.use('/template', require("./backend/routes/templates"));
 app.use('/', index);
 
 

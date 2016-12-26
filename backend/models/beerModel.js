@@ -1,28 +1,35 @@
-var dataBaseModel  = require("./database");
+var dataBaseModel  = require("../../config/database");
 
 var beerModel = {};
 
+
 beerModel.getBeer = function(id, cb) {
     if(dataBaseModel) {
-        var query = "SELECT * " +
-                    "FROM beer " +
-                    "where id = ?";
-        dataBaseModel.query(query, id, function(err, result) {
+        var query = "SELECT b.*, c.name as CategoryName " +
+                    "FROM beer b " +
+                    "LEFT JOIN category c ON b.idCategory = c.id " +
+                    "WHERE b.id = ?";
+        dataBaseModel.query(query, [id], function(err, result) {
             if(err) {
+                console.log(query, err);
                 cb(1006, "Error al obtener la cerveza");
             } else {
+                console.log(id);
                 cb(null, result);
             }
         });
     }
 };
 
-beerModel.getAllBeers = function(id, cb) {
+beerModel.getAllBeers = function(cb) {
     if(dataBaseModel) {
-        var query = "SELECT * " +
-                    "FROM beer";
+        var query = "SELECT b.*, c.name as CategoryName " +
+                    "FROM beer b " +
+                    "LEFT JOIN category c ON b.idCategory = c.id ";
+
         dataBaseModel.query(query, function(err, result) {
             if(err) {
+                console.log(query, err)
                 cb(1007, "Error al obtener todas las cervezas");
             } else {
                 cb(null, result);
@@ -33,10 +40,11 @@ beerModel.getAllBeers = function(id, cb) {
 
 beerModel.getBeersByCategory = function(idCategory, cb) {
     if(dataBaseModel) {
-        var query = "SELECT * " +
-                    "FROM beer " +
-                    "WHERE category = ?";
-        dataBaseModel.query(query, idCategory, function(err, result) {
+        var query = "SELECT b.*, c.name as CategoryName " +
+                    "FROM beer b " +
+                    "LEFT JOIN category c ON b.idCategory = c.id " +
+                    "WHERE b.idCategory = ?";
+        dataBaseModel.query(query, [idCategory], function(err, result) {
             if(err) {
                 cb(1008, "Error al obtener todas las cervezas por categoria");
             } else {
@@ -48,7 +56,7 @@ beerModel.getBeersByCategory = function(idCategory, cb) {
 
 beerModel.insertBeer = function(categoryData, cb) {
     if(dataBaseModel) {
-        var query = "INSERT INTO beer set ?";
+        var query = "INSERT INTO beerList set ?";
         dataBaseModel.query(query, categoryData, function(err, result) {
             if(err) {
                 cb(1009, "Error al insertar la cerveza");
@@ -61,7 +69,7 @@ beerModel.insertBeer = function(categoryData, cb) {
 
 beerModel.updateBeer = function(categoryData, cb) {
     if(dataBaseModel) {
-        var query = "UPDATE beer " +
+        var query = "UPDATE beerList " +
             "SET name = ?, " +
             "idParent = ?";
         var values = [categoryData.name, categoryData.idParent];
@@ -77,7 +85,7 @@ beerModel.updateBeer = function(categoryData, cb) {
 
 beerModel.deleteBeer = function(id, cb) {
     if(dataBaseModel) {
-        var query = "DELETE FROM beer" +
+        var query = "DELETE FROM beerList" +
                     "WHERE id = ?";
         dataBaseModel.query(query, id, function(err, result) {
             if(err) {

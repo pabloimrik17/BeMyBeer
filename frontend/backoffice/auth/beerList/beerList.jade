@@ -1,0 +1,32 @@
+div.jumbotron.text-center
+    h1 Cervezas
+
+div(name="divBeerList" ng-init="blc.loadAllBeers()")
+    table.table.table-hover(name="tblBeerList")
+        thead
+            tr
+                th Id
+                th Nombre
+                th Categoría
+                th Graduación
+                th
+        tbody
+            tr(ng-repeat="item in response.data")
+                td
+                    a(ng-href="/admin/beer/{{item.Id}}") {{item.Id}}
+                td
+                    a(ng-href="/admin/beer/{{item.Id}}") {{item.Name}}
+                td
+                    a(ng-href="/admin/category/{{item.IdCategory}}") {{item.CategoryName}}
+                td {{item.Graduation}}
+                td
+                    div.dropdown
+                        button.btn.btn-default.dropdown-toggle(type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true") ...
+                        ul.dropdown-menu(aria-labelledby="dropdownMenu1")
+                                li
+                                    a(href="#") Modificar
+                                li
+                                    a(href="#") Eliminar
+
+
+button.btn-success(ng-click="blc.clickBeer(1)") Añadir

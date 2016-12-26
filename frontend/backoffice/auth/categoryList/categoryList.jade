@@ -1,0 +1,33 @@
+div.jumbotron.text-center
+    h1 Categorías
+
+div(name="brcCategoryList")
+    ol.breadcrumb
+        li
+            a(href="#") Inicio
+
+div(name="divCategoryList")
+    table.table.table-hover(name="tblCategoryList")
+        thead
+            tr
+                th Id
+                th Nombre
+                th Padre
+        tbody
+            tr
+                td(ng-click="clc.clickCategory(1)") 1
+                td Stout
+                td
+
+            tr(ng-click="blc.clickBeer(2)")
+                td(ng-href="") 2
+                td Ale
+                td
+
+
+
+div(ng-init="clc.loadAllCategories()")
+    ul(ng-repeat="item in response.data")
+        li Name:{{item.username}}, Email: {{item.email}}, Registration Date: {{item.created_at | date : 'medium'}}
+
+button.btn-success(ng-click="clc.clickCategory(1)") Añadir
