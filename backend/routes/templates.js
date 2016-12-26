@@ -12,7 +12,6 @@ router.get("/login", function (req, res) {
 });
 
 router.get("/beers", function (req, res) {
-    console.log("llego");
     res.render("backoffice/auth/beerList/beerList");
 });
 

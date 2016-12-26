@@ -5,8 +5,10 @@ var express = require('express');
 var router = express.Router();
 var beerModel = require("../models/beerModel");
 
-router.get("/getAllBeers", function(req, res) {
-    beerModel.getAllBeers(function(err, result) {
+router.get("/getBeer/:id", function(req, res) {
+    var idBeer = req.params.id;
+
+    beerModel.getBeer(idBeer, function(err, result) {
         if(!err) {
             res.json(result);
         } else {
@@ -17,10 +19,8 @@ router.get("/getAllBeers", function(req, res) {
     })
 });
 
-router.get("/getBeer/:id", function(req, res) {
-    var idBeer = req.params.id;
-
-    beerModel.getBeer(idBeer, function(err, result) {
+router.get("/getAllBeers", function(req, res) {
+    beerModel.getAllBeers(function(err, result) {
         if(!err) {
             res.json(result);
         } else {
