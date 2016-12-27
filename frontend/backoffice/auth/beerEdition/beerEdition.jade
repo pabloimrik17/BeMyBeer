@@ -1,2 +1,21 @@
-div.jumbotron.text-center(ng-init="bec.getBeerData()")
-    h1 {{Name}}
+div(ng-init="bec.getBeerData()")
+    div.jumbotron.text-center
+        h1 {{Name}}
+
+    div.container
+        div.col-sm8.col-sm-offset2
+            form(name="beerForm" ng-submit="submitForm(bec.$valid)" novalidate)
+                div.form-group
+                    label Nombre
+                    input.form-control(type="text" name="txtUsername" ng-model="beer.Name" value="beer.Name" ng-minlength="1" ng-maxlength="50")
+                    p.help-block(ng-show="beerForm.txtUsername.$error.minlength") Debes introducir un nombre
+
+                div.form-group
+                    label Categoría
+                    select.form-control
+                        option
+
+                div.form-group
+                    label Graduación
+                    input.form-control(type="text" name="txtGraduacion" ng-model="bec.Graduation" ng-minlength="1" ng-maxlength="50")
+                button.btn.btn-primary(type="submit" ng-disabled="bec.$invalid") Guardar

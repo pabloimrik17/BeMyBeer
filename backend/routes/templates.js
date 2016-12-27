@@ -7,6 +7,7 @@ var express = require('express');
 var router = express.Router();
 var userModel = require("./login");
 
+
 router.get("/login", function (req, res) {
     res.render("backoffice/noAuth/login/login")
 });
