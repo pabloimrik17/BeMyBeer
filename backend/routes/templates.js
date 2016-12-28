@@ -5,7 +5,6 @@
 
 var express = require('express');
 var router = express.Router();
-var userModel = require("./login");
 
 
 router.get("/login", function (req, res) {
@@ -27,6 +26,8 @@ router.get("/categories", function (req, res) {
 router.get("/categoryEdition", function (req, res) {
     res.render("backoffice/auth/categoryEdition/categoryEdition")
 });
+
+
 
 
 module.exports = router;

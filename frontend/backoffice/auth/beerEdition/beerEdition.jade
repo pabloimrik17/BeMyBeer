@@ -1,21 +1,27 @@
 div(ng-init="bec.getBeerData()")
     div.jumbotron.text-center
-        h1 {{Name}}
+        h1 {{bec.Name}}
+        h2 {{bec.Graduation}}% ({{bec.CategoryName}})
 
     div.container
         div.col-sm8.col-sm-offset2
-            form(name="beerForm" ng-submit="submitForm(bec.$valid)" novalidate)
-                div.form-group
+            form(name="beerForm" ng-submit="bec.submitForm(beerForm.$valid)" novalidate)
+                div.form-group(ng-class="{ 'has-error' : beerForm.beerName.$invalid && !beerForm.beerName.$pristine }")
                     label Nombre
-                    input.form-control(type="text" name="txtUsername" ng-model="beer.Name" value="beer.Name" ng-minlength="1" ng-maxlength="50")
-                    p.help-block(ng-show="beerForm.txtUsername.$error.minlength") Debes introducir un nombre
+                    input.form-control(type="text" name="beerName" id="beerName" ng-model="bec.Name" required ng-maxlength="50")
+                    p.help-block(ng-show="beerForm.beerName.$invalid && !beerForm.beerName.$pristine") Puedes currartelo más
+                    p.help-block(ng-show="beerForm.beerName.$error.$maxlenght && !beerForm.beerName.$pristine") Para tanto no me da la BD hermano
 
-                div.form-group
+                div.form-group(ng-class="{ 'has-error' : beerForm.beerCategory.$invalid && !beerForm.beerCategory.$pristine }")
                     label Categoría
-                    select.form-control
-                        option
+                    select.form-control(name="beerCategory" id="beerCategory" required)
+                        option a
+                        option b
+                    p.help-block(ng-show="beerForm.beerCategory.$invalid && !beerForm.beerCategory.$pristine") Compadre, márcate la categoría
 
-                div.form-group
+                div.form-group(ng-class="{ 'has-error' : beerForm.beerGraduation.$invalid && !beerForm.beerGraduation.$pristine}")
                     label Graduación
-                    input.form-control(type="text" name="txtGraduacion" ng-model="bec.Graduation" ng-minlength="1" ng-maxlength="50")
+                    input.form-control(type="number" name="beerGraduation" id="beerGraduation" ng-model="bec.Graduation" ng-minlength="1" ng-maxlength="5")
+                    p.help-block(ng-show="beerForm.beerGraduation.$invalid && !beerForm.beerGraduation.$pristine && beerForm.beerGraduation.$error.$minlenght") La graduación, si vous plait
+                    p.help-block(ng-show="beerForm.beerGraduation.$error.maxlenght") Menos lobos caperucita
                 button.btn.btn-primary(type="submit" ng-disabled="bec.$invalid") Guardar

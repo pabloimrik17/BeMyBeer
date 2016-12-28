@@ -54,10 +54,10 @@ beerModel.getBeersByCategory = function(idCategory, cb) {
     }
 };
 
-beerModel.insertBeer = function(categoryData, cb) {
+beerModel.insertBeer = function(beerData, cb) {
     if(dataBaseModel) {
-        var query = "INSERT INTO beerList set ?";
-        dataBaseModel.query(query, categoryData, function(err, result) {
+        var query = "INSERT INTO beer set ?";
+        dataBaseModel.query(query, beerData, function(err, result) {
             if(err) {
                 cb(1009, "Error al insertar la cerveza");
             } else {
@@ -67,12 +67,13 @@ beerModel.insertBeer = function(categoryData, cb) {
     }
 };
 
-beerModel.updateBeer = function(categoryData, cb) {
+beerModel.updateBeer = function(idBeer, beerData, cb) {
     if(dataBaseModel) {
-        var query = "UPDATE beerList " +
-            "SET name = ?, " +
-            "idParent = ?";
-        var values = [categoryData.name, categoryData.idParent];
+        var query = "UPDATE beer " +
+                    "SET name = ?, " +
+                    "idParent = ?" +
+                    "WHERE id = ?";
+        var values = [beerData.name, beerData.idParent, idBeer];
         dataBaseModel.query(query, values, function(err, result) {
             if(err) {
                 cb(1010, "Error al actualizar la cerveza");
@@ -83,11 +84,11 @@ beerModel.updateBeer = function(categoryData, cb) {
     }
 };
 
-beerModel.deleteBeer = function(id, cb) {
+beerModel.deleteBeer = function(idBeer, cb) {
     if(dataBaseModel) {
-        var query = "DELETE FROM beerList" +
+        var query = "DELETE FROM beer" +
                     "WHERE id = ?";
-        dataBaseModel.query(query, id, function(err, result) {
+        dataBaseModel.query(query, idBeer, function(err, result) {
             if(err) {
                 cb(1011, "Error al borrar la cerveza");
             } else {
