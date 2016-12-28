@@ -1,6 +1,7 @@
 div.jumbotron.text-center
     h1 Cervezas
 
+button.btn-success(ng-click="blc.newBeer()") Nueva Cerveza
 div(name="divBeerList" ng-init="blc.loadAllBeers()")
     table.table.table-hover(name="tblBeerList")
         thead
@@ -13,12 +14,12 @@ div(name="divBeerList" ng-init="blc.loadAllBeers()")
         tbody
             tr(ng-repeat="item in response.data")
                 td
-                    a(ng-href="/admin/beer/{{item.Id}}") {{item.Id}}
+                    a(ng-href="/admin/beer/{{item.id}}") {{item.id}}
                 td
-                    a(ng-href="/admin/beer/{{item.Id}}") {{item.Name}}
+                    a(ng-href="/admin/beer/{{item.id}}") {{item.name}}
                 td
-                    a(ng-href="/admin/category/{{item.IdCategory}}") {{item.CategoryName}}
-                td {{item.Graduation}}
+                    a(ng-href="/admin/category/{{item.idCategory}}") {{item.categoryName}}
+                td {{item.graduation}}
                 td
                     div.dropdown
                         button.btn.btn-default.dropdown-toggle(type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true") ...
@@ -29,4 +30,3 @@ div(name="divBeerList" ng-init="blc.loadAllBeers()")
                                     a(href="#") Eliminar
 
 
-button.btn-success(ng-click="blc.clickBeer(1)") Añadir

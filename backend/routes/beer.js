@@ -46,10 +46,16 @@ router.get("/getBeersByCategory/:idCategory", function(req, res) {
 });
 
 router.post("/insertBeer", function(req, res) {
-    var beerData = req.body.beerData;
+    var beerData = {
+        name : req.body.name,
+        idCategory : req.body.IdCategory,
+        graduation : req.body.graduation
+    };
+
 
     beerModel.insertBeer(beerData, function(err, result) {
         if(!err) {
+            console.log(result);
             res.json(result);
         } else {
             res
@@ -60,7 +66,11 @@ router.post("/insertBeer", function(req, res) {
 });
 
 router.put("/updateBeer/:idBeer", function(req, res) {
-    var beerData = req.body.beerData;
+    var beerData = {
+        name : req.body.name,
+        idCategory : req.body.idCategory,
+        graduation : req.body.graduation
+    };
     var idBeer = req.params.idBeer;
 
     beerModel.updateBeer(idBeer, beerData, function(err, result) {

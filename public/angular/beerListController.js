@@ -15,8 +15,8 @@ function beerListController($scope, $http, $state) {
             });
     };
 
-    vm.clickBeer = function(idBeer){
-        $state.go('beerEdition', {id: idBeer})
+    vm.newBeer = function(){
+        $state.go('beerEdition')
     }
 
 }

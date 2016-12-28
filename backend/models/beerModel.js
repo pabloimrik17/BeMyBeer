@@ -5,7 +5,7 @@ var beerModel = {};
 
 beerModel.getBeer = function(id, cb) {
     if(dataBaseModel) {
-        var query = "SELECT b.*, c.name as CategoryName " +
+        var query = "SELECT b.*, c.name as categoryName " +
                     "FROM beer b " +
                     "LEFT JOIN category c ON b.idCategory = c.id " +
                     "WHERE b.id = ?";
@@ -23,7 +23,7 @@ beerModel.getBeer = function(id, cb) {
 
 beerModel.getAllBeers = function(cb) {
     if(dataBaseModel) {
-        var query = "SELECT b.*, c.name as CategoryName " +
+        var query = "SELECT b.*, c.name as categoryName " +
                     "FROM beer b " +
                     "LEFT JOIN category c ON b.idCategory = c.id ";
 
@@ -40,7 +40,7 @@ beerModel.getAllBeers = function(cb) {
 
 beerModel.getBeersByCategory = function(idCategory, cb) {
     if(dataBaseModel) {
-        var query = "SELECT b.*, c.name as CategoryName " +
+        var query = "SELECT b.*, c.name as categoryName " +
                     "FROM beer b " +
                     "LEFT JOIN category c ON b.idCategory = c.id " +
                     "WHERE b.idCategory = ?";
@@ -61,7 +61,7 @@ beerModel.insertBeer = function(beerData, cb) {
             if(err) {
                 cb(1009, "Error al insertar la cerveza");
             } else {
-                cb(null, result);
+                cb(null, result.insertId);
             }
         });
     }
@@ -71,9 +71,10 @@ beerModel.updateBeer = function(idBeer, beerData, cb) {
     if(dataBaseModel) {
         var query = "UPDATE beer " +
                     "SET name = ?, " +
-                    "idParent = ?" +
-                    "WHERE id = ?";
-        var values = [beerData.name, beerData.idParent, idBeer];
+                    "idCategory = ?, " +
+                    "graduation = ? " +
+                    "WHERE id = ? ";
+        var values = [beerData.name, beerData.idCategory, beerData.graduation, idBeer];
         dataBaseModel.query(query, values, function(err, result) {
             if(err) {
                 cb(1010, "Error al actualizar la cerveza");
