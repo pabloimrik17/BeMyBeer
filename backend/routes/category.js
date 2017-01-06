@@ -6,7 +6,7 @@
 
 var express = require('express');
 var router = express.Router();
-var userModel = require("./login");
+var categoryModel = require("../models/categoryModel");
 
 
 module.exports = router;

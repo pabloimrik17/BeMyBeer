@@ -59,6 +59,15 @@ function beerEditionController($http, $stateParams) {
             });
     };
 
+    vm.deleteBeer = function() {
+        $http.put('/beer/deleteBeer/'+vm.id)
+            .then(function(data) {
+                alert("OK")
+            }, function(data) {
+                alert("Error: " +data);
+            });
+    };
+
 
     vm.submitForm = function(isValid) {
         if(isValid) {
