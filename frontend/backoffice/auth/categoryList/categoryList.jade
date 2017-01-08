@@ -2,19 +2,19 @@ div.jumbotron.text-center
     h1 Categorías
 
 button.btn-success(ng-click="clc.newCategory()") Nueva Cerveza
-div(name="divCategoryList" ng-init="clc.getCategoriesByParent()")
-    table.table.table-hover(name="tblBeerList")
+div(name="divCategoryList" ng-init="clc.init()")
+    table.table.table-hover(name="tblCategoryList")
         thead
             tr
                 th Id
                 th Nombre
                 th
         tbody
-            tr(ng-repeat="item in clc.data")
+            tr(ng-repeat="item in clc.availableCategories")
                 td
-                    a(ng-href="/admin/category/{{item.id}}") {{item.id}}
+                    a(ng-href="{{item.link}}") {{item.id}}
                 td
-                    a(ng-href="/admin/category/{{item.id}}") {{item.name}}
+                    a(ng-href="{{item.link}}") {{item.name}}
                 td
                     div.dropdown
                         button.btn.btn-default.dropdown-toggle(type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true") ...

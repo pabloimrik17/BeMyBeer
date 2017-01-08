@@ -48,6 +48,20 @@ router.get("/getCategoriesByParent/:idParent", function(req, res) {
     })
 });
 
+router.get("/getRootCategories", function(req, res) {
+
+    categoryModel.getRootCategories(function(err, result) {
+        if(!err) {
+            console.log(result);
+            res.json(result);
+        } else {
+            res
+                .status(400)
+                .json({err : err, description: result})
+        }
+    })
+});
+
 router.post("/insertCategory", function(req, res) {
     var categoryData = {
         name : req.body.name,

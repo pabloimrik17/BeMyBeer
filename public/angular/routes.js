@@ -20,13 +20,13 @@ function routes($stateProvider, $locationProvider) {
             controllerAs : "bec"
         })
         .state('categoryList',{
-            url: '/admin/categories/:id',
+            url: '/admin/categories/:idParent',
             templateUrl: '/template/categories',
             controller: "categoryListController",
             controllerAs : "clc"
         })
         .state('categoryEdition',{
-            url: '/admin/category/:id',
+            url: '/admin/categories/:idParent/:idCategory',
             templateUrl: '/template/categoryEdition',
             controller : "categoryEditionController",
             controllerAs : "cec"

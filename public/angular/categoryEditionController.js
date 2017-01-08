@@ -14,6 +14,14 @@ function categoryEditionController($http, $stateParams, $state) {
         vm.categoriesAvailables = [];
     };
 
+    vm.init = function() {
+        if(vm.idParent > 1) {
+            vm.getCategoriesByParent();
+        } else {
+            vm.getRootCategories();
+        }
+    };
+
     vm.getCategoryData = function() {
         if($stateParams.id > 0) {
             $http.get('/category/getCategory/' + $stateParams.id)
@@ -24,7 +32,7 @@ function categoryEditionController($http, $stateParams, $state) {
                     vm.idParent = response.idParent;
                     vm.parentName = response.parentName;
 
-                    vm.getAllCategories();
+                    vm.getAllCategoriesByParent();
 
                 }, function (data) {
                     console.log("Error: " + data);
@@ -32,11 +40,22 @@ function categoryEditionController($http, $stateParams, $state) {
         }
     };
 
-    vm.getAllCategories = function() {
-        $http.get('/category/getAllCategories')
+    vm.getAllCategoriesByParent = function() {
+        $http.get('/category/getCategoriesByParent/'+vm.idParent)
             .then(function (response) {
-                var data = response.data;
-                console.log(JSON.stringify(data));
+                vm.categoriesAvailables = response.data;
+                console.log(JSON.stringify(vm.categoriesAvailables));
+
+            }, function (data) {
+                console.log("Error: " + data);
+            });
+    };
+
+    vm.getRootCategories = function() {
+        $http.get('/category/getRootCategories')
+            .then(function (response) {
+                vm.categoriesAvailables = response.data;
+                console.log(JSON.stringify(vm.categoriesAvailables));
 
             }, function (data) {
                 console.log("Error: " + data);

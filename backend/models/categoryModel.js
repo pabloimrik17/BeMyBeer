@@ -1,4 +1,5 @@
 var dataBaseModel  = require("../../config/database");
+var constants =  require("../../constants/constants");
 
 var categoryModel = {};
 
@@ -36,9 +37,11 @@ categoryModel.getAllCategories = function(cb) {
 
 categoryModel.getCategoriesByParent = function(idCategoryParent, cb) {
     if(dataBaseModel) {
-        var query = " SELECT c1.*, (case c1.idParent when 0 then 'Inicio' else c2.name end) as parentName " +
+        var query = " SELECT c1.*, (case c1.idParent when 0 then 'Inicio' else c2.name end) as parentName, " +
+                    "   count(c3.id) as childrenCount " +
                     " FROM category c1 " +
                     " LEFT JOIN category c2 on c1.idParent = c2.id " +
+                    " LEFT JOIN category c3 on c1.id = c3.idParent " +
                     " WHERE c1.idParent = ? " +
                     " GROUP BY c1.id ";
         dataBaseModel.query(query, idCategoryParent, function(err, result) {
@@ -50,8 +53,6 @@ categoryModel.getCategoriesByParent = function(idCategoryParent, cb) {
         });
     }
 };
-
-
 
 categoryModel.insertCategory = function(categoryData, cb) {
     if(dataBaseModel) {
@@ -96,6 +97,25 @@ categoryModel.deleteCategory = function(idCategory, cb) {
         dataBaseModel.query(query,[idCategory], function(err, result) {
             if(err) {
                 cb(1005, "Error al borrar la categoria");
+            } else {
+                cb(null, result);
+            }
+        });
+    }
+};
+
+categoryModel.getRootCategories = function(cb) {
+    if(dataBaseModel) {
+        var query = " SELECT c1.*, (case c1.idParent when 0 then 'Inicio' else c2.name end) as parentName, " +
+                    "   count(c3.id) as childrenCount " +
+                    " FROM category c1 " +
+                    " LEFT JOIN category c2 on c1.idParent = c2.id " +
+                    " LEFT JOIN category c3 on c1.id = c3.idParent " +
+                    " WHERE c1.idParent = " + constants.ID_CATEGORY_ROOT +
+                    " GROUP BY c1.id ";
+        dataBaseModel.query(query, function(err, result) {
+            if(err) {
+                cb(1006, "Error al obtener todas las categorias root");
             } else {
                 cb(null, result);
             }
