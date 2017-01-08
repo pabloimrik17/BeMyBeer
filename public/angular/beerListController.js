@@ -4,12 +4,13 @@
  * Created by Etherless-Nxzt on 25/12/2016.
  */
 
-function beerListController($scope, $http, $state) {
+function beerListController($http, $state) {
     var vm = this;
+
     vm.loadAllBeers = function() {
         $http.get('/beer/getAllBeers')
-            .then(function(data) {
-                $scope.response = data;
+            .then(function(response) {
+                vm.data = response.data;
             }, function(data) {
                 console.log("Error: " +data);
             });
@@ -22,4 +23,4 @@ function beerListController($scope, $http, $state) {
 }
 
 angular.module('App')
-    .controller('beerListController',['$scope' , '$http', '$state', beerListController] );
+    .controller('beerListController',['$http', '$state', beerListController] );

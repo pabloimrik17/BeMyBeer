@@ -87,9 +87,9 @@ beerModel.updateBeer = function(idBeer, beerData, cb) {
 
 beerModel.deleteBeer = function(idBeer, cb) {
     if(dataBaseModel) {
-        var query = "DELETE FROM beer" +
+        var query = "DELETE FROM beer " +
                     "WHERE id = ?";
-        dataBaseModel.query(query, idBeer, function(err, result) {
+        dataBaseModel.query(query, [idBeer], function(err, result) {
             if(err) {
                 cb(1011, "Error al borrar la cerveza");
             } else {

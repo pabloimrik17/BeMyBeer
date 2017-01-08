@@ -1,33 +1,27 @@
 div.jumbotron.text-center
     h1 Categorías
 
-div(name="brcCategoryList")
-    ol.breadcrumb
-        li
-            a(href="#") Inicio
-
-div(name="divCategoryList")
-    table.table.table-hover(name="tblCategoryList")
+button.btn-success(ng-click="clc.newCategory()") Nueva Cerveza
+div(name="divCategoryList" ng-init="clc.getCategoriesByParent()")
+    table.table.table-hover(name="tblBeerList")
         thead
             tr
                 th Id
                 th Nombre
-                th Padre
+                th
         tbody
-            tr
-                td(ng-click="clc.clickCategory(1)") 1
-                td Stout
+            tr(ng-repeat="item in clc.data")
                 td
-
-            tr(ng-click="blc.clickBeer(2)")
-                td(ng-href="") 2
-                td Ale
+                    a(ng-href="/admin/category/{{item.id}}") {{item.id}}
                 td
+                    a(ng-href="/admin/category/{{item.id}}") {{item.name}}
+                td
+                    div.dropdown
+                        button.btn.btn-default.dropdown-toggle(type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true") ...
+                        ul.dropdown-menu(aria-labelledby="dropdownMenu1")
+                            li
+                                a(href="#") Modificar
+                            li
+                                a(href="#") Eliminar
 
 
-
-div(ng-init="clc.loadAllCategories()")
-    ul(ng-repeat="item in response.data")
-        li Name:{{item.username}}, Email: {{item.email}}, Registration Date: {{item.created_at | date : 'medium'}}
-
-button.btn-success(ng-click="clc.clickCategory(1)") Añadir

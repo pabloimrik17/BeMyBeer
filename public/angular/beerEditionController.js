@@ -3,14 +3,19 @@
  */
 
 
-function beerEditionController($http, $stateParams) {
+// http://stackoverflow.com/questions/28548263/best-practices-for-creating-crud-services-in-angularjs
+
+function beerEditionController($http, $stateParams, $state) {
     var vm = this;
 
-    vm.id = null;
-    vm.name = null;
-    vm.idCategory = null;
-    vm.graduation = null;
-    vm.categoryName = null;
+    vm.reset = function() {
+        vm.id = 0;
+        vm.name = '';
+        vm.idCategory = 1;
+        vm.graduation = 0;
+        vm.categoryName = '';
+    };
+
 
     vm.getBeerData = function() {
         if($stateParams.id > 0) {
@@ -53,16 +58,19 @@ function beerEditionController($http, $stateParams) {
 
         $http.put('/beer/updateBeer/'+vm.id, beerData)
             .then(function(data) {
-                alert("OK")
+                alert("ACTUALIZADO")
             }, function(data) {
                 alert("Error: " +data);
             });
     };
 
     vm.deleteBeer = function() {
-        $http.put('/beer/deleteBeer/'+vm.id)
+        console.log(vm.id);
+        $http.delete('/beer/deleteBeer/'+vm.id)
             .then(function(data) {
-                alert("OK")
+                alert("BORRADO");
+                vm.reset();
+                $state.go('beerList');
             }, function(data) {
                 alert("Error: " +data);
             });
@@ -71,7 +79,7 @@ function beerEditionController($http, $stateParams) {
 
     vm.submitForm = function(isValid) {
         if(isValid) {
-                if(vm.id == null) {
+                if(vm.id == 0) {
                     vm.insertBeer(function (data) {
                         alert("OK");
                         console.log(data.data);
@@ -90,4 +98,4 @@ function beerEditionController($http, $stateParams) {
 }
 
 angular.module('App')
-    .controller('beerEditionController',['$http', '$stateParams', beerEditionController] );
+    .controller('beerEditionController',['$http', '$stateParams', '$state', beerEditionController] );

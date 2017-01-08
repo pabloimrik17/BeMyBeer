@@ -25,5 +25,5 @@ div(ng-init="bec.getBeerData()")
                     p.help-block(ng-show="beerForm.beerGraduation.$invalid && !beerForm.beerGraduation.$pristine && beerForm.beerGraduation.$error.$minlenght") La graduación, si vous plait
                     p.help-block(ng-show="beerForm.beerGraduation.$error.maxlenght") Menos lobos caperucita
                 button.btn.btn-success(type="submit" ng-disabled="bec.$invalid") Guardar
-                button.btn.btn-danger(ng-click="bec.deleteBeer" ng-show="bec.id > 0" ng-disabled="bec.$invalid") Borrar
-                button.btn.btn-primary(type="submit" ng-disabled="bec.$invalid") Volver
+                button.btn.btn-danger(ng-click="bec.deleteBeer()" ng-show="bec.id > 0" ng-disabled="bec.$invalid") Borrar
+                button.btn.btn-primary(ng-href="/admin/beers" ng-disabled="bec.$invalid") Volver

@@ -4,9 +4,10 @@ var categoryModel = {};
 
 categoryModel.getCategory = function(id, cb) {
     if(dataBaseModel) {
-        var query = "SELECT * " +
-                    "FROM category " +
-                    "WHERE id = ?";
+        var query = " SELECT c1.*, (case c1.idParent when 0 then 'Inicio' else c2.name end) as parentName " +
+                    " FROM category c1 " +
+                    " LEFT JOIN category c2 on c1.idParent = c2.id " +
+                    " WHERE c1.id = ? ";
         dataBaseModel.query(query, id, function(err, result) {
             if(err) {
                 cb(1000, "Error al obtener la categoria");
@@ -19,8 +20,10 @@ categoryModel.getCategory = function(id, cb) {
 
 categoryModel.getAllCategories = function(cb) {
     if(dataBaseModel) {
-        var query = "SELECT * " +
-                    "FROM category ";
+        var query = " SELECT c1.*, (case c1.idParent when 0 then 'Inicio' else c2.name end) as parentName " +
+                    " FROM category c1 " +
+                    " LEFT JOIN category c2 on c1.idParent = c2.id " +
+                    " GROUP BY c1.id ";
         dataBaseModel.query(query, function(err, result) {
             if(err) {
                 cb(1001, "Error al obtener todas las categorias");
@@ -33,9 +36,11 @@ categoryModel.getAllCategories = function(cb) {
 
 categoryModel.getCategoriesByParent = function(idCategoryParent, cb) {
     if(dataBaseModel) {
-        var query = "SELECT * " +
-                    "FROM category " +
-                    "WHERE idParent = ?";
+        var query = " SELECT c1.*, (case c1.idParent when 0 then 'Inicio' else c2.name end) as parentName " +
+                    " FROM category c1 " +
+                    " LEFT JOIN category c2 on c1.idParent = c2.id " +
+                    " WHERE c1.idParent = ? " +
+                    " GROUP BY c1.id ";
         dataBaseModel.query(query, idCategoryParent, function(err, result) {
             if(err) {
                 cb(1002, "Error al obtener todas las categorias por padre");
@@ -50,8 +55,8 @@ categoryModel.getCategoriesByParent = function(idCategoryParent, cb) {
 
 categoryModel.insertCategory = function(categoryData, cb) {
     if(dataBaseModel) {
-        var query = "INSERT INTO category " +
-                    "SET ?";
+        var query = " INSERT INTO category " +
+                    " SET ?";
         dataBaseModel.query(query, categoryData, function(err, result) {
             if(err) {
                 cb(1003, "Error al insertar la categoria");
@@ -67,10 +72,10 @@ categoryModel.updateCategory = function(idCategory, categoryData, cb) {
         cb(1006, "Error, no se puede modificar la categoria root");
     } else {
         if (dataBaseModel) {
-            var query = "UPDATE category " +
-                "SET name = ?, " +
-                "idParent = ? " +
-                "WHERE Id = ? ";
+            var query = " UPDATE category " +
+                        " SET name = ?, " +
+                        " idParent = ? " +
+                        " WHERE Id = ? ";
             var values = [categoryData.name, categoryData.idParent, idCategory];
             dataBaseModel.query(query, values, function (err, result) {
                 if (err) {
@@ -85,8 +90,8 @@ categoryModel.updateCategory = function(idCategory, categoryData, cb) {
 
 categoryModel.deleteCategory = function(idCategory, cb) {
     if(dataBaseModel) {
-        var query = "DELETE FROM category " +
-                    "WHERE id = ?";
+        var query = " DELETE FROM category " +
+                    " WHERE id = ?";
         console.log(idCategory);
         dataBaseModel.query(query,[idCategory], function(err, result) {
             if(err) {

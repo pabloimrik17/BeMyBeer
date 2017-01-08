@@ -1,0 +1,28 @@
+div(ng-init="cec.getCategoryData()")
+    div.jumbotron.text-center
+        h1 {{cec.parentName}} / {{cec.name}}
+
+    div.container
+        div.col-sm8.col-sm-offset2
+            form(name="categoryForm" ng-submit="cec.submitForm(categoryForm.$valid)" novalidate)
+                div.form-group(ng-class="{ 'has-error' : categoryForm.categoryName.$invalid && !categoryForm.categoryName.$pristine }")
+                    label Nombre
+                    input.form-control(type="text" name="categoryName" id="categoryName" ng-model="cec.name" required ng-maxlength="50")
+                    p.help-block(ng-show="categoryForm.categoryName.$invalid && !categoryForm.categoryName.$pristine") Puedes currartelo más
+                    p.help-block(ng-show="categoryForm.categoryName.$error.$maxlenght && !categoryForm.categoryName.$pristine") Para tanto no me da la BD hermano
+
+                div.form-group(ng-class="{ 'has-error' : categoryForm.beerCategory.$invalid && !categoryForm.beerCategory.$pristine }")
+                    label Categoría Padre
+                    select.form-control(name="beerCategory" id="beerCategory" required)
+                        option a
+                        option b
+                    p.help-block(ng-show="categoryForm.beerCategory.$invalid && !categoryForm.beerCategory.$pristine") Compadre, márcate la categoría
+
+                div.form-group(ng-class="{ 'has-error' : categoryForm.beerGraduation.$invalid && !categoryForm.beerGraduation.$pristine}")
+                    label Graduación
+                    input.form-control(type="number" name="beerGraduation" id="beerGraduation" ng-model="cec.graduation" ng-minlength="1" ng-maxlength="5")
+                    p.help-block(ng-show="categoryForm.beerGraduation.$invalid && !categoryForm.beerGraduation.$pristine && categoryForm.beerGraduation.$error.$minlenght") La graduación, si vous plait
+                    p.help-block(ng-show="categoryForm.beerGraduation.$error.maxlenght") Menos lobos caperucita
+                button.btn.btn-success(type="submit" ng-disabled="cec.$invalid") Guardar
+                button.btn.btn-danger(ng-click="cec.deleteBeer()" ng-show="cec.id > 0" ng-disabled="cec.$invalid") Borrar
+                button.btn.btn-primary(ng-href="/admin/beers" ng-disabled="cec.$invalid") Volver
