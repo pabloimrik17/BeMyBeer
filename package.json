@@ -1,0 +1,30 @@
+{
+  "name": "bemybeer",
+  "version": "0.1.0",
+  "description": "This is a server for a RESTful API based on Nodejs to manage my beer \"drinked\" list and related information",
+  "main": "server",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pabloimrik17/BeMyBeer.git"
+  },
+  "keywords": [
+    ""
+  ],
+  "author": "Pablo F. Guerra",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pabloimrik17/BeMyBeer/issues"
+  },
+  "homepage": "https://github.com/pabloimrik17/BeMyBeer#readme",
+  "dependencies": {
+    "async": "^2.6.0",
+    "body-parser": "^1.18.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "lodash": "^4.17.4",
+    "mysql": "^2.15.0"
+  }
+}
