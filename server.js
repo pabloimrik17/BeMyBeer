@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(process.env.API_ENTRY_POINT, require('./api/routes/routes'));
 
-const port = process.env.SERVER_PORT;
+const port = process.env.PORT || 3000;
 // SERVER RUN
 app.listen(port, () => {
     console.log(`App listeting on http://localhost:${port}`)
