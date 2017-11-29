@@ -5,8 +5,9 @@
   "main": "server",
   "scripts": {
     "test": "mocha",
-    "cover": "nyc mocha"
-  },
+    "coverage": "nyc --reporter=html --reporter=text _mocha"
+
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pabloimrik17/BeMyBeer.git"
