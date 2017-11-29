@@ -4,7 +4,7 @@
   "description": "This is a server for a RESTful API based on Nodejs to manage my beer \"drinked\" list and related information",
   "main": "server",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "cover": "istanbul cover _mocha"
   },
   "repository": {
@@ -29,6 +29,7 @@
     "mysql": "^2.15.0"
   },
   "devDependencies": {
-    "istanbul": "^0.4.5"
+    "istanbul": "^0.4.5",
+    "mocha": "^4.0.1"
   }
 }
