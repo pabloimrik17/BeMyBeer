@@ -1,10 +1,11 @@
 'use strict';
 
 require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const db = require('./api/shared/bdObject');
+const db = require('./api/shared/dbObject');
 
 const app = express();
 
