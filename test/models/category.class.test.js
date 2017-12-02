@@ -41,8 +41,9 @@ describe('Instantiate Category Object with no id', () => {
 });
 
 describe('Instantiate Category Object with id', () => {
-    before(() => {
+    before( async () => {
         category = new Category(1);
+        await category.getOne();
     });
 
     it('idCategory should be greather than 0', () => {
@@ -52,7 +53,7 @@ describe('Instantiate Category Object with id', () => {
 
     it('name should not be empty', () => {
         expect(category.name).to.be.a('string');
-        expect(category.name).to.equal('Categoria');
+        expect(category.name).to.equal('Pale Ale');
     });
 
     it('idCategoryParent should greater than 0', () => {

@@ -4,9 +4,9 @@ const express = require('express');
 const router = express.Router();
 
 const Category = require('../models/category.model');
-let category = new Category();
 
 router.get('/', async (req, res) => {
+    const category = new Category();
     try {
         const categories = await category.getAll();
         res.json({data: JSON.stringify(categories)});
@@ -17,8 +17,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     const idCategory = req.params.id;
+    const category = new Category(idCategory);
     try {
-        await category.getOne(idCategory);
+        await category.getOne();
         res.json({data: JSON.stringify(category)});
     } catch(e) {
         res.json({data: JSON.stringify(e)});

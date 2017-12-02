@@ -8,18 +8,20 @@ let _dbObjectProperties = Symbol();
 
 class ObjectModel {
 
-    constructor(dbObjectProperties = []) {
+    constructor(idObject = 0, dbObjectProperties = []) {
         this[_childObjectName] = this.constructor.name.toLowerCase();
         this[_dbObjectProperties] = dbObjectProperties;
+
+        this.id = idObject;
         this.dateInsert = null;
         this.dateUpdate = null;
     }
 
-    async init(idObject) {
+    async init() {
         const sql = "" +
             " SELECT " + _.join(this[_dbObjectProperties]) +
             " FROM " + this[_childObjectName] +
-            " WHERE id_" + this[_childObjectName] + " = " + idObject +
+            " WHERE id_" + this[_childObjectName] + " = " + this.id +
             "";
 
         try {
@@ -37,9 +39,9 @@ class ObjectModel {
     }
 
 
-    async getOne(idObject) {
+    async getOne() {
         try {
-            await this.init(idObject);
+            await this.init();
         } catch (e) {
             console.log(e);
         }

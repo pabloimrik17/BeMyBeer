@@ -14,8 +14,8 @@ const dbObjectProperties = [
 class Category extends ObjectModel {
 
     constructor(idCategory = 0) {
-        super(dbObjectProperties);
-        this.idCategory = idCategory;
+        super(idCategory, dbObjectProperties);
+        this.idCategory = this.id;
         this.name = "";
         this.idCategoryParent = 0;
     }

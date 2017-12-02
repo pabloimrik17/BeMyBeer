@@ -8,11 +8,13 @@ const moment = require('moment');
 const expect = chai.expect;
 chai.use(require('chai-date-string'));
 
-db.connect(process.env.CURRENT_ENVIROMENT, () => {});
-exports.db = db;
+db.connect(process.env.CURRENT_ENVIROMENT, () => {
+    exports.db = db;
 
-exports.expect = expect;
-exports.faker = faker;
-exports.moment = moment;
+    exports.expect = expect;
+    exports.faker = faker;
+    exports.moment = moment;
+});
+
 
 
