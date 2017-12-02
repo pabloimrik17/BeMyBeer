@@ -4,7 +4,7 @@
 
 require("dotenv").config();
 
-const mysql = require('mysql');
+const mysql = require('mysql2/promise');
 const async = require('async');
 
 exports.MODE_TEST = process.env.TEST_ENVIROMENT;
