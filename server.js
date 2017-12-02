@@ -5,7 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const db = require('./api/shared/dbObject');
+const db = require('./db/dbObject');
 
 const app = express();
 
