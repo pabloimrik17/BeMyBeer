@@ -48,7 +48,7 @@ exports.fixtures = function (data) {
     }, done)
 };
 
-module.exports.drop = function (tables, done) {
+exports.drop = function (tables, done) {
     const pool = state.pool;
     if (!pool) return done(new Error('Missing database connection.'));
 
