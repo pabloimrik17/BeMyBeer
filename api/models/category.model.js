@@ -17,34 +17,27 @@ const _dbObjectProperties = [
 
 class Category extends ObjectModel {
 
-    constructor(idCategory = 0, autoInit = false) {
+    constructor(idCategory = 0, autoInit = true) {
         super(idCategory);
-        this.idCategory = this.id;
+        this.idCategory = 0;
         this.name = "";
         this.idCategoryParent = 0;
 
-        if(autoInit === true) {
-            this.init();
+        if(idCategory > 0 && autoInit === true) {
+            this.idCategory = idCategory;
+
+            this._init();
         }
     }
 
-    get dbEntity() {
+    static get dbEntity() {
         return _dbEntity;
     }
 
-    get dbObjectProperties() {
+    static get dbObjectProperties() {
         return _dbObjectProperties;
     }
-
-    async getAll() {
-        const category = new Category();
-        return await super.getAll(category);
-    }
 }
-
-
-const c = new Category(2);
-c.getAll();
 
 module.exports = Category;
 

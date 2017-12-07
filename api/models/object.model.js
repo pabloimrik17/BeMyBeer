@@ -5,13 +5,17 @@ const _ = require('lodash');
 
 class ObjectModel {
 
-    constructor(idObject = 0) {
-        this.id = idObject;
+    constructor(idObject = 0, autoInit = true) {
+        this.id = 0;
         this.dateInsert = null;
         this.dateUpdate = null;
+
+        if(idObject > 0) {
+            this.id = idObject
+        }
     }
 
-    async init() {
+    async _init() {
         const sql = "" +
             " SELECT " + _.join(this.dbObjectProperties) +
             " FROM " + this.dbEntity +
@@ -32,17 +36,7 @@ class ObjectModel {
         }
     }
 
-
-    async getOne() {
-        try {
-            await this.init();
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    async getAll(childObject) {
-        let object = new this.constructor.name();
+    static async getAll() {
         let objects = [];
 
         const sql = "" +
@@ -54,12 +48,13 @@ class ObjectModel {
             const [rows, fields] = await db.get().query(sql);
 
             _.forEach(rows, (row) => {
+                let object = {};
                 if (!_.isEmpty(rows)) {
                     _.forOwn(row, (value, key) => {
-                        childObject[key] = value;
+                        object[key] = value;
                     });
 
-                    objects.push(childObject);
+                    objects.push(object);
                 }
             });
             return objects;
