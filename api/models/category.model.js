@@ -3,7 +3,11 @@
 const bd = require('../../db/dbObject');
 const ObjectModel = require("./object.model");
 
-const dbObjectProperties = [
+// DB DEFINITIONS
+
+const _dbEntity = "category";
+
+const _dbObjectProperties = [
     "id_category as idCategory",
     "name as name",
     "id_category_parent as idCategoryParent",
@@ -13,11 +17,23 @@ const dbObjectProperties = [
 
 class Category extends ObjectModel {
 
-    constructor(idCategory = 0) {
-        super(idCategory, dbObjectProperties);
+    constructor(idCategory = 0, autoInit = false) {
+        super(idCategory);
         this.idCategory = this.id;
         this.name = "";
         this.idCategoryParent = 0;
+
+        if(autoInit === true) {
+            this.init();
+        }
+    }
+
+    get dbEntity() {
+        return _dbEntity;
+    }
+
+    get dbObjectProperties() {
+        return _dbObjectProperties;
     }
 
     async getAll() {
@@ -26,4 +42,10 @@ class Category extends ObjectModel {
     }
 }
 
+
+const c = new Category(2);
+c.getAll();
+
 module.exports = Category;
+
+

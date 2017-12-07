@@ -3,15 +3,9 @@
 const db = require('../../db/dbObject');
 const _ = require('lodash');
 
-let _childObjectName = Symbol();
-let _dbObjectProperties = Symbol();
-
 class ObjectModel {
 
-    constructor(idObject = 0, dbObjectProperties = []) {
-        this[_childObjectName] = this.constructor.name.toLowerCase();
-        this[_dbObjectProperties] = dbObjectProperties;
-
+    constructor(idObject = 0) {
         this.id = idObject;
         this.dateInsert = null;
         this.dateUpdate = null;
@@ -19,9 +13,9 @@ class ObjectModel {
 
     async init() {
         const sql = "" +
-            " SELECT " + _.join(this[_dbObjectProperties]) +
-            " FROM " + this[_childObjectName] +
-            " WHERE id_" + this[_childObjectName] + " = " + this.id +
+            " SELECT " + _.join(this.dbObjectProperties) +
+            " FROM " + this.dbEntity +
+            " WHERE id_" + this.dbEntity + " = " + this.id +
             "";
 
         try {
@@ -48,11 +42,12 @@ class ObjectModel {
     }
 
     async getAll(childObject) {
+        let object = new this.constructor.name();
         let objects = [];
 
         const sql = "" +
-            " SELECT " + _.join(this[_dbObjectProperties]) +
-            " FROM " + this[_childObjectName] +
+            " SELECT " + _.join(this.dbObjectProperties) +
+            " FROM " + this.dbEntity +
             "";
 
         try {
