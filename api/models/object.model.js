@@ -15,11 +15,15 @@ class ObjectModel {
         }
     }
 
-    async _init() {
+    // TODO PENDING OF ABSTRACTION TO AVOID PARAMETERS ON FUNCTION
+    async _init(dbEntity, dbObjectProperties) {
+        dbObjectProperties.push("date_insert as dateInsert");
+        dbObjectProperties.push("date_update as dateUpdate");
+
         const sql = "" +
-            " SELECT " + _.join(this.dbObjectProperties) +
-            " FROM " + this.dbEntity +
-            " WHERE id_" + this.dbEntity + " = " + this.id +
+            " SELECT " + _.join(dbObjectProperties) +
+            " FROM " + dbEntity +
+            " WHERE id_" + dbEntity + " = " + this.id +
             "";
 
         try {
@@ -61,6 +65,35 @@ class ObjectModel {
         } catch (e) {
             console.log(e);
         }
+    }
+
+    static async deleteOne(idObject, dbEntity) {
+        const sql = "" +
+            " DELETE " +
+            " FROM " + dbEntity +
+            " WHERE id_" + dbEntity + " = " + idObject +
+            "";
+
+        try {
+            await db.get().query(sql);
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    async delete(dbEntity) {
+        const sql = "" +
+            " DELETE " +
+            " FROM " + dbEntity +
+            " WHERE id_" + dbEntity + " = " + this.id +
+            "";
+
+        try {
+            await db.get().query(sql);
+        } catch(e) {
+            console.log(e);
+        }
+
     }
 }
 
