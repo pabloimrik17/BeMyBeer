@@ -3,25 +3,27 @@
 const db = require('../../db/dbObject');
 const _ = require('lodash');
 
-let _childObjectName = Symbol();
-let _dbObjectProperties = Symbol();
-
 class ObjectModel {
 
-    constructor(idObject = 0, dbObjectProperties = []) {
-        this[_childObjectName] = this.constructor.name.toLowerCase();
-        this[_dbObjectProperties] = dbObjectProperties;
-
-        this.id = idObject;
+    constructor(idObject = 0, autoInit = true) {
+        this.id = 0;
         this.dateInsert = null;
         this.dateUpdate = null;
+
+        if(idObject > 0) {
+            this.id = idObject
+        }
     }
 
-    async init() {
+    // TODO PENDING OF ABSTRACTION TO AVOID PARAMETERS ON FUNCTION
+    async _init(dbEntity, dbObjectProperties) {
+        dbObjectProperties.push("date_insert as dateInsert");
+        dbObjectProperties.push("date_update as dateUpdate");
+
         const sql = "" +
-            " SELECT " + _.join(this[_dbObjectProperties]) +
-            " FROM " + this[_childObjectName] +
-            " WHERE id_" + this[_childObjectName] + " = " + this.id +
+            " SELECT " + _.join(dbObjectProperties) +
+            " FROM " + dbEntity +
+            " WHERE id_" + dbEntity + " = " + this.id +
             "";
 
         try {
@@ -38,39 +40,60 @@ class ObjectModel {
         }
     }
 
-
-    async getOne() {
-        try {
-            await this.init();
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    async getAll(childObject) {
+    static async getAll() {
         let objects = [];
 
         const sql = "" +
-            " SELECT " + _.join(this[_dbObjectProperties]) +
-            " FROM " + this[_childObjectName] +
+            " SELECT " + _.join(this.dbObjectProperties) +
+            " FROM " + this.dbEntity +
             "";
 
         try {
             const [rows, fields] = await db.get().query(sql);
 
             _.forEach(rows, (row) => {
+                let object = {};
                 if (!_.isEmpty(rows)) {
                     _.forOwn(row, (value, key) => {
-                        childObject[key] = value;
+                        object[key] = value;
                     });
 
-                    objects.push(childObject);
+                    objects.push(object);
                 }
             });
             return objects;
         } catch (e) {
             console.log(e);
         }
+    }
+
+    static async deleteOne(idObject, dbEntity) {
+        const sql = "" +
+            " DELETE " +
+            " FROM " + dbEntity +
+            " WHERE id_" + dbEntity + " = " + idObject +
+            "";
+
+        try {
+            await db.get().query(sql);
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    async delete(dbEntity) {
+        const sql = "" +
+            " DELETE " +
+            " FROM " + dbEntity +
+            " WHERE id_" + dbEntity + " = " + this.id +
+            "";
+
+        try {
+            await db.get().query(sql);
+        } catch(e) {
+            console.log(e);
+        }
+
     }
 }
 

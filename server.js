@@ -3,13 +3,16 @@
 require('dotenv').config();
 
 const express = require('express');
+const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
 
 const db = require('./db/dbObject');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(expressValidator());
 
 app.use(process.env.API_ENTRY_POINT, require('./api/routes/routes'));
 

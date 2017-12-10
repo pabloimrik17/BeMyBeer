@@ -43,7 +43,7 @@ describe('Instantiate Category Object with no id', () => {
 describe('Instantiate Category Object with id', () => {
     before( async () => {
         category = new Category(1);
-        await category.getOne();
+        await category._init();
     });
 
     it('idCategory should be greather than 0', () => {
