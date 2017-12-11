@@ -3,6 +3,14 @@
 const db = require('../../db/dbObject');
 const _ = require('lodash');
 
+const  _definition = {
+    tableName: '',
+    dbFields: [
+        "date_insert as dateInsert",
+        "date_update as dateUpdate",
+    ],
+};
+
 class ObjectModel {
 
     constructor(idObject = 0, autoInit = true) {
@@ -15,10 +23,16 @@ class ObjectModel {
         }
     }
 
-    // TODO PENDING OF ABSTRACTION TO AVOID PARAMETERS ON FUNCTION
-    async _init(dbEntity, dbObjectProperties) {
-        dbObjectProperties.push("date_insert as dateInsert");
-        dbObjectProperties.push("date_update as dateUpdate");
+    static get tableName() {
+        return _definition.tableName;
+    }
+
+    static get dbFields() {
+        return _definition.dbFields;
+    }
+
+    async _init() {
+        this["constructor"].dbFields.concat(this.dbFields);
 
         const sql = "" +
             " SELECT " + _.join(dbObjectProperties) +

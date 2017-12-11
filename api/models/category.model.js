@@ -4,14 +4,14 @@ const bd = require('../../db/dbObject');
 const ObjectModel = require("./object.model");
 
 // DB DEFINITIONS
-
-const _dbEntity = "category";
-
-const _dbObjectProperties = [
-    "id_category as idCategory",
-    "name as name",
-    "id_category_parent as idCategoryParent"
-];
+const _definition = {
+    tableName: "category",
+    dbFields: [
+        "id_category as idCategory",
+        "name as name",
+        "id_category_parent as idCategoryParent"
+    ],
+};
 
 class Category extends ObjectModel {
 
@@ -27,15 +27,7 @@ class Category extends ObjectModel {
     }
 
     async _init() {
-        await super._init(Category.dbEntity, Category.dbObjectProperties);
-    }
-
-    static get dbEntity() {
-        return _dbEntity;
-    }
-
-    static get dbObjectProperties() {
-        return _dbObjectProperties;
+        await super._init(Category.tableName, Category.dbFields);
     }
 
     static async getOne(idCategory) {
@@ -46,10 +38,13 @@ class Category extends ObjectModel {
     }
 
     static async deleteOne(idCategory) {
-        await super.deleteOne(idCategory, Category.dbEntity);
+        await super.deleteOne(idCategory, Category.tableName);
     }
 
 }
+
+const cat = new Category(1);
+cat._init();
 
 module.exports = Category;
 
