@@ -6,7 +6,7 @@ function importTest(name, path) {
     });
 }
 
-var common = require("./common");
+const common = require("./common");
 
 describe("top", function () {
     beforeEach(function () {

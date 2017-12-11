@@ -6,7 +6,7 @@ const express = require('express');
 const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
 
-const db = require('./db/dbObject');
+const db = require('./api/db/dbObject');
 
 const app = express();
 
