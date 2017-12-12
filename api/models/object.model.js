@@ -14,7 +14,7 @@ const  _definition = {
 
 class ObjectModel {
 
-    constructor(idObject = 0, autoInit = true) {
+    constructor(idObject = 0) {
         this.id = 0;
         this.dateInsert = null;
         this.dateUpdate = null;
@@ -28,6 +28,10 @@ class ObjectModel {
         return _definition.tableName;
     }
 
+    static get primaryKey() {
+        return _definition.primaryKey
+    }
+
     static get dbFields() {
         return _definition.dbFields;
     }
@@ -35,11 +39,11 @@ class ObjectModel {
     async _init() {
         this["constructor"].dbFields.concat(this.dbFields);
 
-        const sql = "" +
-            " SELECT " + _.join(dbObjectProperties) +
-            " FROM " + dbEntity +
-            " WHERE id_" + dbEntity + " = " + this.id +
-            "";
+        const sql = `
+             SELECT " ${_.join(this["constructor"].dbFields)} 
+             FROM ${this["constructor"].tableName}
+             WHERE ${this["constructor"].primaryKey} =  ${this.id} 
+        `;
 
         try {
             const [rows, fields] = await db.get().query(sql);
