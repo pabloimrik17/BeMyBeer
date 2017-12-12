@@ -1,6 +1,7 @@
+// https://www.sitepoint.com/object-oriented-javascript-deep-dive-es6-classes/
 'use strict';
 
-const db = require('../../db/dbObject');
+const db = require('../db/dbObject');
 const _ = require('lodash');
 
 const  _definition = {

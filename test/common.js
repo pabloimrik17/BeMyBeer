@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const db = require('../db/dbObject');
+const db = require('../api/db/dbObject');
 const chai = require('chai');
 const faker = require('faker/locale/es');
 const moment = require('moment');

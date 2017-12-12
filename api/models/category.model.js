@@ -1,6 +1,6 @@
 'use strict';
 
-const bd = require('../../db/dbObject');
+const bd = require('../db/dbObject');
 const ObjectModel = require("./object.model");
 
 // DB DEFINITIONS

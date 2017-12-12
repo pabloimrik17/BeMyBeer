@@ -14,6 +14,7 @@ let category2;
 describe('Instantiate Category Object with no id', () => {
     before(() => {
         category = new Category();
+        expect(category).to.be.a('object');
     });
 
     it('idCategory should be 0', () => {
@@ -43,6 +44,9 @@ describe('Instantiate Category Object with no id', () => {
 describe('Instantiate Category Object with id', () => {
     before( async () => {
         category = new Category(1);
+        expect(category).to.be.a('object');
+        expect(category._init).to.be.a('function');
+
         await category._init();
     });
 
