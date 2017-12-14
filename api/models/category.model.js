@@ -3,13 +3,14 @@
 const ObjectModel = require("./object.model");
 
 // DB DEFINITIONS
+
 const _definition = {
-    tableName: "category",
-    primaryKey: 'id_category',
-    dbFields: [
-        "id_category as idCategory",
-        "name as name",
-        "id_category_parent as idCategoryParent"
+    primaryKey: 'idCategory',
+    tableName: 'category',
+    dbProperties: [
+        "idCategory",
+        "name",
+        "idParent"
     ],
 };
 
@@ -19,27 +20,27 @@ class Category extends ObjectModel {
         super(idCategory);
         this.idCategory = 0;
         this.name = "";
-        this.idCategoryParent = 0;
+        this.idParent = 0;
 
         if(idCategory > 0) {
             this.idCategory = idCategory;
         }
     }
 
-    static get tableName() {
+    async _init() {
+        await super._init();
+    }
+
+    static get getPrimaryKey() {
+        return _definition.primaryKey;
+    }
+
+    static get getTableName() {
         return _definition.tableName;
     }
 
-    static get primaryKey() {
-        return _definition.primaryKey
-    }
-
-    static get dbFields() {
-        return _definition.dbFields;
-    }
-
-    async _init() {
-        await super._init();
+    static get getDbProperties() {
+        return _definition.dbProperties;
     }
 
     static async getOne(idCategory) {
@@ -49,14 +50,16 @@ class Category extends ObjectModel {
         return category;
     }
 
+    /**
+     * @deprecated
+     * @param idCategory
+     * @returns {Promise<void>}
+     */
     static async deleteOne(idCategory) {
-        await super.deleteOne(idCategory, Category.tableName);
+        await super.deleteOne(idCategory, Category.getTableName);
     }
 
 }
-
-const cat = new Category(1);
-cat._init();
 
 module.exports = Category;
 

@@ -15,16 +15,14 @@ let state = {
     mode: null,
 };
 
-exports.connect = function (mode, done) {
-    state.pool = mysql.createPool({
-        host: process.env.DATABASE_HOST,
+exports.connect = async function (mode) {
+     state.pool = await mysql.createPool({
+        host: process.env.DATABASE_HOST_IP,
         user: process.env.DATABASE_USER,
         password: process.env.DATABASE_PASS,
         database: mode === exports.MODE_PRODUCTION ? process.env.PROD_DATABASE_NAME : process.env.TEST_DATABASE_NAME
     });
-
     state.mode = mode;
-    done()
 };
 
 exports.get = function () {
