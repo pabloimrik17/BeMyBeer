@@ -19,8 +19,11 @@ app.use(process.env.API_ENTRY_POINT, require('./api/routes/routes'));
 const port = process.env.PORT || 3000;
 // SERVER RUN
 
-db.connect(process.env.CURRENT_ENVIROMENT, () => {
-    app.listen(port, () => {
+try {
+    db.connect(process.env.CURRENT_ENVIROMENT);
+    app.listen(port, async () => {
         console.log(`App listeting on http://localhost:${port}`);
     });
-});
+} catch (e) {
+    console.log(e);
+}
