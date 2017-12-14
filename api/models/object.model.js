@@ -11,15 +11,15 @@ class ObjectModel {
         this.createdAt = null;
         this.updatedAt = null;
 
+        this["constructor"].getDbProperties.push("createdAt");
+        this["constructor"].getDbProperties.push("updatedAt");
+
         if(idObject > 0) {
             this.id = idObject
         }
     }
 
-    // TODO PENDING OF ABSTRACTION TO AVOID PARAMETERS ON FUNCTION
     async _init() {
-        this["constructor"].getDbProperties.push("createdAt");
-        this["constructor"].getDbProperties.push("updatedAt");
 
         const sql = `
             SELECT ${_.join(this["constructor"].getDbProperties)}
@@ -43,6 +43,28 @@ class ObjectModel {
 
     async save() {
 
+        const sql = `
+            INSERT INTO ${this["constructor"].getTableName}
+            SET ?
+        `;
+
+        let insertData = {};
+
+        _.forEach(this["constructor"].getDbProperties, (value) => {
+            insertData[value] = this[value];
+        });
+
+        try {
+            const result = await db.get().query(sql, insertData);
+
+            this.id = result.insertId;
+            this[this["constructor"].getPrimaryKey] = result.insertId;
+
+            this._init();
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     async update() {

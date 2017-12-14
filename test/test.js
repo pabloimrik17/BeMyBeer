@@ -8,13 +8,13 @@ function importTest(name, path) {
 
 const common = require("./common");
 
-describe("top", function () {
+describe("top", () => {
     before(async () => {
         await common.knex.migrate.rollback({env: 'development'});
-        await common.knex.migrate.latest();
+        await common.knex.migrate.latest({env: 'development'});
     });
 
-    beforeEach(function () {
+    beforeEach(() => {
         console.log("running something before each test");
     });
     importTest("Category Class", './models/category.class.test');
