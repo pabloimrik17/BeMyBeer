@@ -1,11 +1,12 @@
 
 exports.up = function(knex, Promise) {
   return Promise.all([
-      knex.schema.createTableIfNotExists('category', (table) => {
-          table.increments("id_category");
-          table.string("name").unique();
-          table.integer("id_parent").default(0);
-          table.timestamps();
+      knex.schema.createTable('category', (table) => {
+          table.increments("idCategory");
+          table.string("name").default('');
+          table.integer("idParent").default(0);
+          table.timestamp('createdAt').notNull().default('000-00-00 00:00:00');
+          table.timestamp('updatedAt').notNull().default('000-00-00 00:00:00');
       })
   ]);
 };
