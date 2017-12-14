@@ -92,10 +92,7 @@ class ObjectModel {
         updateData["updatedAt"] = moment().utc().format('YYYY-MM-DD HH:mm:ss');
 
         try {
-            const result = await db.get().query(sql, updateData);
-
-            this.id = result[0].insertId;
-            this[this["constructor"].getPrimaryKey] = result[0].insertId;
+            await db.get().query(sql, updateData);
 
             this._init();
 
