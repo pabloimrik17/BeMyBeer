@@ -1,204 +1,210 @@
-
-const common = require('../common');
-const expect = common.expect;
-const faker = common.faker;
-const moment = common.moment;
+const {expect, moment, knex, _} = require('../common');
 
 const Category = require('../../api/models/category.model');
+const CategorySeeder = require('../seeders/category.seeder');
 
 // TODO REFACT THIS UGLY THING
 // TODO FIX ALL THE DATA SEEDING / MANAGEMENT WITH KNEX
 let category;
-let category2;
+let currentRow;
 
-describe('Instantiate Category Object with no id', () => {
-    before(() => {
+    before(async () => {
         category = new Category();
         expect(category).to.be.a('object');
+
+        expect(Category.getPrimaryKey).to.exist();
+        expect(Category.getTableName).to.exist();
+        expect(Category.getDbProperties).to.exist();
+        expect(Category.getOne()).to.exist();
+        expect(Category.getAll).to.exist();
+        expect(category._init).to.exist();
+        expect(category.save).to.exist();
+        expect(category.delete).to.exist();
+        expect(category.update).to.exist();
+
+        expect(CategorySeeder.getTableName).to.exist();
+        expect(CategorySeeder.generateCategoryObject).to.exist();
+        expect(CategorySeeder.generateCategoryData).to.exist();
+        expect(CategorySeeder.upData).to.exist();
+        expect(CategorySeeder.downData).to.exist();
+
+        await CategorySeeder.upData();
     });
 
-    it('idCategory should be 0', () => {
-        expect(category.idCategory).to.be.a('number');
-        expect(category.idCategory).to.equal(0);
+    after(async () => {
+        await CategorySeeder.downData();
     });
 
-    it('name should be empty', () => {
-        expect(category.name).to.be.a('string');
-        expect(category.name).to.equal('');
+    describe(`Instantiate Category Object with no id`, () => {
+        it(`idCategory should be 0`, () => {
+            expect(category.idCategory).to.be.a('number');
+            expect(category.idCategory).to.equal(0);
+        });
+
+        it(`name should be empty`, () => {
+            expect(category.name).to.be.a('string');
+            expect(category.name).to.equal('');
+        });
+
+        it(`idCategoryParent should be 0`, () => {
+            expect(category.idParent).to.be.a('number');
+            expect(category.idParent).to.equal(0);
+        });
+
+        it(`dateInsert should be null`, () => {
+            expect(category.createdAt).to.equal(null);
+        });
+
+        it(`dateUpdate should be null`, () => {
+            expect(category.updatedAt).to.equal(null);
+        });
     });
 
-    it('idCategoryParent should be 0', () => {
-        expect(category.idCategoryParent).to.be.a('number');
-        expect(category.idCategoryParent).to.equal(0);
+    describe(`Instantiate Category Object with id`, () => {
+        before(async () => {
+            currentRow = await knex(Category.getTableName).limit(1).orderByRaw('rand()');
+            category = new Category(currentRow[0].idCategory);
+            expect(category).to.be.a('object');
+
+            await category._init();
+        });
+
+        it(`idCategory should be equal to`, () => {
+            expect(category.idCategory).to.be.a('number');
+            expect(category.idCategory).to.equal(currentRow[0].idCategory);
+        });
+
+        it(`name should be equal to`, () => {
+            expect(category.name).to.be.a('string');
+            expect(category.name).to.equal(currentRow[0].name);
+        });
+
+        it(`idParent should be equal to`, () => {
+            expect(category.idParent).to.be.a('number');
+            expect(category.idParent).to.equal(currentRow[0].idParent);
+        });
+
+        it(`createdAt should be equal to`, () => {
+            expect(category.createdAt).to.be.a.dateString();
+            expect(category.createdAt).to.equal(currentRow[0].createdAt);
+        });
+
+        it(`updatedAt should be equal to`, () => {
+            expect(category.updatedAt).to.be.a.dateString();
+            expect(category.updatedAt).to.equal(currentRow[0].updatedAt);
+        });
     });
 
-    it('dateInsert should be null', () => {
-        expect(category.dateInsert).to.equal(null);
+    describe(`Create new category`, () => {
+        before(async () => {
+            category = CategorySeeder.generateCategoryObject();
+            await category.save();
+
+            currentRow = await knex(Category.getTableName).order(`${Category.idCategory} desc`).limit(1);
+
+            category = new Category(currentRow[0].idCategory);
+            await category._init();
+        });
+
+        it(`idCategory should be equal to`, () => {
+            expect(category.idCategory).to.be.a('number');
+            expect(category.idCategory).to.equal(currentRow[0].idCategory);
+        });
+
+        it(`name should be equal to`, () => {
+            expect(category.name).to.be.a('string');
+            expect(category.name).to.equal(currentRow[0].name);
+        });
+
+        it(`idParent should be equal to`, () => {
+            expect(category.idParent).to.be.a('number');
+            expect(category.idParent).to.equal(currentRow[0].idParent);
+        });
+
+        it(`createdAt should be equal to`, () => {
+            expect(category.createdAt).to.be.a.dateString();
+            expect(category.createdAt).to.equal(currentRow[0].createdAt);
+        });
+
+        it(`updatedAt should be equal to`, () => {
+            expect(category.updatedAt).to.be.a.dateString();
+            expect(category.updatedAt).to.equal(currentRow[0].updatedAt);
+        });
     });
 
-    it('dateUpdate should be null', () => {
-        expect(category.dateUpdate).to.equal(null);
-    });
-});
+    describe(`Update existing category`, () => {
+        before(async () => {
+            currentRow = await knex(Category.getTableName).limit(1).orderByRaw('rand()');
+            category = new Category(currentRow[0].idCategory);
+            expect(category).to.be.a('object');
 
-describe('Instantiate Category Object with id', () => {
-    before( async () => {
-        category = new Category(1);
-        expect(category).to.be.a('object');
-        expect(category._init).to.be.a('function');
+            category._init();
 
-        await category._init();
-    });
+            category = CategorySeeder.generateCategoryObject();
+            category.update();
+            currentRow = await knex(Category.getTableName).where(Category.getPrimaryKey(), currentRow[0].idCategory);
+        });
 
-    it('idCategory should be greather than 0', () => {
-        expect(category.idCategory).to.be.a('number');
-        expect(category.idCategory).to.equal(1);
-    });
+        it(`idCategory should be greather than 0`, () => {
+            expect(category.idCategory).to.be.a('number');
+            expect(category.idCategory).to.equal(category.idCategory);
+        });
 
-    it('name should not be empty', () => {
-        expect(category.name).to.be.a('string');
-        expect(category.name).to.equal('Pale Ale');
-    });
+        it(`name should not be empty`, () => {
+            expect(category.name).to.be.a('string');
+            expect(category.name).to.equal(category.name);
+        });
 
-    it('idCategoryParent should greater than 0', () => {
-        expect(category.idCategoryParent).to.be.a('number');
-        expect(category.idCategoryParent).to.equal(0);
-    });
+        it(`idParent should greater than 0`, () => {
+            expect(category.idParent).to.be.a('number');
+            expect(category.idParent).to.equal(category.idParent);
+        });
 
-    it('dateInsert should not be null', () => {
-        expect(category.dateInsert).to.be.a.dateString();
-        expect(category.dateInsert).to.equal('2017-12-01');
-    });
+        it(`createdAt should not be null`, () => {
+            expect(category.createdAt).to.be.a.dateString();
+            expect(category.createdAt).to.equal(category.createdAt);
+        });
 
-    it('dateUpdate should not be null', () => {
-        expect(category.dateInsert).to.be.a.dateString();
-        expect(category.dateUpdate).to.equal('2017-12-01');
-    });
-});
-
-describe('Create new category', () => {
-    before(() => {
-        category = new Category();
-        category.name = faker.name.firstName();
-        category.idCategoryParent = faker.random.number();
-        category.dateInsert = moment(faker.date.recent(10)).format('YYYY-MM-DD');
-        category.dateUpdate = moment(faker.date.recent(10)).format('YYYY-MM-DD');
-
-        category.save();
-        //TODO Fixed id category to 1 by the moment
-        category2 = new Category(1);
-
+        it(`updateAt should not be null`, () => {
+            expect(category.updateAt).to.be.a.dateString();
+            expect(category.updateAt).to.equal(category.updateAt);
+        });
     });
 
-    it('idCategory should be greather than 0', () => {
-        expect(category2.idCategory).to.be.a('number');
-        expect(category2.idCategory).to.equal(category.idCategory);
+    describe(`Delete existing Category`, () => {
+        before(async () => {
+            currentRow = await knex(Category.getTableName).limit(1).orderByRaw('rand()');
+
+            category = new Category(currentRow[0].idCategory);
+            expect(category).to.be.a('object');
+            category.delete();
+
+            currentRow = await knex(Category.getTableName).where(Category.getPrimaryKey(), currentRow[0].idCategory);
+            expect(currentRow).to.be.a('array');
+            expect(currentRow).to.be.empty();
+            expect(currentRow.length).to.be(0);
+        });
+
+        it(`idCategory should be 0`, () => {
+            expect(category.idCategory).to.be.a('number');
+            expect(category.idCategory).to.equal(0);
+        });
+
+        it(`name should be empty`, () => {
+            expect(category.name).to.be.a('string');
+            expect(category.name).to.equal('');
+        });
+
+        it(`idCategoryParent should be 0`, () => {
+            expect(category.idParent).to.be.a('number');
+            expect(category.idParent).to.equal(0);
+        });
+
+        it(`dateInsert should be null`, () => {
+            expect(category.createdAt).to.equal(null);
+        });
+
+        it(`dateUpdate should be null`, () => {
+            expect(category.updatedAt).to.equal(null);
+        });
     });
-
-    it('name should not be empty', () => {
-        expect(category2.name).to.be.a('string');
-        expect(category2.name).to.equal(category.name);
-    });
-
-    it('idCategoryParent should greater than 0', () => {
-        expect(category2.idCategoryParent).to.be.a('number');
-        expect(category2.idCategoryParent).to.equal(category.idCategoryParent);
-    });
-
-    it('dateInsert should not be null', () => {
-        expect(category2.dateInsert).to.be.a.dateString();
-        expect(category2.dateInsert).to.equal(category.dateInsert);
-    });
-
-    it('dateUpdate should not be null', () => {
-        expect(category2.dateInsert).to.be.a.dateString();
-        expect(category2.dateUpdate).to.equal(category.dateUpdate);
-    });
-});
-
-describe('Update existing category', () => {
-    before(() => {
-        category = new Category();
-        category.name = faker.name.firstName();
-        category.idCategoryParent = faker.random.number();
-        category.dateInsert = moment(faker.date.recent(10)).format('YYYY-MM-DD');
-        category.dateUpdate = moment(faker.date.recent(10)).format('YYYY-MM-DD');
-
-        category.save();
-        //TODO Fixed id category to 1 by the moment
-        category = new Category(1);
-        category.name = faker.name.firstName();
-        category.idCategoryParent = faker.random.number();
-        category.dateInsert = moment(faker.date.recent(10)).format('YYYY-MM-DD');
-        category.dateUpdate = moment(faker.date.recent(10)).format('YYYY-MM-DD');
-        category.update();
-
-        category2 = new Category(1)
-
-    });
-
-    it('idCategory should be greather than 0', () => {
-        expect(category2.idCategory).to.be.a('number');
-        expect(category2.idCategory).to.equal(category.idCategory);
-    });
-
-    it('name should not be empty', () => {
-        expect(category2.name).to.be.a('string');
-        expect(category2.name).to.equal(category.name);
-    });
-
-    it('idCategoryParent should greater than 0', () => {
-        expect(category2.idCategoryParent).to.be.a('number');
-        expect(category2.idCategoryParent).to.equal(category.idCategoryParent);
-    });
-
-    it('dateInsert should not be null', () => {
-        expect(category2.dateInsert).to.be.a.dateString();
-        expect(category2.dateInsert).to.equal(category.dateInsert);
-    });
-
-    it('dateUpdate should not be null', () => {
-        expect(category2.dateInsert).to.be.a.dateString();
-        expect(category2.dateUpdate).to.equal(category.dateUpdate);
-    });
-});
-
-describe('Delete existing Category', () =>  {
-    before(() => {
-        category = new Category();
-        category.name = faker.name.firstName();
-        category.idCategoryParent = faker.random.number();
-        category.dateInsert = moment(faker.date.recent(10)).format('YYYY-MM-DD');
-        category.dateUpdate = moment(faker.date.recent(10)).format('YYYY-MM-DD');
-
-        category.save();
-        category.delete();
-
-        category = new Category(1);
-    });
-
-    it('idCategory should be greather than 0', () => {
-        expect(category.idCategory).to.be.a('number');
-        expect(category.idCategory).to.equal(1);
-    });
-
-    it('name should not be empty', () => {
-        expect(category.name).to.be.a('string');
-        expect(category.name).to.equal('Categoria');
-    });
-
-    it('idCategoryParent should greater than 0', () => {
-        expect(category.idCategoryParent).to.be.a('number');
-        expect(category.idCategoryParent).to.equal(0);
-    });
-
-    it('dateInsert should not be null', () => {
-        expect(category.dateInsert).to.be.a.dateString();
-        expect(category.dateInsert).to.equal('2017-12-01');
-    });
-
-    it('dateUpdate should not be null', () => {
-        expect(category.dateInsert).to.be.a.dateString();
-        expect(category.dateUpdate).to.equal('2017-12-01');
-    });
-});
