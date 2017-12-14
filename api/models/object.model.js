@@ -101,19 +101,19 @@ class ObjectModel {
         }
     }
 
-    async delete(dbEntity) {
-        const sql = "" +
-            " DELETE " +
-            " FROM " + dbEntity +
-            " WHERE id_" + dbEntity + " = " + this.id +
-            "";
+    async delete() {
+
+        const sql = `
+            DELETE
+            FROM ${this["constructor"].getTableName}
+            WHERE ${this["constructor"].getPrimaryKey} = ${this.id}
+        `;
 
         try {
             await db.get().query(sql);
         } catch(e) {
             console.log(e);
         }
-
     }
 
     static async getAll() {
