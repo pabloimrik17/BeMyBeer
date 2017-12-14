@@ -1,6 +1,14 @@
-require('dotenv').config();
+'use strict';
 
-const db = require('../api/db/dbObject');
+require('dotenv').config({path: '../../.env'});
+
+const knexConfig = require('../knexfile');
+const Knex = require('knex');
+//TODO QUITAR STRING FIJO
+const knex = Knex(knexConfig["development"]);
+
+require('../api/db/dbObject').connect(process.env.TEST_ENVIROMENT);
+
 const chai = require('chai');
 const faker = require('faker/locale/es');
 const moment = require('moment');
@@ -8,13 +16,10 @@ const moment = require('moment');
 const expect = chai.expect;
 chai.use(require('chai-date-string'));
 
-db.connect(process.env.CURRENT_ENVIROMENT, () => {
-    exports.db = db;
-
-    exports.expect = expect;
-    exports.faker = faker;
-    exports.moment = moment;
-});
+exports.knex = knex;
+exports.expect = expect;
+exports.faker = faker;
+exports.moment = moment;
 
 
 

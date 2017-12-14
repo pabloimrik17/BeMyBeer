@@ -1,40 +1,71 @@
 'use strict';
 
+const {faker, knex, moment} = require('../common');
+
 const ObjectSeeder = require('./object.seeder');
 const Category = require('../../api/models/category.model');
 
 const _definition = {
-    primaryKey: Category.primaryKey,
-    tableName: Category.tableName,
-    dbProperties: Category.dbProperties,
+    primaryKey: Category.getPrimaryKey,
+    tableName: Category.getTableName,
+    dbProperties: Category.getDbProperties,
 };
 
-class CategorySeeder extends ObjectSeeder {
+const _MIN_OBJECTS_TO_GENERATE_ = 10;
+const _MAX_OBJECTS_TO_GENERATE_ = 50;
 
-    static get getPrimaryKey() {
-        return _definition.primaryKey;
-    }
+class CategorySeeder extends ObjectSeeder {
 
     static get getTableName() {
         return _definition.tableName;
     }
 
-    static get getDbProperties() {
-        return _definition.dbProperties;
+    static generateCategoryObject() {
+        const category = new Category();
+
+        const newCategoryData = CategorySeeder.generateCategoryData();
+
+        _.forOwn(newCategoryData, (key, value) => {
+            category[key] = value;
+        });
+
+        return category;
     }
 
-    static async up() {
+    static generateCategoryData(maxIdParentId = 0) {
+
+        const objectData = {
+            name: faker.name.firstName(),
+            idParent: faker.random.number({min:0, max:maxIdParentId}),
+            createdAt: moment(faker.date.past()).format('YYYY-MM-DD'),
+            updatedAt: moment(faker.date.future()).format('YYYY-MM-DD'),
+        };
+
+        return objectData;
+    }
+
+    static async upData() {
+        const numberOfDataToInsert = faker.random.number({min: _MIN_OBJECTS_TO_GENERATE_, max: _MAX_OBJECTS_TO_GENERATE_});
+        let dataToInsert = [];
+
         try {
-            return await _testDb.schema.createTableIfNotExists(Category, (table) => {
-                table.increments("id_category");
-                table.string('name');
-                table.timestamps();
-            });
-        } catch (e) {
+            for(let i = 0; i < numberOfDataToInsert; i++) {
+                dataToInsert.push(CategorySeeder.generateCategoryData(numberOfDataToInsert));
+            }
+
+            await knex(Category.getTableName).insert(dataToInsert);
+        } catch(e) {
             console.log(e);
         }
     }
 
+    static async downData() {
+        try {
+            await knex(CategorySeeder.getTableName).truncate();
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }
 
 module.exports = CategorySeeder;
