@@ -2,7 +2,7 @@
 'use strict';
 
 const db = require('../db/dbObject');
-const _ = require('lodash');
+const {_, moment} = require('../shared/common.api');
 
 class ObjectModel {
 
@@ -28,12 +28,15 @@ class ObjectModel {
         `;
 
         try {
-            const [rows, fields] = await db.get().query(sql);
+            const [rows] = await db.get().query(sql);
 
             if (!_.isEmpty(rows)) {
                 _.forOwn(rows[0], (value, key) => {
                     this[key] = value;
                 });
+
+                this.createdAt = moment.utc(rows["createdAt"]).format('YYYY-MM-DD HH:mm:ss');
+                this.updatedAt = moment.utc(rows["updatedAt"]).format('YYYY-MM-DD HH:mm:ss');
             }
 
         } catch (e) {
@@ -54,11 +57,14 @@ class ObjectModel {
             insertData[value] = this[value];
         });
 
+        insertData["createdAt"] = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+        insertData["updatedAt"] = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+
         try {
             const result = await db.get().query(sql, insertData);
 
-            this.id = result.insertId;
-            this[this["constructor"].getPrimaryKey] = result.insertId;
+            this.id = result[0].insertId;
+            this[this["constructor"].getPrimaryKey] = result[0].insertId;
 
             this._init();
 
@@ -95,7 +101,7 @@ class ObjectModel {
             "";
 
         try {
-            const [rows, fields] = await db.get().query(sql);
+            const [rows] = await db.get().query(sql);
 
             _.forEach(rows, (row) => {
                 let object = {};

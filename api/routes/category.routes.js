@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const {checkIdParam, checkBody} = require('../middleware/routes.middleware');
+const {_ } = require('../shared/common.api');
 const schemas = require('../schemas/category.schema');
 const Category = require('../models/category.model');
 
@@ -30,10 +31,18 @@ router.get('/:id', checkIdParam(), async (req, res) => {
 
 router.post('/', checkBody(schemas.createCategory), async (req, res) => {
     try {
-        console.log(req.body.name);
-        res.json("Ok");
+        const category = new Category;
+
+        _.forEach(req.body, (value, key) => {
+            category[key] = value;
+        });
+
+        await category.save();
+
+        res.json({message: "TODO MENSAJE OK", data: JSON.stringify(category)});
+
     } catch(e) {
-        res.json("Not ok");
+        res.json("TODO RESPONSE FAIL "+e);
     }
 });
 
@@ -52,9 +61,5 @@ router.delete('/:id', async (req, res) => {
     }
 
 });
-
-function checkId() {
-
-}
 
 module.exports = router;

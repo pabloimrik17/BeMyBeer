@@ -13,11 +13,22 @@ exports.createCategory =  {
             "description": "An explanation about the purpose of this instance.",
             "default": "",
             "examples": [
-                "asdasd"
+                "Pale Ale"
+            ]
+        },
+        "idParent": {
+            "$id": "/properties/idCategory",
+            "type": "integer",
+            "title": "The Idcategory Schema.",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                0
             ]
         }
     },
     "required": [
-        "name"
+        "name",
+        "idParent"
     ]
 };

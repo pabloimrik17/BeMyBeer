@@ -3,7 +3,7 @@
 const { param, validationResult } = require('express-validator/check');
 
 const Ajv = require('ajv');
-const ajv = new Ajv();
+const ajv = new Ajv({allErrors: true, removeAdditional:'all'});
 
 exports.validationResult = validationResult;
 
@@ -13,13 +13,12 @@ exports.checkIdParam = () => {
 
 exports.checkBody = (schema) => {
     return (req, res, next) => {
-        console.log(req.body);
 
         const valid = ajv.validate(schema, req.body);
         if(valid) {
             next();
         } else {
-            res.json("FAIL");
+            res.json("TODO TO CHANGE");
         }
     }
 };

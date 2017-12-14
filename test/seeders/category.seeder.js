@@ -34,14 +34,12 @@ class CategorySeeder extends ObjectSeeder {
 
     static generateCategoryData(maxIdParentId = 0) {
 
-        const objectData = {
+        return {
             name: faker.name.firstName(),
             idParent: faker.random.number({min:0, max:maxIdParentId}),
-            createdAt: moment(faker.date.past()).format('YYYY-MM-DD'),
-            updatedAt: moment(faker.date.future()).format('YYYY-MM-DD'),
+            createdAt: moment(faker.date.past()).utc().format('YYYY-MM-DD HH:mm:ss'),
+            updatedAt: moment(faker.date.future()).utc().format('YYYY-MM-DD HH:mm:ss'),
         };
-
-        return objectData;
     }
 
     static async upData() {
