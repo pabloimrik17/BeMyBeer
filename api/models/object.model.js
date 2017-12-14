@@ -74,7 +74,34 @@ class ObjectModel {
     }
 
     async update() {
+        const sql = `
+            UPDATE ${this["constructor"].getTableName}
+            SET ?
+            WHERE ${this["constructor"].getPrimaryKey} = ${this.id}
+        `;
 
+        let updateData = {};
+
+        _.forEach(this["constructor"].getDbProperties, (value) => {
+            updateData[value] = this[value];
+        });
+
+        delete updateData["createdAt"];
+        delete updateData[this["constructor"].getPrimaryKey];
+
+        updateData["updatedAt"] = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+
+        try {
+            const result = await db.get().query(sql, updateData);
+
+            this.id = result[0].insertId;
+            this[this["constructor"].getPrimaryKey] = result[0].insertId;
+
+            this._init();
+
+        } catch(e) {
+            console.log(e);
+        }
     }
 
     async delete(dbEntity) {
