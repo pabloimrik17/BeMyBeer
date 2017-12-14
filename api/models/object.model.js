@@ -6,10 +6,10 @@ const _ = require('lodash');
 
 class ObjectModel {
 
-    constructor(idObject = 0, autoInit = true) {
+    constructor(idObject = 0) {
         this.id = 0;
-        this.dateInsert = null;
-        this.dateUpdate = null;
+        this.createdAt = null;
+        this.updatedAt = null;
 
         if(idObject > 0) {
             this.id = idObject
@@ -17,15 +17,15 @@ class ObjectModel {
     }
 
     // TODO PENDING OF ABSTRACTION TO AVOID PARAMETERS ON FUNCTION
-    async _init(dbEntity, dbObjectProperties) {
-        dbObjectProperties.push("date_insert as dateInsert");
-        dbObjectProperties.push("date_update as dateUpdate");
+    async _init() {
+        this["constructor"].getDbProperties.push("createdAt");
+        this["constructor"].getDbProperties.push("updatedAt");
 
-        const sql = "" +
-            " SELECT " + _.join(dbObjectProperties) +
-            " FROM " + dbEntity +
-            " WHERE id_" + dbEntity + " = " + this.id +
-            "";
+        const sql = `
+            SELECT ${_.join(this["constructor"].getDbProperties)}
+            FROM ${this["constructor"].getTableName}
+            WHERE ${this["constructor"].getPrimaryKey} = ${this.id}
+        `;
 
         try {
             const [rows, fields] = await db.get().query(sql);
@@ -39,6 +39,29 @@ class ObjectModel {
         } catch (e) {
             console.log(e);
         }
+    }
+
+    async save() {
+
+    }
+
+    async update() {
+
+    }
+
+    async delete(dbEntity) {
+        const sql = "" +
+            " DELETE " +
+            " FROM " + dbEntity +
+            " WHERE id_" + dbEntity + " = " + this.id +
+            "";
+
+        try {
+            await db.get().query(sql);
+        } catch(e) {
+            console.log(e);
+        }
+
     }
 
     static async getAll() {
@@ -68,6 +91,12 @@ class ObjectModel {
         }
     }
 
+    /**
+     * @deprecated
+     * @param idObject
+     * @param dbEntity
+     * @returns {Promise<void>}
+     */
     static async deleteOne(idObject, dbEntity) {
         const sql = "" +
             " DELETE " +
@@ -80,21 +109,6 @@ class ObjectModel {
         } catch(e) {
             console.log(e);
         }
-    }
-
-    async delete(dbEntity) {
-        const sql = "" +
-            " DELETE " +
-            " FROM " + dbEntity +
-            " WHERE id_" + dbEntity + " = " + this.id +
-            "";
-
-        try {
-            await db.get().query(sql);
-        } catch(e) {
-            console.log(e);
-        }
-
     }
 }
 
