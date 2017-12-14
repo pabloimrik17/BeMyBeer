@@ -17,11 +17,13 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', checkIdParam(), async (req, res) => {
-    const idCategory = req.params.id;
 
     try {
         validationResult(req).throw();
+
+        const idCategory = req.params.id;
         const category = await Category.getOne(idCategory);
+
         res.json({data: JSON.stringify(category)});
     } catch(e) {
         console.log(e);
@@ -47,10 +49,11 @@ router.post('/', checkBody(schemas.createCategory), async (req, res) => {
 });
 
 router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), (req, res) => {
-    const idCategory = req.params.id;
+
     try {
         validationResult(req).throw();
 
+        const idCategory = req.params.id;
         const category = new Category(idCategory);
 
         _.forEach(req.body, (value, key) => {
@@ -66,16 +69,19 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), (req, res)
     }
 });
 
-router.delete('/:id', async (req, res) => {
-    const idCategory = req.params.id;
+router.delete('/:id', checkIdParam(), (req, res) => {
 
     try {
-        await Category.deleteOne(idCategory);
+        validationResult(req).throw();
+
+        const idCategory = req.params.id;
+        const category = new Category(idCategory);
+        category.delete();
+
         res.json({data: "OK"});
     } catch(e) {
         res.json({data: JSON.stringify(e)});
     }
-
 });
 
 module.exports = router;
