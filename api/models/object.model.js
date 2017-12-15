@@ -34,9 +34,6 @@ class ObjectModel {
                 _.forOwn(rows[0], (value, key) => {
                     this[key] = value;
                 });
-
-                this.createdAt = moment.utc(rows["createdAt"]).format('YYYY-MM-DD HH:mm:ss');
-                this.updatedAt = moment.utc(rows["updatedAt"]).format('YYYY-MM-DD HH:mm:ss');
             }
 
         } catch (e) {
