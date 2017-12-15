@@ -4,6 +4,7 @@
 // Update with your config settings.
 
 require('dotenv').config();
+const {moment} = require('./api/shared/common.api');
 
 module.exports = {
 
@@ -15,6 +16,16 @@ module.exports = {
           password : process.env.DATABASE_PASS,
           database : process.env.TEST_DATABASE_NAME,
           charset : process.env.DATABASE_CHARSET,
+          timezone: process.env.TIMEZONE,
+          typeCast: (field, next) => {
+              if(field.type == 'DATETIME') {
+                  return moment(field.string()).utc().format('YYYY-MM-DD HH:mm:ss');
+              } else if(field.type == 'TIMESTAMP') {
+                  return moment(field.string()).utc().format('YYYY-MM-DD HH:mm:ss');
+              }
+
+              return next();
+          }
       }
   },
 
@@ -26,6 +37,14 @@ module.exports = {
           password : process.env.DATABASE_PASS,
           database : process.env.TEST_DATABASE_NAME,
           charset : process.env.DATABASE_CHARSET,
+          timezone: process.env.TIMEZONE,
+          typeCast: (field, next) => {
+              if(field.type == 'DATETIME') {
+                  return moment(field.string()).format('YYYY-MM-DD HH:mm:ss');
+              } else if(field.type == 'TIMESTAMP') {
+                  return moment(field.string()).format('YYYY-MM-DD HH:mm:ss');
+              }
+          }
       }
   }
 };

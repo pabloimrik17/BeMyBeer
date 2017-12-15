@@ -1,6 +1,6 @@
 'use strict';
 
-const {faker, knex, moment} = require('../common');
+const {faker, knex, moment, _} = require('../common');
 
 const ObjectSeeder = require('./object.seeder');
 const Category = require('../../api/models/category.model');
@@ -26,7 +26,7 @@ class CategorySeeder extends ObjectSeeder {
         const newCategoryData = CategorySeeder.generateCategoryData();
 
         _.forOwn(newCategoryData, (key, value) => {
-            category[key] = value;
+            category[value] = key;
         });
 
         return category;
@@ -37,8 +37,8 @@ class CategorySeeder extends ObjectSeeder {
         return {
             name: faker.name.firstName(),
             idParent: faker.random.number({min:0, max:maxIdParentId}),
-            createdAt: moment(faker.date.past()).utc().format('YYYY-MM-DD HH:mm:ss'),
-            updatedAt: moment(faker.date.future()).utc().format('YYYY-MM-DD HH:mm:ss'),
+            createdAt: faker.date.past(),
+            updatedAt: faker.date.future(),
         };
     }
 
