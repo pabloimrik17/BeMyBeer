@@ -1,6 +1,4 @@
-'use strict';
-
-const ObjectModel = require("./object.model");
+const ObjectModel = require('./object.model');
 
 // DB DEFINITIONS
 
@@ -8,23 +6,27 @@ const _definition = {
     primaryKey: 'idCategory',
     tableName: 'category',
     dbProperties: [
-        "idCategory",
-        "name",
-        "idParent"
+        'idCategory',
+        'name',
+        'idParent',
     ],
 };
 
 class Category extends ObjectModel {
 
     constructor(idCategory = 0) {
+
         super(idCategory);
         this.idCategory = 0;
-        this.name = "";
+        this.name = '';
         this.idParent = 0;
 
-        if(idCategory > 0) {
+        if (idCategory > 0) {
+
             this.idCategory = idCategory;
+
         }
+
     }
 
     async _init() {
@@ -62,5 +64,3 @@ class Category extends ObjectModel {
 }
 
 module.exports = Category;
-
-
