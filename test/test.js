@@ -6,7 +6,7 @@ function importTest(name, path) {
     });
 }
 
-const common = require("./common");
+const common = require("./common.test");
 
 describe("top", () => {
     before(async () => {
@@ -20,5 +20,6 @@ describe("top", () => {
     importTest("Category Class", './models/category.class.test');
     after(async () => {
         await common.knex.migrate.rollback({env: 'development'});
+        await common.knex.migrate.latest({env: 'development'});
     });
 });

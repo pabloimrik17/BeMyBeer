@@ -1,10 +1,9 @@
 // https://www.sitepoint.com/object-oriented-javascript-deep-dive-es6-classes/
 
-const db = require('../db/dbObject');
+const db = require('./db/database.model');
 const { _, moment } = require('../shared/common.api');
 
 class ObjectModel {
-
     constructor(idObject = 0) {
         this.id = 0;
         this.createdAt = null;
@@ -13,35 +12,31 @@ class ObjectModel {
         this.constructor.getDbProperties.push('createdAt');
         this.constructor.getDbProperties.push('updatedAt');
 
-        if(idObject > 0) {
-            this.id = idObject
+        if (idObject > 0) {
+            this.id = idObject;
         }
     }
 
     async _init() {
-
         const sql = `
             SELECT ${_.join(this.constructor.getDbProperties)}
             FROM ${this.constructor.getTableName}
-            WHERE ${this.constructor.getPrimaryKey} = ${this.id}
+            WHERE ${this.constructor.getPrimaryKey} = ?
         `;
 
         try {
-            const [rows] = await db.get().query(sql);
-
+            const rows = await db.get().query(sql, this.id);
             if (!_.isEmpty(rows)) {
                 _.forOwn(rows[0], (value, key) => {
                     this[key] = value;
                 });
             }
-
         } catch (e) {
             console.log(e);
         }
     }
 
     async save() {
-
         const sql = `
             INSERT INTO ${this.constructor.getTableName}
             SET ?
@@ -63,7 +58,6 @@ class ObjectModel {
             this[this.constructor.getPrimaryKey] = result[0].insertId;
 
             this._init();
-
         } catch (e) {
             console.log(e);
         }
@@ -76,29 +70,27 @@ class ObjectModel {
             WHERE ${this.constructor.getPrimaryKey} = ${this.id}
         `;
 
-        let updateData = {};
+        const updateData = {};
 
         _.forEach(this.constructor.getDbProperties, (value) => {
             updateData[value] = this[value];
         });
 
-        delete updateData['createdAt'];
+        delete updateData.createdAt;
         delete updateData[this.constructor.getPrimaryKey];
 
-        updateData['updatedAt'] = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+        updateData.updatedAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
 
         try {
             await db.get().query(sql, updateData);
 
             this._init();
-
         } catch(e) {
             console.log(e);
         }
     }
 
     async delete() {
-
         const sql = `
             DELETE
             FROM ${this.constructor.getTableName}
@@ -107,56 +99,33 @@ class ObjectModel {
 
         try {
             await db.get().query(sql);
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         }
     }
 
-    static async getAll() {
-        let objects = [];
+    async getAll() {
+        const objects = [];
 
         const sql = `
-            SELECT ${_.join(this.dbObjectProperties)}
-            " FROM " + this.dbEntity +
+            SELECT ${_.join(this.constructor.getDbProperties)}
+            FROM ${this.constructor.getTableName}
+            ORDER BY ${this.constructor.getPrimaryKey}
         `;
 
         try {
             const [rows] = await db.get().query(sql);
 
             _.forEach(rows, (row) => {
-                let object = {};
-                if (!_.isEmpty(rows)) {
-                    _.forOwn(row, (value, key) => {
-                        object[key] = value;
-                    });
-
-                    objects.push(object);
+                if (!_.isEmpty(row)) {
+                    objects.push(row);
                 }
             });
-            return objects;
         } catch (e) {
             console.log(e);
         }
-    }
 
-    /**
-     * @deprecated
-     * @param idObject
-     * @param dbEntity
-     * @returns {Promise<void>}
-     */
-    static async deleteOne(idObject, dbEntity) {
-        const sql = "" +
-            " DELETE " +
-            " FROM " + dbEntity +
-            " WHERE id_" + dbEntity + " = " + idObject +
-            "";
-
-        try {
-            await db.get().query(sql);
-        } catch(e) {
-            console.log(e);
-        }
+        return objects;
     }
 }
 

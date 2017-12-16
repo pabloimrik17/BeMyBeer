@@ -1,12 +1,10 @@
-'use strict';
-
 require('dotenv').config();
 
 const express = require('express');
 const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
+const db = require('./api/models/db/database.model');
 
-const db = require('./api/db/dbObject');
 db.connect(process.env.CURRENT_ENVIROMENT);
 
 const app = express();

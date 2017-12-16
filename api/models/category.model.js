@@ -13,20 +13,15 @@ const _definition = {
 };
 
 class Category extends ObjectModel {
-
     constructor(idCategory = 0) {
-
         super(idCategory);
         this.idCategory = 0;
         this.name = '';
         this.idParent = 0;
 
         if (idCategory > 0) {
-
             this.idCategory = idCategory;
-
         }
-
     }
 
     async _init() {

@@ -2,7 +2,7 @@
 
 require('dotenv').config();
 
-const { moment } = require('../shared/common.api');
+const { moment } = require('../../shared/common.api');
 
 const mysql = require('mysql2/promise');
 
@@ -15,7 +15,7 @@ const state = {
 };
 
 exports.connect = async (mode) => {
-    state.pool = await mysql.createPool({
+    state.pool = await mysql.createConnection({
         host: process.env.DATABASE_HOST_IP,
         user: process.env.DATABASE_USER,
         password: process.env.DATABASE_PASS,
@@ -23,9 +23,9 @@ exports.connect = async (mode) => {
         timezone: process.env.TIMEZONE,
         typeCast: (field, next) => {
             if (field.type == 'DATETIME') {
-                return moment(field.string()).utc().format('YYYY-MM-DD HH:mm:ss');
+                return moment.utc(field.string(), 'YYYY-MM-DD HH:mm:ss').format();
             } else if (field.type == 'TIMESTAMP') {
-                return moment(field.string()).utc().format('YYYY-MM-DD HH:mm:ss');
+                return moment.utc(field.string(), 'YYYY-MM-DD HH:mm:ss').format();
             }
 
             return next();
@@ -34,6 +34,4 @@ exports.connect = async (mode) => {
     state.mode = mode;
 };
 
-exports.get = () => {
-    return state.pool;
-};
+exports.get = () => state.pool;
