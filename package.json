@@ -4,7 +4,7 @@
   "description": "This is a server for a RESTful API based on Nodejs to manage my beer \"drinked\" list and related information",
   "main": "server",
   "scripts": {
-    "test": "mocha --delay",
+    "test": "mocha --delay --exit",
     "coverage": "nyc --reporter=html --reporter=text _mocha"
   },
   "repository": {
