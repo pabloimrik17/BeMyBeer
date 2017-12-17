@@ -6,7 +6,8 @@ const CategorySeeder = require('../seeders/category.seeder');
 // TODO REFACT THIS UGLY THING
 // TODO FIX ALL THE DATA SEEDING / MANAGEMENT WITH KNEX
 let category;
-let currentRow;
+let categories;
+let rows;
 
 before(async () => {
     category = new Category();
@@ -62,8 +63,8 @@ describe('Instantiate Category Object with no id', () => {
 
 describe('Instantiate Category Object with id', () => {
     before(async () => {
-        currentRow = await knex(Category.getTableName).limit(1).orderByRaw('rand()');
-        category = new Category(currentRow[0].idCategory);
+        rows = await knex(Category.getTableName).limit(1).orderByRaw('rand()');
+        category = new Category(rows[0].idCategory);
         expect(category).to.be.a('object');
 
         await category._init();
@@ -71,28 +72,57 @@ describe('Instantiate Category Object with id', () => {
 
     it('idCategory should be equal to', () => {
         expect(category.idCategory).to.be.a('number');
-        expect(category.idCategory).to.equal(currentRow[0].idCategory);
+        expect(category.idCategory).to.equal(rows[0].idCategory);
     });
 
     it('name should be equal to', () => {
         expect(category.name).to.be.a('string');
-        expect(category.name).to.equal(currentRow[0].name);
+        expect(category.name).to.equal(rows[0].name);
     });
 
     it('idParent should be equal to', () => {
         expect(category.idParent).to.be.a('number');
-        expect(category.idParent).to.equal(currentRow[0].idParent);
+        expect(category.idParent).to.equal(rows[0].idParent);
     });
 
     it('createdAt should be equal to', () => {
         expect(category.createdAt).to.be.a.dateString();
-        expect(category.createdAt).to.equal(currentRow[0].createdAt);
+        expect(category.createdAt).to.equal(rows[0].createdAt);
     });
 
     it('updatedAt should be equal to', () => {
         expect(category.updatedAt).to.be.a.dateString();
-        expect(category.updatedAt).to.equal(currentRow[0].updatedAt);
+        expect(category.updatedAt).to.equal(rows[0].updatedAt);
     });
+});
+
+describe('Get all categories', function() {
+   before(async function() {
+       try {
+           category = new Category();
+           categories = await category.getAll();
+
+           rows = await knex(Category.getTableName).orderBy(Category.getPrimaryKey);
+       } catch (e) {
+           expect(e).to.be.empty;
+       }
+   });
+
+   it('Should return some data', function() {
+        expect(categories.length).to.be.greaterThan(0);
+   });
+
+   it('Should return all rows in db', function(){
+       expect(categories.length).to.be.equal(rows.length);
+   });
+
+   it('Should return the same data as in db', function() {
+       for(let i = 0; i < categories.length; i += 1) {
+           _.forOwn(categories[i], (value, key) => {
+               expect(categories[i][key]).to.be.equal(rows[i][key]);
+           });
+       }
+   });
 });
 
 describe('Create new category', () => {
@@ -100,49 +130,49 @@ describe('Create new category', () => {
         category = CategorySeeder.generateCategoryObject();
         await category.save();
 
-        currentRow = await knex(Category.getTableName).order(`${Category.idCategory} desc`).limit(1);
+        rows = await knex(Category.getTableName).order(`${Category.idCategory} desc`).limit(1);
 
-        category = new Category(currentRow[0].idCategory);
+        category = new Category(rows[0].idCategory);
         await category._init();
     });
 
     it('idCategory should be equal to', () => {
         expect(category.idCategory).to.be.a('number');
-        expect(category.idCategory).to.equal(currentRow[0].idCategory);
+        expect(category.idCategory).to.equal(rows[0].idCategory);
     });
 
     it('name should be equal to', () => {
         expect(category.name).to.be.a('string');
-        expect(category.name).to.equal(currentRow[0].name);
+        expect(category.name).to.equal(rows[0].name);
     });
 
     it('idParent should be equal to', () => {
         expect(category.idParent).to.be.a('number');
-        expect(category.idParent).to.equal(currentRow[0].idParent);
+        expect(category.idParent).to.equal(rows[0].idParent);
     });
 
     it('createdAt should be equal to', () => {
         expect(category.createdAt).to.be.a.dateString();
-        expect(category.createdAt).to.equal(currentRow[0].createdAt);
+        expect(category.createdAt).to.equal(rows[0].createdAt);
     });
 
     it('updatedAt should be equal to', () => {
         expect(category.updatedAt).to.be.a.dateString();
-        expect(category.updatedAt).to.equal(currentRow[0].updatedAt);
+        expect(category.updatedAt).to.equal(rows[0].updatedAt);
     });
 });
 
 describe('Update existing category', () => {
     before(async () => {
-        currentRow = await knex(Category.getTableName).limit(1).orderByRaw('rand()');
-        category = new Category(currentRow[0].idCategory);
+        rows = await knex(Category.getTableName).limit(1).orderByRaw('rand()');
+        category = new Category(rows[0].idCategory);
         expect(category).to.be.a('object');
 
         category._init();
 
         category = CategorySeeder.generateCategoryObject();
         category.update();
-        currentRow = await knex(Category.getTableName).where(Category.getPrimaryKey(), currentRow[0].idCategory);
+        rows = await knex(Category.getTableName).where(Category.getPrimaryKey(), rows[0].idCategory);
     });
 
     it('idCategory should be greather than 0', () => {
@@ -173,16 +203,16 @@ describe('Update existing category', () => {
 
 describe('Delete existing Category', () => {
     before(async () => {
-        currentRow = await knex(Category.getTableName).limit(1).orderByRaw('rand()');
+        rows = await knex(Category.getTableName).limit(1).orderByRaw('rand()');
 
-        category = new Category(currentRow[0].idCategory);
+        category = new Category(rows[0].idCategory);
         expect(category).to.be.a('object');
         category.delete();
 
-        currentRow = await knex(Category.getTableName).where(Category.getPrimaryKey(), currentRow[0].idCategory);
-        expect(currentRow).to.be.a('array');
-        expect(currentRow).to.be.empty();
-        expect(currentRow.length).to.be(0);
+        rows = await knex(Category.getTableName).where(Category.getPrimaryKey(), rows[0].idCategory);
+        expect(rows).to.be.a('array');
+        expect(rows).to.be.empty();
+        expect(rows.length).to.be(0);
     });
 
     it('idCategory should be 0', () => {
