@@ -9,6 +9,8 @@ const _definition = {
         'idCategory',
         'name',
         'idParent',
+        'createdAt',
+        'updatedAt',
     ],
 };
 
@@ -55,7 +57,6 @@ class Category extends ObjectModel {
     static async deleteOne(idCategory) {
         await super.deleteOne(idCategory, Category.getTableName);
     }
-
 }
 
 module.exports = Category;

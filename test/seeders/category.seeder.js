@@ -18,16 +18,12 @@ class CategorySeeder extends ObjectSeeder {
         return _definition.tableName;
     }
 
-    static generateCategoryObject() {
-        const category = new Category();
-
+    static generateCategoryObject(categoryObject) {
         const newCategoryData = CategorySeeder.generateCategoryData();
 
         _.forOwn(newCategoryData, (key, value) => {
-            category[value] = key;
+            categoryObject[value] = key;
         });
-
-        return category;
     }
 
     static generateCategoryData(maxIdParentId = 0) {

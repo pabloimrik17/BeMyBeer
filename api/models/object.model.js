@@ -9,9 +9,6 @@ class ObjectModel {
         this.createdAt = null;
         this.updatedAt = null;
 
-        this.constructor.getDbProperties.push('createdAt');
-        this.constructor.getDbProperties.push('updatedAt');
-
         if (idObject > 0) {
             this.id = idObject;
         }
@@ -49,7 +46,7 @@ class ObjectModel {
         });
 
         insertData.createdAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
-        insertData.updatedAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+        insertData.updatedAt = this.createdAt;
 
         try {
             const result = await db.get().query(sql, insertData);
@@ -67,7 +64,7 @@ class ObjectModel {
         const sql = `
             UPDATE ${this.constructor.getTableName}
             SET ?
-            WHERE ${this.constructor.getPrimaryKey} = ${this.id}
+            WHERE ${this.constructor.getPrimaryKey} = ?
         `;
 
         const updateData = {};
@@ -82,10 +79,10 @@ class ObjectModel {
         updateData.updatedAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
 
         try {
-            await db.get().query(sql, updateData);
+            await db.get().query(sql, [updateData, this.id]);
 
             this._init();
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         }
     }
@@ -94,14 +91,17 @@ class ObjectModel {
         const sql = `
             DELETE
             FROM ${this.constructor.getTableName}
-            WHERE ${this.constructor.getPrimaryKey} = ${this.id}
+            WHERE ${this.constructor.getPrimaryKey} = ?
         `;
 
         try {
-            await db.get().query(sql);
+            await db.get().query(sql, [this.id]);
         } catch (e) {
             console.log(e);
         }
+
+        this.id = 0;
+        this[this.constructor.getPrimaryKey] = 0;
     }
 
     async getAll() {
