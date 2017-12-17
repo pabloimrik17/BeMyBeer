@@ -15,12 +15,12 @@ before(async () => {
     expect(Category.getPrimaryKey).to.exist;
     expect(Category.getTableName).to.exist;
     expect(Category.getDbProperties).to.exist;
-    expect(Category.getOne()).to.exist;
-    expect(Category.getAll).to.exist;
+    expect(Category.getOne).to.exist;
     expect(category._init).to.exist;
     expect(category.save).to.exist;
     expect(category.delete).to.exist;
     expect(category.update).to.exist;
+    expect(category.getAll).to.exist;
 
     expect(CategorySeeder.getTableName).to.exist;
     expect(CategorySeeder.generateCategoryObject).to.exist;

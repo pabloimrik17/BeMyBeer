@@ -21,7 +21,8 @@ router.get('/:id', checkIdParam(), async (req, res) => {
         validationResult(req).throw();
 
         const idCategory = req.params.id;
-        const category = await Category.getOne(idCategory);
+        const category = new Category(idCategory);
+        await category._init();
 
         res.json({ data: JSON.stringify(category) });
     } catch (e) {

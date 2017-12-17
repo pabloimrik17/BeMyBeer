@@ -25,7 +25,7 @@ class ObjectModel {
         `;
 
         try {
-            const rows = await db.get().query(sql, this.id);
+            const [rows] = await db.get().query(sql, [this.id]);
             if (!_.isEmpty(rows)) {
                 _.forOwn(rows[0], (value, key) => {
                     this[key] = value;
