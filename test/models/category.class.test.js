@@ -1,4 +1,4 @@
-const { expect, knex } = require('../common.test');
+const { expect, knex, _ } = require('../common.test');
 
 const Category = require('../../api/models/category.model');
 const CategorySeeder = require('../seeders/category.seeder');
@@ -126,6 +126,22 @@ describe('Get all categories', function() {
 
    it('Should return all rows in db', function(){
        expect(categories.length).to.be.equal(rows.length);
+   });
+
+   it('Should return correct data type', function() {
+       _.forEach(categories, (category) => {
+           expect(category.idCategory).to.exist;
+           expect(category.name).to.exist;
+           expect(category.idParent).to.exist;
+           expect(category.createdAt).to.exist;
+           expect(category.updatedAt).to.exist;
+
+           expect(category.idCategory).to.be.a('number');
+           expect(category.name).to.be.a('string');
+           expect(category.idParent).to.be.a('number');
+           expect(category.createdAt).to.be.a.dateString();
+           expect(category.updatedAt).to.be.a.dateString();
+       });
    });
 
    it('Should return the same data as in db', function() {
