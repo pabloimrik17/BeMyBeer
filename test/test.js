@@ -6,21 +6,29 @@ function importTest(name, path) {
     });
 }
 
-const common = require('./common.test');
+const { knex, expect } = require('./common.test');
 
-setTimeout(() => {
-    describe('MODEL TEST SUITE', function() {
-        before(async function() {
-            await common.knex.migrate.rollback({ env: 'development' });
-            await common.knex.migrate.latest({ env: 'development' });
-        });
+describe('MODEL TEST SUITE', async function () {
+    this.timeout(20000);
 
-        importTest('Category Class', './models/category.class.test');
+    before(async function () {
 
-        after(async function() {
-            await common.knex.migrate.rollback({ env: 'development' });
-            await common.knex.migrate.latest({ env: 'development' });
-        });
+        try {
+            await knex.migrate.rollback({env: 'development'});
+            await knex.migrate.latest({env: 'development'});
+        } catch (e) {
+            expect(e).to.be.empty;
+        }
     });
-    run();
-}, 10000);
+
+    importTest('Category Class', './models/category.class.test');
+
+    after(async function () {
+        try {
+            await knex.migrate.rollback({env: 'development'});
+            await knex.migrate.latest({env: 'development'});
+        } catch (e) {
+            expect(e).to.be.empty;
+        }
+    });
+});

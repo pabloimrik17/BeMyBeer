@@ -36,6 +36,7 @@ before(async function () {
 after(async function() {
     try {
         await CategorySeeder.downData();
+        
     } catch (e) {
         expect(e).to.be.empty;
     }
@@ -74,6 +75,7 @@ describe('Instantiate Category Object with id', function() {
             expect(category).to.be.a('object');
 
             await category._init();
+            
         } catch (e) {
             expect(e).to.be.empty;
         }
@@ -116,6 +118,7 @@ describe('Create new category', function() {
 
             category = new Category(currentRow[0].idCategory);
             await category._init();
+            
         } catch (e) {
             expect(e).to.be.empty;
         }
@@ -159,6 +162,7 @@ describe('Update existing category', function() {
             CategorySeeder.generateCategoryObject(category);
             await category.update();
             currentRow = await knex(Category.getTableName).where(Category.getPrimaryKey, currentRow[0].idCategory);
+            
         } catch (e) {
             expect(e).to.be.empty;
         }
@@ -203,6 +207,7 @@ describe('Delete existing Category', function() {
             expect(currentRow).to.be.a('array');
             expect(currentRow).to.be.empty;
             expect(currentRow.length).to.equal(0);
+            
         } catch (e) {
             expect(e).to.be.empty;
         }
