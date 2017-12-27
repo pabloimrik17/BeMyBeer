@@ -2,7 +2,7 @@
 
 require('dotenv').config();
 
-const { moment } = require('../../shared/common.api');
+const { moment } = require('./common.api');
 
 const mysql = require('mysql2/promise');
 

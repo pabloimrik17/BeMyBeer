@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
-const db = require('./api/models/db/database.model');
+const db = require('./api/shared/database');
 
 db.connect(process.env.CURRENT_ENVIROMENT);
 
