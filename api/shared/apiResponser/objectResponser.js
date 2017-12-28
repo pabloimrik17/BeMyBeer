@@ -20,5 +20,8 @@ class ObjectResponser {
         if (typeof options.data === 'undefined') {
             options.data = {};
         }
+
+        res.status(500);
+
     }
 }
