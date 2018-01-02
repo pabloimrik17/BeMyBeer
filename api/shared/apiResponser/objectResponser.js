@@ -1,5 +1,7 @@
 const _RESPONSE_DEFAULT_SUCCESS_MESSAGE_ = 'OK';
 
+const { apiErrors } = require('./apiErrors');
+
 class ObjectResponser {
     static responseSuccess(res, data = {}) {
         const responseObject = {
@@ -21,7 +23,19 @@ class ObjectResponser {
             options.data = {};
         }
 
-        res.status(500);
+        const responseObject = {
+            responseCode: apiErrors[error].code,
+            responseMessage: apiErrors[error].message,
+            responseData: options.data,
+        };
 
+        res.status(500);
+        res.json(responseObject);
+
+        if(options.canContinue === false) {
+            throw new Error(responseObject);
+        }
     }
 }
+
+module.exports = ObjectResponser;

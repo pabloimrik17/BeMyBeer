@@ -1,6 +1,6 @@
 const express = require('express');
 const { checkIdParam, checkBody, validationResult } = require('../middleware/routes.middleware');
-const { _ } = require('../shared/common.api');
+const { _, ObjectResponser, apiErrors } = require('../shared/common.api');
 const schemas = require('../schemas/category.schema');
 const Category = require('../models/category.model');
 
@@ -10,9 +10,9 @@ router.get('/', async (req, res) => {
     try {
         const category = new Category();
         const categories = await category.getAll();
-        res.json({ data: JSON.stringify(categories) });
+        ObjectResponser.responseSuccess(res, categories);
     } catch (e) {
-        res.json({ data: JSON.stringify(e) });
+        ObjectResponser.responseError(res, apiErrors.CATEGORY_ERROR_CREATE);
     }
 });
 
