@@ -11,8 +11,8 @@ router.get('/', async (req, res) => {
         const category = new Category();
         const categories = await category.getAll();
         ObjectResponser.responseSuccess(res, categories);
-    } catch (e) {
-        ObjectResponser.responseError(res, apiErrors.CATEGORY_ERROR_CREATE);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
     }
 });
 
@@ -24,10 +24,9 @@ router.get('/:id', checkIdParam(), async (req, res) => {
         const category = new Category(idCategory);
         await category._init();
 
-        res.json({ data: JSON.stringify(category) });
-    } catch (e) {
-        console.log(e);
-        res.json({ data: JSON.stringify(e) });
+        ObjectResponser.responseSuccess(res, category);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
     }
 });
 
@@ -41,9 +40,9 @@ router.post('/', checkBody(schemas.createCategory), async (req, res) => {
 
         await category.save();
 
-        res.json({ message: 'TODO MENSAJE OK', data: JSON.stringify(category) });
-    } catch (e) {
-        res.json(`TODO RESPONSE FAIL ${e}`);
+        ObjectResponser.responseSuccess(res, category);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
     }
 });
 
@@ -60,9 +59,9 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), async (req
 
         await category.update();
 
-        res.json({ message: 'TODO MENSAJE OK', data: JSON.stringify(category) });
-    } catch (e) {
-        res.json(`TODO RESPONSE FAIL ${e}`);
+        ObjectResponser.responseSuccess(res, category);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
     }
 });
 
@@ -74,9 +73,9 @@ router.delete('/:id', checkIdParam(), async (req, res) => {
         const category = new Category(idCategory);
         await category.delete();
 
-        res.json({ data: 'OK' });
-    } catch (e) {
-        res.json({ data: JSON.stringify(e) });
+        ObjectResponser.responseSuccess(res);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
     }
 });
 

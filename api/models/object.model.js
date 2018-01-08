@@ -1,7 +1,7 @@
 // https://www.sitepoint.com/object-oriented-javascript-deep-dive-es6-classes/
 
 const db = require('../shared/database');
-const { _, moment } = require('../shared/common.api');
+const { _, moment, apiErrors } = require('../shared/common.api');
 
 class ObjectModel {
     constructor(idObject = 0) {
@@ -30,6 +30,7 @@ class ObjectModel {
             }
         } catch (e) {
             console.log(e);
+            throw apiErrors.OBJECT_MODEL_INIT_QUERY_ERROR;
         }
     }
 
@@ -57,6 +58,7 @@ class ObjectModel {
             this._init();
         } catch (e) {
             console.log(e);
+            throw apiErrors.OBJECT_MODEL_SAVE_QUERY_ERROR;
         }
     }
 
@@ -84,6 +86,7 @@ class ObjectModel {
             this._init();
         } catch (e) {
             console.log(e);
+            throw apiErrors.OBJECT_MODEL_UPDATE_QUERY_ERROR;
         }
     }
 
@@ -98,6 +101,7 @@ class ObjectModel {
             await db.get().query(sql, [this.id]);
         } catch (e) {
             console.log(e);
+            throw apiErrors.OBJECT_MODEL_DELETE_QUERY_ERROR;
         }
 
         this.id = 0;
@@ -110,7 +114,7 @@ class ObjectModel {
         const sql = `
             SELECT ${_.join(this.constructor.getDbProperties)}
             FROM ${this.constructor.getTableName}
-            ORDER BY ${this.constructor.getPrimaryKey}
+            ORDER  asas BY ${this.constructor.getPrimaryKey}
         `;
 
         try {
@@ -121,8 +125,9 @@ class ObjectModel {
                     objects.push(row);
                 }
             });
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            console.log(error);
+            throw apiErrors.OBJECT_MODEL_GET_ALL;
         }
 
         return objects;

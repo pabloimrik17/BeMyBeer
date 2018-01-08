@@ -1,11 +1,13 @@
 const _RESPONSE_DEFAULT_SUCCESS_MESSAGE_ = 'OK';
+const _RESPONSE_DEFAULT_SUCCESS_CODE_ = 0;
 
-const { apiErrors } = require('./apiErrors');
+const _RESPONSE_DEFAULT_ERROR_MESSAGE_ = 'UNKNOW ERROR';
+const _RESPONSE_DEFAULT_ERROR_CODE_ = 4815162342;
 
 class ObjectResponser {
     static responseSuccess(res, data = {}) {
         const responseObject = {
-            responseCode: 0,
+            responseCode: _RESPONSE_DEFAULT_SUCCESS_CODE_,
             responseMessage: _RESPONSE_DEFAULT_SUCCESS_MESSAGE_,
             responseData: data,
         };
@@ -23,17 +25,24 @@ class ObjectResponser {
             options.data = {};
         }
 
+        if(typeof error === 'undefined') {
+            error.code = _RESPONSE_DEFAULT_ERROR_CODE_;
+            error.message = _RESPONSE_DEFAULT_ERROR_MESSAGE_;
+        }
+
         const responseObject = {
-            responseCode: apiErrors[error].code,
-            responseMessage: apiErrors[error].message,
+            responseCode: error.code,
+            responseMessage: error.message,
             responseData: options.data,
         };
+
+        console.log(responseObject);
 
         res.status(500);
         res.json(responseObject);
 
         if(options.canContinue === false) {
-            throw new Error(responseObject);
+            process.exit(1);
         }
     }
 }
