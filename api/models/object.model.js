@@ -1,6 +1,6 @@
 // https://www.sitepoint.com/object-oriented-javascript-deep-dive-es6-classes/
 
-const db = require('./db/database.model');
+const db = require('../shared/database');
 const { _, moment } = require('../shared/common.api');
 
 class ObjectModel {
