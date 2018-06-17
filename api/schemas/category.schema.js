@@ -1,67 +1,67 @@
-'use strict';
 
-exports.createCategory =  {
-    "definitions": {},
-    "$schema": "http://json-schema.org/draft-06/schema#",
-    "$id": "http://example.com/example.json",
-    "type": "object",
-    "properties": {
-        "name": {
-            "$id": "/properties/name",
-            "type": "string",
-            "title": "The Name Schema.",
-            "description": "An explanation about the purpose of this instance.",
-            "default": "",
-            "examples": [
-                "Pale Ale"
-            ]
+
+exports.createCategory = {
+    definitions: {},
+    $schema: 'http://json-schema.org/draft-06/schema#',
+    $id: 'http://example.com/example.json',
+    type: 'object',
+    properties: {
+        name: {
+            $id: '/properties/name',
+            type: 'string',
+            title: 'The Name Schema.',
+            description: 'An explanation about the purpose of this instance.',
+            default: '',
+            examples: [
+                'Pale Ale',
+            ],
         },
-        "idParent": {
-            "$id": "/properties/idCategory",
-            "type": "integer",
-            "title": "The Idcategory Schema.",
-            "description": "An explanation about the purpose of this instance.",
-            "default": 0,
-            "examples": [
-                0
-            ]
-        }
+        idParent: {
+            $id: '/properties/idCategory',
+            type: 'integer',
+            title: 'The Idcategory Schema.',
+            description: 'An explanation about the purpose of this instance.',
+            default: 0,
+            examples: [
+                0,
+            ],
+        },
     },
-    "required": [
-        "name",
-        "idParent"
-    ]
+    required: [
+        'name',
+        'idParent',
+    ],
 };
 
-exports.updateCategory =  {
-    "definitions": {},
-    "$schema": "http://json-schema.org/draft-06/schema#",
-    "$id": "http://example.com/example.json",
-    "type": "object",
-    "properties": {
-        "name": {
-            "$id": "/properties/name",
-            "type": "string",
-            "title": "The Name Schema.",
-            "description": "An explanation about the purpose of this instance.",
-            "default": "",
-            "examples": [
-                "Pale Ale"
-            ]
+exports.updateCategory = {
+    definitions: {},
+    $schema: 'http://json-schema.org/draft-06/schema#',
+    $id: 'http://example.com/example.json',
+    type: 'object',
+    properties: {
+        name: {
+            $id: '/properties/name',
+            type: 'string',
+            title: 'The Name Schema.',
+            description: 'An explanation about the purpose of this instance.',
+            default: '',
+            examples: [
+                'Pale Ale',
+            ],
         },
-        "idParent": {
-            "$id": "/properties/idCategory",
-            "type": "integer",
-            "title": "The Idcategory Schema.",
-            "description": "An explanation about the purpose of this instance.",
-            "default": 0,
-            "examples": [
-                0
-            ]
-        }
+        idParent: {
+            $id: '/properties/idCategory',
+            type: 'integer',
+            title: 'The Idcategory Schema.',
+            description: 'An explanation about the purpose of this instance.',
+            default: 0,
+            examples: [
+                0,
+            ],
+        },
     },
-    "required": [
-        "name",
-        "idParent"
-    ]
+    required: [
+        'name',
+        'idParent',
+    ],
 };

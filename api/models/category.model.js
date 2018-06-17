@@ -42,6 +42,11 @@ class Category extends ObjectModel {
         return _definition.dbProperties;
     }
 
+    /**
+     * @deprecated
+     * @param idCategory
+     * @returns {Promise<Category>}
+     */
     static async getOne(idCategory) {
         const category = new Category(idCategory);
         await category._init();

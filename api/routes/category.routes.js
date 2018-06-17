@@ -1,6 +1,6 @@
 const express = require('express');
 const { checkIdParam, checkBody, validationResult } = require('../middleware/routes.middleware');
-const { _, ObjectResponser, apiErrors } = require('../shared/common.api');
+const { _, ObjectResponser } = require('../shared/common.api');
 const schemas = require('../schemas/category.schema');
 const Category = require('../models/category.model');
 
@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     try {
         const category = new Category();
-        const categories = await category.getAll();
+        const categories = await category.constructor.getAll();
         ObjectResponser.responseSuccess(res, categories);
     } catch (error) {
         ObjectResponser.responseError(res, error);

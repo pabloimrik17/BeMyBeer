@@ -29,7 +29,7 @@ class ObjectModel {
                 });
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
             throw apiErrors.OBJECT_MODEL_INIT_QUERY_ERROR;
         }
     }
@@ -90,7 +90,7 @@ class ObjectModel {
         }
     }
 
-    static async delete() {
+    async delete() {
         const sql = `
             DELETE
             FROM ${this.constructor.getTableName}

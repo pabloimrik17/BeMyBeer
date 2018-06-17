@@ -20,7 +20,7 @@ before(async function () {
         expect(category.save).to.exist;
         expect(category.delete).to.exist;
         expect(category.update).to.exist;
-        expect(category.getAll).to.exist;
+        expect(category.constructor.getAll).to.exist;
 
         expect(CategorySeeder.getTableName).to.exist;
         expect(CategorySeeder.generateCategoryObject).to.exist;
@@ -112,7 +112,7 @@ describe('Get all categories', function() {
    before(async function() {
        try {
            category = new Category();
-           categories = await category.getAll();
+           categories = await category.constructor.getAll();
 
            rows = await knex(Category.getTableName).orderBy(Category.getPrimaryKey);
        } catch (e) {
