@@ -1,11 +1,9 @@
-'use strict';
-
-require('dotenv').config({path: '../../.env'});
+require('dotenv').config({ path: '../../.env' });
 
 const knexConfig = require('../knexfile');
 const Knex = require('knex');
-//TODO QUITAR STRING FIJO
-const knex = Knex(knexConfig["development"]);
+// TODO QUITAR STRING FIJO
+const knex = Knex(knexConfig.development);
 
 require('../api/db/dbObject').connect(process.env.TEST_ENVIROMENT);
 
@@ -20,6 +18,4 @@ exports.knex = knex;
 exports.expect = expect;
 exports.faker = faker;
 exports.moment = moment;
-
-
 
