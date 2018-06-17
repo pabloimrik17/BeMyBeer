@@ -114,7 +114,7 @@ class ObjectModel {
         const sql = `
             SELECT ${_.join(this.constructor.getDbProperties)}
             FROM ${this.constructor.getTableName}
-            ORDER  asas BY ${this.constructor.getPrimaryKey}
+            ORDER BY ${this.constructor.getPrimaryKey}
         `;
 
         try {
