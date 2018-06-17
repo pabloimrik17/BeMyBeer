@@ -87,7 +87,7 @@ class ObjectModel {
         }
     }
 
-    async delete() {
+    static async delete() {
         const sql = `
             DELETE
             FROM ${this.constructor.getTableName}
@@ -104,13 +104,13 @@ class ObjectModel {
         this[this.constructor.getPrimaryKey] = 0;
     }
 
-    async getAll() {
+    static async getAll() {
         const objects = [];
 
         const sql = `
-            SELECT ${_.join(this.constructor.getDbProperties)}
-            FROM ${this.constructor.getTableName}
-            ORDER BY ${this.constructor.getPrimaryKey}
+            SELECT ${_.join(this.getDbProperties)}
+            FROM ${this.getTableName}
+            ORDER BY ${this.getPrimaryKey}
         `;
 
         try {
