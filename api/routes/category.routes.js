@@ -1,6 +1,6 @@
 const express = require('express');
 const { checkIdParam, checkBody, validationResult } = require('../middleware/routes.middleware');
-const { _ } = require('../shared/common.api');
+const { _, ObjectResponser, apiErrors } = require('../shared/common.api');
 const schemas = require('../schemas/category.schema');
 const Category = require('../models/category.model');
 
@@ -8,10 +8,11 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const categories = await Category.getAll();
-        res.json({ data: JSON.stringify(categories) });
-    } catch (e) {
-        res.json({ data: JSON.stringify(e) });
+        const category = new Category();
+        const categories = await category.getAll();
+        ObjectResponser.responseSuccess(res, categories);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
     }
 });
 
@@ -20,11 +21,12 @@ router.get('/:id', checkIdParam(), async (req, res) => {
 
     try {
         validationResult(req).throw();
-        const category = await Category.getOne(idCategory);
-        res.json({ data: JSON.stringify(category) });
-    } catch (e) {
-        console.log(e);
-        res.json({ data: JSON.stringify(e) });
+        const category = new Category(idCategory);
+        await category._init();
+
+        ObjectResponser.responseSuccess(res, category);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
     }
 });
 
@@ -38,9 +40,9 @@ router.post('/', checkBody(schemas.createCategory), async (req, res) => {
 
         await category.save();
 
-        res.json({ message: 'TODO MENSAJE OK', data: JSON.stringify(category) });
-    } catch (e) {
-        res.json(`TODO RESPONSE FAIL ${e}`);
+        ObjectResponser.responseSuccess(res, category);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
     }
 });
 
@@ -57,21 +59,24 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), async (req
 
         await category.update();
 
-        res.json({ message: 'TODO MENSAJE OK', data: JSON.stringify(category) });
-    } catch (e) {
-        res.json(`TODO RESPONSE FAIL ${e}`);
+        ObjectResponser.responseSuccess(res, category);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
     }
 });
 
 router.delete('/:id', checkIdParam(), async (req, res) => {
-  const idCategory = req.params.id;
+    const idCategory = req.params.id;
 
-  try {
-    await Category.deleteOne(idCategory);
-    res.json({ data: 'OK' });
-  } catch (e) {
-    res.json({ data: JSON.stringify(e) });
-  }
+    try {
+        validationResult(req).throw();
+        const category = new Category(idCategory);
+        await category.delete();
+
+        ObjectResponser.responseSuccess(res);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
+    }
 });
 
 module.exports = router;
