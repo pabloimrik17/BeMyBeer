@@ -7,7 +7,8 @@ const Knex = require('knex');
 // TODO QUITAR STRING FIJO
 const knex = Knex(knexConfig.development);
 
-const database = require('../api/shared/database');
+require('../api/db/dbObject').connect(process.env.TEST_ENVIROMENT);
+
 const chai = require('chai');
 const faker = require('faker/locale/es');
 const moment = require('moment');

@@ -8,8 +8,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const category = new Category();
-        const categories = await category.getAll();
+        const categories = await Category.getAll();
         res.json({ data: JSON.stringify(categories) });
     } catch (e) {
         res.json({ data: JSON.stringify(e) });
@@ -17,13 +16,11 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', checkIdParam(), async (req, res) => {
+    const idCategory = req.params.id;
+
     try {
         validationResult(req).throw();
-
-        const idCategory = req.params.id;
-        const category = new Category(idCategory);
-        await category._init();
-
+        const category = await Category.getOne(idCategory);
         res.json({ data: JSON.stringify(category) });
     } catch (e) {
         console.log(e);
@@ -67,17 +64,14 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), async (req
 });
 
 router.delete('/:id', checkIdParam(), async (req, res) => {
-    try {
-        validationResult(req).throw();
+  const idCategory = req.params.id;
 
-        const idCategory = req.params.id;
-        const category = new Category(idCategory);
-        await category.delete();
-
-        res.json({ data: 'OK' });
-    } catch (e) {
-        res.json({ data: JSON.stringify(e) });
-    }
+  try {
+    await Category.deleteOne(idCategory);
+    res.json({ data: 'OK' });
+  } catch (e) {
+    res.json({ data: JSON.stringify(e) });
+  }
 });
 
 module.exports = router;
