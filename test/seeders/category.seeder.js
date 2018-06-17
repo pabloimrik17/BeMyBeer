@@ -36,6 +36,7 @@ class CategorySeeder extends ObjectSeeder {
     }
 
     static async upData() {
+        await super.upData();
         const numberOfDataToInsert = faker.random.number({ min: _MIN_OBJECTS_TO_GENERATE_, max: _MAX_OBJECTS_TO_GENERATE_ });
         const dataToInsert = [];
 
@@ -47,14 +48,18 @@ class CategorySeeder extends ObjectSeeder {
             await knex(Category.getTableName).insert(dataToInsert);
         } catch (e) {
             console.log(e);
+            throw new Error();
         }
     }
 
     static async downData() {
+        await super.downData();
+
         try {
             await knex(CategorySeeder.getTableName).truncate();
         } catch (e) {
             console.log(e);
+            throw new Error();
         }
     }
 }

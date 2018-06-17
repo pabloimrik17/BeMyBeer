@@ -23,4 +23,5 @@ exports.expect = expect;
 exports.faker = faker;
 exports.moment = moment;
 exports._ = _;
+exports.database = database;
 
