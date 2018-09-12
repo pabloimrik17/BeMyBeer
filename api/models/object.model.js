@@ -47,7 +47,7 @@ class ObjectModel {
         });
 
         insertData.createdAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
-        insertData.updatedAt = this.createdAt;
+        insertData.updatedAt = insertData.createdAt;
 
         try {
             const result = await db.get().query(sql, insertData);
@@ -55,7 +55,7 @@ class ObjectModel {
             this.id = result[0].insertId;
             this[this.constructor.getPrimaryKey] = result[0].insertId;
 
-            this._init();
+            await this._init();
         } catch (e) {
             console.log(e);
             throw apiErrors.OBJECT_MODEL_SAVE_QUERY_ERROR;
@@ -83,7 +83,7 @@ class ObjectModel {
         try {
             await db.get().query(sql, [updateData, this.id]);
 
-            this._init();
+            await this._init();
         } catch (e) {
             console.log(e);
             throw apiErrors.OBJECT_MODEL_UPDATE_QUERY_ERROR;
