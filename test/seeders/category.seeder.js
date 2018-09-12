@@ -1,4 +1,4 @@
-const { faker, knex, _ } = require('../common.test');
+const {faker, knex, _} = require('../common.test');
 
 const ObjectSeeder = require('./object.seeder');
 const Category = require('../../api/models/category.model');
@@ -14,11 +14,11 @@ const _MAX_OBJECTS_TO_GENERATE_ = 50;
 
 class CategorySeeder extends ObjectSeeder {
 
-    static get getTableName() {
+    static get getTableName () {
         return _definition.tableName;
     }
 
-    static generateCategoryObject(categoryObject) {
+    static generateCategoryObject (categoryObject) {
         const newCategoryData = CategorySeeder.generateCategoryData();
 
         _.forOwn(newCategoryData, (key, value) => {
@@ -26,18 +26,21 @@ class CategorySeeder extends ObjectSeeder {
         });
     }
 
-    static generateCategoryData(maxIdParentId = 0) {
+    static generateCategoryData (maxIdParentId = 0) {
         return {
             name: faker.name.firstName(),
-            idParent: faker.random.number({ min: 0, max: maxIdParentId }),
+            idParent: faker.random.number({min: 0, max: maxIdParentId}),
             createdAt: faker.date.past(),
             updatedAt: faker.date.future(),
         };
     }
 
-    static async upData() {
+    static async upData () {
         await super.upData();
-        const numberOfDataToInsert = faker.random.number({ min: _MIN_OBJECTS_TO_GENERATE_, max: _MAX_OBJECTS_TO_GENERATE_ });
+        const numberOfDataToInsert = faker.random.number({
+            min: _MIN_OBJECTS_TO_GENERATE_,
+            max: _MAX_OBJECTS_TO_GENERATE_
+        });
         const dataToInsert = [];
 
         try {
@@ -52,7 +55,7 @@ class CategorySeeder extends ObjectSeeder {
         }
     }
 
-    static async downData() {
+    static async downData () {
         await super.downData();
 
         try {

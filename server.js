@@ -5,19 +5,28 @@ const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
 const db = require('./api/shared/database');
 
-db.connect(process.env.CURRENT_ENVIROMENT);
 
-const app = express();
+async function main () {
+    const app = express();
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(expressValidator());
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressValidator());
+    app.use(process.env.API_ENTRY_POINT, require('./api/routes/routes'));
 
-app.use(process.env.API_ENTRY_POINT, require('./api/routes/routes'));
+    const port = process.env.PORT || 3000;
 
-const port = process.env.PORT || 3000;
-// SERVER RUN
+    try {
+        await db.connect(process.env.CURRENT_ENVIROMENT);
 
-app.listen(port, async () => {
-    console.log(`App listeting on http://localhost:${port}`);
-});
+        // SERVER RUN
+        app.listen(port, () => {
+            console.log(`App listeting on http://localhost:${port}`);
+        });
+
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+main()

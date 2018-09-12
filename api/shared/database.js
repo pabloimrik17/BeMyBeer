@@ -22,6 +22,7 @@ exports.connect = async (mode) => {
         database: mode === exports.MODE_PRODUCTION
             ? process.env.PROD_DATABASE_NAME
             : process.env.TEST_DATABASE_NAME,
+        connectTimeout: 3000,
         timezone: process.env.TIMEZONE,
         typeCast: (field, next) => {
             if (field.type === 'DATETIME') {
