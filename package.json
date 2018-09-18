@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/pabloimrik17/BeMyBeer#readme",
   "dependencies": {
-    "ajv": "^5.5.1",
+    "ajv": "^6.5.3",
     "async": "^2.6.0",
     "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
