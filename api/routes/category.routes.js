@@ -8,8 +8,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const category = new Category();
-        const categories = await category.constructor.getAll();
+        const categories = await Category.getAll();
         ObjectResponser.responseSuccess(res, categories);
     } catch (error) {
         ObjectResponser.responseError(res, error);
@@ -22,7 +21,7 @@ router.get('/:id', checkIdParam(), async (req, res) => {
     try {
         validationResult(req).throw();
         const category = new Category(idCategory);
-        await category._init();
+        await category.get();
 
         ObjectResponser.responseSuccess(res, category);
     } catch (error) {
@@ -33,11 +32,7 @@ router.get('/:id', checkIdParam(), async (req, res) => {
 router.post('/', checkBody(schemas.createCategory), async (req, res) => {
     try {
         const category = new Category();
-
-        _.forEach(req.body, (value, key) => {
-            category[key] = value;
-        });
-
+        category.init(req.body);
         await category.save();
 
         ObjectResponser.responseSuccess(res, category);

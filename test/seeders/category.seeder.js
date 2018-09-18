@@ -50,7 +50,7 @@ class CategorySeeder extends ObjectSeeder {
 
             await knex(Category.getTableName).insert(dataToInsert);
         } catch (e) {
-            console.log(e);
+            console.error(e);
             throw new Error();
         }
     }
@@ -61,7 +61,7 @@ class CategorySeeder extends ObjectSeeder {
         try {
             await knex(CategorySeeder.getTableName).truncate();
         } catch (e) {
-            console.log(e);
+            console.error(e);
             throw new Error();
         }
     }

@@ -4,7 +4,7 @@ const _definition = {
     primaryKey: 'idBeer',
     tableName: 'beer',
     dbProperties: [
-        'ibBeer',
+        'idBeer',
         'name',
         'graduation',
         'color',
@@ -30,6 +30,10 @@ class Beer extends ObjectModel {
         this.idCategory = 0;
         this.datePurchased = '';
         this.dateDrinked = null;
+
+        if (idBeer > 0) {
+            this.idBeer = idBeer
+        }
     }
 
     static get getPrimaryKey() {
@@ -44,3 +48,5 @@ class Beer extends ObjectModel {
         return _definition.dbProperties;
     }
 }
+
+module.exports = Beer;

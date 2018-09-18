@@ -1,10 +1,10 @@
 // https://www.sitepoint.com/object-oriented-javascript-deep-dive-es6-classes/
 
 const db = require('../shared/database');
-const { _, moment, apiErrors } = require('../shared/common.api');
+const {_, moment, apiErrors} = require('../shared/common.api');
 
 class ObjectModel {
-    constructor(idObject = 0) {
+    constructor (idObject = 0) {
         this.id = 0;
         this.createdAt = null;
         this.updatedAt = null;
@@ -14,7 +14,13 @@ class ObjectModel {
         }
     }
 
-    async _init() {
+    init (options = {}) {
+        Object.keys(options).forEach(key => {
+            this[key] = options[key]
+        })
+    }
+
+    async get () {
         const sql = `
             SELECT ${_.join(this.constructor.getDbProperties)}
             FROM ${this.constructor.getTableName}
@@ -34,7 +40,7 @@ class ObjectModel {
         }
     }
 
-    async save() {
+    async save () {
         const sql = `
             INSERT INTO ${this.constructor.getTableName}
             SET ?
@@ -55,14 +61,14 @@ class ObjectModel {
             this.id = result[0].insertId;
             this[this.constructor.getPrimaryKey] = result[0].insertId;
 
-            await this._init();
+            await this.get();
         } catch (e) {
-            console.log(e);
+            console.error(e);
             throw apiErrors.OBJECT_MODEL_SAVE_QUERY_ERROR;
         }
     }
 
-    async update() {
+    async update () {
         const sql = `
             UPDATE ${this.constructor.getTableName}
             SET ?
@@ -83,14 +89,14 @@ class ObjectModel {
         try {
             await db.get().query(sql, [updateData, this.id]);
 
-            await this._init();
+            await this.get();
         } catch (e) {
-            console.log(e);
+            console.error(e);
             throw apiErrors.OBJECT_MODEL_UPDATE_QUERY_ERROR;
         }
     }
 
-    async delete() {
+    async delete () {
         const sql = `
             DELETE
             FROM ${this.constructor.getTableName}
@@ -100,7 +106,7 @@ class ObjectModel {
         try {
             await db.get().query(sql, [this.id]);
         } catch (e) {
-            console.log(e);
+            console.error(e);
             throw apiErrors.OBJECT_MODEL_DELETE_QUERY_ERROR;
         }
 
@@ -108,11 +114,11 @@ class ObjectModel {
         this[this.constructor.getPrimaryKey] = 0;
     }
 
-    static async getAll() {
+    static async getAll () {
         const objects = [];
 
         const sql = `
-            SELECT ${_.join(this.getDbProperties)}
+            SELECT ${_.join(this.getDbProperties, ', ')}
             FROM ${this.getTableName}
             ORDER BY ${this.getPrimaryKey}
         `;
@@ -126,7 +132,7 @@ class ObjectModel {
                 }
             });
         } catch (error) {
-            console.log(error);
+            console.error(error);
             throw apiErrors.OBJECT_MODEL_GET_ALL;
         }
 

@@ -16,7 +16,7 @@ before(async function () {
         expect(Beer.getTableName).to.exist;
         expect(Beer.getDbProperties).to.exist;
         expect(Beer.getOne).to.exist;
-        expect(beer._init).to.exist;
+        expect(beer.get).to.exist;
         expect(beer.save).to.exist;
         expect(beer.delete).to.exist;
         expect(beer.update).to.exist;
@@ -103,7 +103,7 @@ describe('Instantiate Category Object with id', function() {
             beer = new Beer(rows[0].idCategory);
             expect(beer).to.be.a('object');
 
-            await beer._init();
+            await beer.get();
 
         } catch (e) {
             expect(e).to.be.empty;
@@ -221,7 +221,7 @@ describe('Create new beer', function() {
             rows = await knex(Beer.getTableName).orderBy(Beer.getPrimaryKey, 'desc').limit(1);
 
             beer = new Beer(rows[0].idBeer);
-            await beer._init();
+            await beer.get();
 
         } catch (e) {
             expect(e).to.be.empty;
@@ -291,7 +291,7 @@ describe('Update existing beer', function() {
             beer = new Beer(rows[0].idBeer);
             expect(beer).to.be.a('object');
 
-            await beer._init();
+            await beer.get();
 
             BeerSeeder.generateCategoryObject(beer);
             await beer.update();

@@ -45,7 +45,7 @@ class BeerSeeder extends ObjectSeeder {
 
             await knex(Beer.getTableName).insert(dataToInsert);
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }
 
@@ -53,7 +53,7 @@ class BeerSeeder extends ObjectSeeder {
         try {
             await knex(Beer.getTableName).truncate();
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }
 }

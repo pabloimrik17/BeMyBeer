@@ -26,10 +26,6 @@ class Category extends ObjectModel {
         }
     }
 
-    async _init() {
-        await super._init();
-    }
-
     static get getPrimaryKey() {
         return _definition.primaryKey;
     }
@@ -49,7 +45,7 @@ class Category extends ObjectModel {
      */
     static async getOne(idCategory) {
         const category = new Category(idCategory);
-        await category._init();
+        await category.get();
 
         return category;
     }

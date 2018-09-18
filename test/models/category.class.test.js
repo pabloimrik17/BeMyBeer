@@ -16,7 +16,7 @@ before(async function () {
         expect(Category.getTableName).to.exist;
         expect(Category.getDbProperties).to.exist;
         expect(Category.getOne).to.exist;
-        expect(category._init).to.exist;
+        expect(category.get).to.exist;
         expect(category.save).to.exist;
         expect(category.delete).to.exist;
         expect(category.update).to.exist;
@@ -75,7 +75,7 @@ describe('Instantiate Category Object with id', function() {
             category = new Category(rows[0].idCategory);
             expect(category).to.be.a('object');
 
-            await category._init();
+            await category.get();
 
         } catch (e) {
             expect(e).to.be.empty;
@@ -163,7 +163,7 @@ describe('Create new category', function() {
             rows = await knex(Category.getTableName).orderBy(Category.getPrimaryKey, 'desc').limit(1);
 
             category = new Category(rows[0].idCategory);
-            await category._init();
+            await category.get();
 
         } catch (e) {
             expect(e).to.be.empty;
@@ -203,7 +203,7 @@ describe('Update existing category', function() {
             category = new Category(rows[0].idCategory);
             expect(category).to.be.a('object');
 
-            await category._init();
+            await category.get();
 
             CategorySeeder.generateCategoryObject(category);
             await category.update();
