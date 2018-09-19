@@ -23,10 +23,10 @@ class Beer extends ObjectModel {
         super(idBeer);
         this.idBeer = 0;
         this.name = '';
-        this.graduation = 0;
+        this.graduation = 0.00;
         this.color = '';
-        this.score = 0;
-        this.price = 0;
+        this.score = 0.00;
+        this.price = 0.00;
         this.idCategory = 0;
         this.datePurchased = '';
         this.dateDrinked = null;

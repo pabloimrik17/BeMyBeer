@@ -9,7 +9,7 @@ exports.checkIdParam = () => param('id').exists().isInt();
 
 exports.checkBody = schema => (req, res, next) => {
     const valid = ajv.validate(schema, req.body);
-    if (valid) {
+    if (valid && Object.keys(req.body).length > 0) {
         next();
     } else {
         res.json('TODO TO CHANGE');

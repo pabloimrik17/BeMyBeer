@@ -68,21 +68,18 @@ class ObjectModel {
         }
     }
 
-    async update () {
+    async update (updateData = {}) {
         const sql = `
             UPDATE ${this.constructor.getTableName}
             SET ?
             WHERE ${this.constructor.getPrimaryKey} = ?
         `;
 
-        const updateData = {};
-
-        _.forEach(this.constructor.getDbProperties, (value) => {
-            updateData[value] = this[value];
+        Object.keys(updateData).forEach(key => {
+            if (!this.constructor.getDbProperties.includes(key)) {
+                delete updateData[key]
+            }
         });
-
-        delete updateData.createdAt;
-        delete updateData[this.constructor.getPrimaryKey];
 
         updateData.updatedAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
 

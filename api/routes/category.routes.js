@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', checkIdParam(), async (req, res) => {
-    const idCategory = req.params.id;
+    const idCategory = parseInt(req.params.id);
 
     try {
         validationResult(req).throw();
@@ -45,7 +45,7 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), async (req
     try {
         validationResult(req).throw();
 
-        const idCategory = req.params.id;
+        const idCategory = parseInt(req.params.id);
         const category = new Category(idCategory);
 
         _.forEach(req.body, (value, key) => {
@@ -61,7 +61,7 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), async (req
 });
 
 router.delete('/:id', checkIdParam(), async (req, res) => {
-    const idCategory = req.params.id;
+    const idCategory = parseInt(req.params.id);
 
     try {
         validationResult(req).throw();

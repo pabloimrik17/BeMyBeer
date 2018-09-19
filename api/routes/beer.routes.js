@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', checkIdParam(), async (req, res) => {
-   const idBeer = req.params.id;
+   const idBeer = parseInt(req.params.id);
    
    try {
        validationResult(req).throw();
@@ -30,6 +30,23 @@ router.get('/:id', checkIdParam(), async (req, res) => {
 
 router.post('/', checkBody(schemas.createBeer), async (req, res) => {
 
+});
+
+router.put('/:id', checkIdParam(), checkBody(schemas.updateBeer), async (req, res) => {
+    try {
+        validationResult(req).throw();
+
+        const idBeer = parseInt(req.params.id);
+        const beer = new Beer(idBeer);
+
+        //beer.init(req.body);
+        await beer.update(req.body);
+
+        ObjectResponser.responseSuccess(res, beer);
+
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
+    }
 });
 
 module.exports = router;
