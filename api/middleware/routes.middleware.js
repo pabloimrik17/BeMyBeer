@@ -19,6 +19,4 @@ exports.checkBody = schema => (req, res, next) => {
     } catch (error) {
         console.error(error)
     }
-
-
 };

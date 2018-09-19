@@ -39,7 +39,7 @@ exports.getAllBeers = {
         },
         "graduation": {
             "$id": "#/properties/graduation",
-            "type": "string",
+            "type": "integer",
             "title": "The Graduation Schema",
             "default": "",
             "examples": [
@@ -68,7 +68,7 @@ exports.getAllBeers = {
         },
         "price": {
             "$id": "#/properties/price",
-            "type": "string",
+            "type": "integer",
             "title": "The Price Schema",
             "default": "",
             "examples": [
@@ -91,7 +91,7 @@ exports.getAllBeers = {
             "title": "The Datepurchased Schema",
             "default": "",
             "examples": [
-                "2018-09-16T22:00:00.000Z"
+                "2018-09-16"
             ],
             "pattern": "^(.*)$"
         },
@@ -101,7 +101,7 @@ exports.getAllBeers = {
             "title": "The Datedrinked Schema",
             "default": "",
             "examples": [
-                "2018-09-16T22:00:00.000Z"
+                "2018-09-16"
             ],
             "changeme": null,
             "pattern": "^(.*)$"
@@ -154,7 +154,7 @@ exports.createBeer = {
         },
         graduation: {
             $id: "#/properties/graduation",
-            type: "string",
+            type: "integer",
             title: "The Graduation Schema",
             default: "",
             examples: [
@@ -183,7 +183,7 @@ exports.createBeer = {
         },
         price: {
             $id: "#/properties/price",
-            type: "string",
+            type: "integer",
             title: "The Price Schema",
             default: "",
             examples: [
@@ -206,7 +206,7 @@ exports.createBeer = {
             title: "The Datepurchased Schema",
             default: "",
             examples: [
-                "2018-09-16T22:00:00.000Z"
+                "2018-09-16"
             ],
             pattern: "^(.*)$"
         },
@@ -216,7 +216,7 @@ exports.createBeer = {
             title: "The Datedrinked Schema",
             default: "",
             examples: [
-                "2018-09-16T22:00:00.000Z"
+                "2018-09-16"
             ],
             changeme: null,
             pattern: "^(.*)$"
