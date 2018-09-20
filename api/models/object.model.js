@@ -52,7 +52,7 @@ class ObjectModel {
             insertData[value] = this[value];
         });
 
-        insertData.createdAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+        insertData.createdAt = ObjectModel._getCurrentDate();
         insertData.updatedAt = insertData.createdAt;
 
         try {
@@ -81,7 +81,7 @@ class ObjectModel {
             }
         });
 
-        updateData.updatedAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+        updateData.updatedAt = ObjectModel._getCurrentDate();
 
         try {
             await db.get().query(sql, [updateData, this.id]);
@@ -134,6 +134,10 @@ class ObjectModel {
         }
 
         return objects;
+    }
+
+    static _getCurrentDate() {
+        return moment().utc().format('YYYY-MM-DD HH:mm:ss');
     }
 }
 

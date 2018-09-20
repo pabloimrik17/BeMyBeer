@@ -1,6 +1,6 @@
 const express = require('express');
-const { checkIdParam, checkBody, validationResult } = require('../middleware/routes.middleware');
-const { _, ObjectResponser } = require('../shared/common.api');
+const {checkIdParam, checkBody, validationResult} = require('../middleware/routes.middleware');
+const {ObjectResponser} = require('../shared/common.api');
 const schemas = require('../schemas/category.schema');
 const Category = require('../models/category.model');
 
@@ -48,11 +48,7 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), async (req
         const idCategory = parseInt(req.params.id);
         const category = new Category(idCategory);
 
-        _.forEach(req.body, (value, key) => {
-            category[key] = value;
-        });
-
-        await category.update();
+        await category.update(req.body);
 
         ObjectResponser.responseSuccess(res, category);
     } catch (error) {
