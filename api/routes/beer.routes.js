@@ -3,11 +3,12 @@ const { checkIdParam, checkBody, validationResult } = require('../middleware/rou
 const { ObjectResponser } = require('../shared/common.api');
 const schemas = require('../schemas/beer.schema');
 const Beer = require('../models/beer.model');
+
 const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const beers = await Beer.getAll();
+        const beers = await new Beer().getAll();
         ObjectResponser.responseSuccess(res, beers);
     } catch (error) {
         ObjectResponser.responseError(res, error);
@@ -47,11 +48,10 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateBeer), async (req, re
         const idBeer = parseInt(req.params.id);
         const beer = new Beer(idBeer);
 
-        //beer.init(req.body);
+        // beer.init(req.body);
         await beer.update(req.body);
 
         ObjectResponser.responseSuccess(res, beer);
-
     } catch (error) {
         ObjectResponser.responseError(res, error);
     }

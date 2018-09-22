@@ -20,7 +20,7 @@ const _definition = {
 
 class Beer extends ObjectModel {
     constructor(idBeer = 0) {
-        super(idBeer);
+        super(idBeer, _definition.primaryKey, _definition.tableName, _definition.dbProperties);
         this.idBeer = 0;
         this.name = '';
         this.graduation = 0.00;
@@ -34,18 +34,6 @@ class Beer extends ObjectModel {
         if (idBeer > 0) {
             this.idBeer = idBeer;
         }
-    }
-
-    static get getPrimaryKey() {
-        return _definition.primaryKey;
-    }
-
-    static get getTableName() {
-        return _definition.tableName;
-    }
-
-    static get getDbProperties() {
-        return _definition.dbProperties;
     }
 }
 
