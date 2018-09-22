@@ -32,7 +32,7 @@ class Beer extends ObjectModel {
         this.dateDrinked = null;
 
         if (idBeer > 0) {
-            this.idBeer = idBeer
+            this.idBeer = idBeer;
         }
     }
 
