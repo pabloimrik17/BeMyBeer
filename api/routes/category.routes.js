@@ -1,6 +1,6 @@
 const express = require('express');
-const {checkIdParam, checkBody, validationResult} = require('../middleware/routes.middleware');
-const {ObjectResponser} = require('../shared/common.api');
+const { checkIdParam, checkBody, validationResult } = require('../middleware/routes.middleware');
+const { ObjectResponser } = require('../shared/common.api');
 const schemas = require('../schemas/category.schema');
 const Category = require('../models/category.model');
 

@@ -17,6 +17,6 @@ exports.checkBody = schema => (req, res, next) => {
             res.json('TODO TO CHANGE');
         }
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 };

@@ -10,21 +10,21 @@ router.get('/', async (req, res) => {
         const beers = await Beer.getAll();
         ObjectResponser.responseSuccess(res, beers);
     } catch (error) {
-        ObjectResponser.responseError(res, error)
+        ObjectResponser.responseError(res, error);
     }
 });
 
 router.get('/:id', checkIdParam(), async (req, res) => {
-   const idBeer = parseInt(req.params.id);
-   
-   try {
-       validationResult(req).throw();
-       const beer = new Beer(idBeer);
-       await beer.get();
+    const idBeer = parseInt(req.params.id);
 
-        ObjectResponser.responseSuccess(res, beer)
+    try {
+        validationResult(req).throw();
+        const beer = new Beer(idBeer);
+        await beer.get();
+
+        ObjectResponser.responseSuccess(res, beer);
     } catch (error) {
-        ObjectResponser.responseError(res, error)
+        ObjectResponser.responseError(res, error);
     }
 });
 
