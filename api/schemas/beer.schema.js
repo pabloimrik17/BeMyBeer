@@ -39,7 +39,7 @@ exports.getAllBeers = {
         },
         "graduation": {
             "$id": "#/properties/graduation",
-            "type": "string",
+            "type": "integer",
             "title": "The Graduation Schema",
             "default": "",
             "examples": [
@@ -68,7 +68,7 @@ exports.getAllBeers = {
         },
         "price": {
             "$id": "#/properties/price",
-            "type": "string",
+            "type": "integer",
             "title": "The Price Schema",
             "default": "",
             "examples": [
@@ -91,7 +91,7 @@ exports.getAllBeers = {
             "title": "The Datepurchased Schema",
             "default": "",
             "examples": [
-                "2018-09-16T22:00:00.000Z"
+                "2018-09-16"
             ],
             "pattern": "^(.*)$"
         },
@@ -101,7 +101,7 @@ exports.getAllBeers = {
             "title": "The Datedrinked Schema",
             "default": "",
             "examples": [
-                "2018-09-16T22:00:00.000Z"
+                "2018-09-16"
             ],
             "changeme": null,
             "pattern": "^(.*)$"
@@ -130,96 +130,96 @@ exports.getAllBeers = {
 };
 
 exports.createBeer = {
-    "definitions": {},
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://example.com/root.json",
-    "type": "object",
-    "title": "The Root Schema",
-    "required": [
+    definitions: {},
+    $schema: "http://json-schema.org/draft-07/schema#",
+    $id: "http://example.com/root.json",
+    type: "object",
+    title: "The Root Schema",
+    required: [
         "name",
         "graduation",
         "idCategory",
         "datePurchased"
     ],
-    "properties": {
-        "name": {
-            "$id": "#/properties/name",
-            "type": "string",
-            "title": "The Name Schema",
-            "default": "",
-            "examples": [
+    properties: {
+        name: {
+            $id: "#/properties/name",
+            type: "string",
+            title: "The Name Schema",
+            default: "",
+            examples: [
                 "aasda"
             ],
-            "pattern": "^(.*)$"
+            pattern: "^(.*)$"
         },
-        "graduation": {
-            "$id": "#/properties/graduation",
-            "type": "string",
-            "title": "The Graduation Schema",
-            "default": "",
-            "examples": [
+        graduation: {
+            $id: "#/properties/graduation",
+            type: "integer",
+            title: "The Graduation Schema",
+            default: "",
+            examples: [
                 "12.00"
             ],
-            "pattern": "^(.*)$"
+            pattern: "^(.*)$"
         },
-        "color": {
-            "$id": "#/properties/color",
-            "type": "string",
-            "title": "The Color Schema",
-            "default": "",
-            "examples": [
+        color: {
+            $id: "#/properties/color",
+            type: "string",
+            title: "The Color Schema",
+            default: "",
+            examples: [
                 "FFF"
             ],
-            "pattern": "^(.*)$"
+            pattern: "^(.*)$"
         },
-        "score": {
-            "$id": "#/properties/score",
-            "type": "integer",
-            "title": "The Score Schema",
-            "default": 0,
-            "examples": [
+        score: {
+            $id: "#/properties/score",
+            type: "integer",
+            title: "The Score Schema",
+            default: 0,
+            examples: [
                 0
             ]
         },
-        "price": {
-            "$id": "#/properties/price",
-            "type": "string",
-            "title": "The Price Schema",
-            "default": "",
-            "examples": [
+        price: {
+            $id: "#/properties/price",
+            type: "integer",
+            title: "The Price Schema",
+            default: "",
+            examples: [
                 "0.00"
             ],
-            "pattern": "^(.*)$"
+            pattern: "^(.*)$"
         },
-        "idCategory": {
-            "$id": "#/properties/idCategory",
-            "type": "integer",
-            "title": "The Idcategory Schema",
-            "default": 0,
-            "examples": [
+        idCategory: {
+            $id: "#/properties/idCategory",
+            type: "integer",
+            title: "The Idcategory Schema",
+            default: 0,
+            examples: [
                 2
             ]
         },
-        "datePurchased": {
-            "$id": "#/properties/datePurchased",
-            "type": "string",
-            "title": "The Datepurchased Schema",
-            "default": "",
-            "examples": [
-                "2018-09-16T22:00:00.000Z"
+        datePurchased: {
+            $id: "#/properties/datePurchased",
+            type: "string",
+            title: "The Datepurchased Schema",
+            default: "",
+            examples: [
+                "2018-09-16"
             ],
-            "pattern": "^(.*)$"
+            pattern: "^(.*)$"
         },
-        "dateDrinked": {
-            "$id": "#/properties/dateDrinked",
-            "type": "string",
-            "title": "The Datedrinked Schema",
-            "default": "",
-            "examples": [
-                "2018-09-16T22:00:00.000Z"
+        dateDrinked: {
+            $id: "#/properties/dateDrinked",
+            type: "string",
+            title: "The Datedrinked Schema",
+            default: "",
+            examples: [
+                "2018-09-16"
             ],
-            "changeme": null,
-            "pattern": "^(.*)$"
+            changeme: null,
+            pattern: "^(.*)$"
         }
     }
 };

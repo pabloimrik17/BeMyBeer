@@ -8,10 +8,15 @@ exports.validationResult = validationResult;
 exports.checkIdParam = () => param('id').exists().isInt();
 
 exports.checkBody = schema => (req, res, next) => {
-    const valid = ajv.validate(schema, req.body);
-    if (valid) {
-        next();
-    } else {
-        res.json('TODO TO CHANGE');
+    try {
+        const valid = ajv.validate(schema, req.body);
+
+        if (valid) {
+            next();
+        } else {
+            res.json('TODO TO CHANGE');
+        }
+    } catch (error) {
+        console.error(error)
     }
 };
