@@ -4,15 +4,16 @@ const express = require('express');
 const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
 const db = require('./api/shared/database');
+const routes = require('./api/routes/routes');
 
 
-async function main () {
+async function main() {
     const app = express();
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: false}));
-    app.use(expressValidator());
 
-    app.use(process.env.API_ENTRY_POINT, require('./api/routes/routes'));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(expressValidator());
+    app.use(process.env.API_ENTRY_POINT, routes);
 
     const port = process.env.PORT || 3000;
 
@@ -23,10 +24,9 @@ async function main () {
         app.listen(port, () => {
             console.log(`App listeting on http://localhost:${port}`);
         });
-
     } catch (e) {
-        console.error(e)
+        console.error(e);
     }
 }
 
-main()
+main();
