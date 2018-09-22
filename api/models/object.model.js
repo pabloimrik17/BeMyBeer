@@ -52,7 +52,7 @@ class ObjectModel {
             insertData[value] = this[value];
         });
 
-        insertData.createdAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+        insertData.createdAt = ObjectModel._getCurrentDate();
         insertData.updatedAt = insertData.createdAt;
 
         try {
@@ -68,23 +68,20 @@ class ObjectModel {
         }
     }
 
-    async update () {
+    async update (updateData = {}) {
         const sql = `
             UPDATE ${this.constructor.getTableName}
             SET ?
             WHERE ${this.constructor.getPrimaryKey} = ?
         `;
 
-        const updateData = {};
-
-        _.forEach(this.constructor.getDbProperties, (value) => {
-            updateData[value] = this[value];
+        Object.keys(updateData).forEach(key => {
+            if (!this.constructor.getDbProperties.includes(key)) {
+                delete updateData[key]
+            }
         });
 
-        delete updateData.createdAt;
-        delete updateData[this.constructor.getPrimaryKey];
-
-        updateData.updatedAt = moment().utc().format('YYYY-MM-DD HH:mm:ss');
+        updateData.updatedAt = ObjectModel._getCurrentDate();
 
         try {
             await db.get().query(sql, [updateData, this.id]);
@@ -137,6 +134,10 @@ class ObjectModel {
         }
 
         return objects;
+    }
+
+    static _getCurrentDate() {
+        return moment().utc().format('YYYY-MM-DD HH:mm:ss');
     }
 }
 

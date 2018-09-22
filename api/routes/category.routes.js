@@ -1,6 +1,6 @@
 const express = require('express');
-const { checkIdParam, checkBody, validationResult } = require('../middleware/routes.middleware');
-const { _, ObjectResponser } = require('../shared/common.api');
+const {checkIdParam, checkBody, validationResult} = require('../middleware/routes.middleware');
+const {ObjectResponser} = require('../shared/common.api');
 const schemas = require('../schemas/category.schema');
 const Category = require('../models/category.model');
 
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', checkIdParam(), async (req, res) => {
-    const idCategory = req.params.id;
+    const idCategory = parseInt(req.params.id);
 
     try {
         validationResult(req).throw();
@@ -45,14 +45,10 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), async (req
     try {
         validationResult(req).throw();
 
-        const idCategory = req.params.id;
+        const idCategory = parseInt(req.params.id);
         const category = new Category(idCategory);
 
-        _.forEach(req.body, (value, key) => {
-            category[key] = value;
-        });
-
-        await category.update();
+        await category.update(req.body);
 
         ObjectResponser.responseSuccess(res, category);
     } catch (error) {
@@ -61,7 +57,7 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), async (req
 });
 
 router.delete('/:id', checkIdParam(), async (req, res) => {
-    const idCategory = req.params.id;
+    const idCategory = parseInt(req.params.id);
 
     try {
         validationResult(req).throw();
