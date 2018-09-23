@@ -16,10 +16,10 @@ before(async function () {
         expect(Beer.getTableName).to.exist;
         expect(Beer.getDbProperties).to.exist;
         expect(Beer.getOne).to.exist;
-        expect(beer.get).to.exist;
-        expect(beer.save).to.exist;
+        expect(beer._get).to.exist;
+        expect(beer._save).to.exist;
         expect(beer.delete).to.exist;
-        expect(beer.update).to.exist;
+        expect(beer._update).to.exist;
         expect(beer.getAll).to.exist;
 
         expect(BeerSeeder.getTableName).to.exist;
@@ -34,7 +34,7 @@ before(async function () {
     }
 });
 
-after(async function() {
+after(async function () {
     try {
         await CategorySeeder.downData();
 
@@ -43,131 +43,131 @@ after(async function() {
     }
 });
 
-describe('Instantiate Category Object with no id', function() {
-    it('idCategory should be 0', function() {
+describe('Instantiate Category Object with no id', function () {
+    it('idCategory should be 0', function () {
         expect(beer.idBeer).to.be.a('number');
         expect(beer.idBeer).to.equal(0);
     });
 
-    it('name should be empty', function() {
+    it('name should be empty', function () {
         expect(beer.name).to.be.a('string');
         expect(beer.name).to.equal('');
     });
 
-    it('graduation should be 0', function() {
+    it('graduation should be 0', function () {
         expect(beer.graduation).to.be.a('number');
         expect(beer.graduation).to.equal(0);
     });
 
-    it('color should be #FFF', function() {
+    it('color should be #FFF', function () {
         expect(beer.color).to.be.a('string');
         expect(beer.color).to.equal('#FFF');
     });
 
-    it('score should be 0', function() {
+    it('score should be 0', function () {
         expect(beer.score).to.be.a('number');
         expect(beer.score).to.equal(0);
     });
 
-    it('price should be 0', function() {
+    it('price should be 0', function () {
         expect(beer.price).to.be.a('number');
         expect(beer.price).to.equal(0);
     });
 
-    it('idCategory should be 0', function() {
+    it('idCategory should be 0', function () {
         expect(beer.idCategory).to.be.a('number');
         expect(beer.idCategory).to.equal(0);
     });
 
-    it('purchasedAt should be null', function() {
+    it('purchasedAt should be null', function () {
         expect(beer.purchasedAt).to.equal(null);
     });
 
-    it('drinkedAt should be null', function() {
+    it('drinkedAt should be null', function () {
         expect(beer.drinkedAt).to.equal(null);
     });
 
-    it('createdAt should be null', function() {
+    it('createdAt should be null', function () {
         expect(beer.createdAt).to.equal(null);
     });
 
-    it('dateUpdate should be null', function() {
+    it('dateUpdate should be null', function () {
         expect(beer.updatedAt).to.equal(null);
     });
 });
 
-describe('Instantiate Category Object with id', function() {
+describe('Instantiate Category Object with id', function () {
     before(async function () {
         try {
             rows = await knex(Beer.getTableName).limit(1).orderByRaw('rand()');
             beer = new Beer(rows[0].idCategory);
             expect(beer).to.be.a('object');
 
-            await beer.get();
+            await beer._get();
 
         } catch (e) {
             expect(e).to.be.empty;
         }
     });
 
-    it('idBeer should be greater than 0', function() {
+    it('idBeer should be greater than 0', function () {
         expect(beer.idBeer).to.be.a('number');
         expect(beer.idBeer).to.equal(rows[0].idBeer);
     });
 
-    it('name should not be empty', function() {
+    it('name should not be empty', function () {
         expect(beer.name).to.be.a('string');
         expect(beer.name).to.equal(rows[0].name);
     });
 
-    it('graduation should be greater than 0', function() {
+    it('graduation should be greater than 0', function () {
         expect(beer.graduation).to.be.a('number');
         expect(beer.graduation).to.equal(rows[0].graduation);
     });
 
-    it('color should be a valid hex color (#FFF)', function() {
+    it('color should be a valid hex color (#FFF)', function () {
         expect(beer.color).to.be.a('string');
         expect(beer.color).to.equal(rows[0].color);
     });
 
-    it('score should be greater than 0', function() {
+    it('score should be greater than 0', function () {
         expect(beer.score).to.be.a('number');
         expect(beer.score).to.equal(rows[0].score);
     });
 
-    it('price should be greater than 0', function() {
+    it('price should be greater than 0', function () {
         expect(beer.price).to.be.a('number');
         expect(beer.price).to.equal(rows[0].price);
     });
 
-    it('idCategory should be greater than 0', function() {
+    it('idCategory should be greater than 0', function () {
         expect(beer.idCategory).to.be.a('number');
         expect(beer.idCategory).to.equal(rows[0].idCategory);
     });
 
-    it('purchasedAt should not be null', function() {
+    it('purchasedAt should not be null', function () {
         expect(beer.purchasedAt).to.be.a.dateString();
         expect(beer.purchasedAt).to.equal(rows[0].purchasedAt);
     });
 
-    it('drinkedAt should not be null', function() {
+    it('drinkedAt should not be null', function () {
         expect(beer.drinkedAt).to.be.a.dateString();
         expect(beer.drinkedAt).to.equal(rows[0].drinkedAt);
     });
 
-    it('createdAt should not be null', function() {
+    it('createdAt should not be null', function () {
         expect(beer.createdAt).to.be.a.dateString();
         expect(beer.createdAt).to.equal(rows[0].createdAt);
     });
 
-    it('dateUpdate should not be null', function() {
+    it('dateUpdate should not be null', function () {
         expect(beer.updatedAt).to.be.a.dateString();
         expect(beer.updatedAt).to.equal(rows[0].updatedAt);
     });
 });
 
-describe('Get all beers', function() {
-    before(async function() {
+describe('Get all beers', function () {
+    before(async function () {
         try {
             beer = new Beer();
             beers = await beer.getAll();
@@ -178,15 +178,15 @@ describe('Get all beers', function() {
         }
     });
 
-    it('Should return some data', function() {
+    it('Should return some data', function () {
         expect(beers.length).to.be.greaterThan(0);
     });
 
-    it('Should return all rows in db', function(){
+    it('Should return all rows in db', function () {
         expect(beers.length).to.be.equal(rows.length);
     });
 
-    it('Should return correct data type', function() {
+    it('Should return correct data type', function () {
         _.forEach(beers, (beer) => {
             expect(beer.idCategory).to.exist;
             expect(beer.name).to.exist;
@@ -202,8 +202,8 @@ describe('Get all beers', function() {
         });
     });
 
-    it('Should return the same data as in db', function() {
-        for(let i = 0; i < beers.length; i += 1) {
+    it('Should return the same data as in db', function () {
+        for (let i = 0; i < beers.length; i += 1) {
             _.forOwn(beers[i], (value, key) => {
                 expect(beers[i][key]).to.be.equal(rows[i][key]);
             });
@@ -211,90 +211,90 @@ describe('Get all beers', function() {
     });
 });
 
-describe('Create new beer', function() {
-    before(async function() {
+describe('Create new beer', function () {
+    before(async function () {
         try {
             beer = new Beer();
             BeerSeeder.generateCategoryObject(beer);
-            await beer.save();
+            await beer._save();
 
             rows = await knex(Beer.getTableName).orderBy(Beer.getPrimaryKey, 'desc').limit(1);
 
             beer = new Beer(rows[0].idBeer);
-            await beer.get();
+            await beer._get();
 
         } catch (e) {
             expect(e).to.be.empty;
         }
     });
 
-    it('idBeer should be greater than 0', function() {
+    it('idBeer should be greater than 0', function () {
         expect(beer.idBeer).to.be.a('number');
         expect(beer.idBeer).to.equal(rows[0].idBeer);
     });
 
-    it('name should not be empty', function() {
+    it('name should not be empty', function () {
         expect(beer.name).to.be.a('string');
         expect(beer.name).to.equal(rows[0].name);
     });
 
-    it('graduation should be greater than 0', function() {
+    it('graduation should be greater than 0', function () {
         expect(beer.graduation).to.be.a('number');
         expect(beer.graduation).to.equal(rows[0].graduation);
     });
 
-    it('color should be a valid hex color (#FFF)', function() {
+    it('color should be a valid hex color (#FFF)', function () {
         expect(beer.color).to.be.a('string');
         expect(beer.color).to.equal(rows[0].color);
     });
 
-    it('score should be greater than 0', function() {
+    it('score should be greater than 0', function () {
         expect(beer.score).to.be.a('number');
         expect(beer.score).to.equal(rows[0].score);
     });
 
-    it('price should be greater than 0', function() {
+    it('price should be greater than 0', function () {
         expect(beer.price).to.be.a('number');
         expect(beer.price).to.equal(rows[0].price);
     });
 
-    it('idCategory should be greater than 0', function() {
+    it('idCategory should be greater than 0', function () {
         expect(beer.idCategory).to.be.a('number');
         expect(beer.idCategory).to.equal(rows[0].idCategory);
     });
 
-    it('purchasedAt should not be null', function() {
+    it('purchasedAt should not be null', function () {
         expect(beer.purchasedAt).to.be.a.dateString();
         expect(beer.purchasedAt).to.equal(rows[0].purchasedAt);
     });
 
-    it('drinkedAt should not be null', function() {
+    it('drinkedAt should not be null', function () {
         expect(beer.drinkedAt).to.be.a.dateString();
         expect(beer.drinkedAt).to.equal(rows[0].drinkedAt);
     });
 
-    it('createdAt should not be null', function() {
+    it('createdAt should not be null', function () {
         expect(beer.createdAt).to.be.a.dateString();
         expect(beer.createdAt).to.equal(rows[0].createdAt);
     });
 
-    it('dateUpdate should not be null', function() {
+    it('dateUpdate should not be null', function () {
         expect(beer.updatedAt).to.be.a.dateString();
         expect(beer.updatedAt).to.equal(rows[0].updatedAt);
     });
 });
 
-describe('Update existing beer', function() {
-    before(async function() {
+describe('Update existing beer', function () {
+    before(async function () {
         try {
             rows = await knex(Beer.getTableName).limit(1).orderByRaw('rand()');
             beer = new Beer(rows[0].idBeer);
             expect(beer).to.be.a('object');
 
-            await beer.get();
+            await beer._get();
 
             BeerSeeder.generateCategoryObject(beer);
-            await beer.update();
+            await beer._update();
             rows = await knex(Beer.getTableName).where(Beer.getPrimaryKey, currentRow[0].idBeer);
 
         } catch (e) {
@@ -302,64 +302,64 @@ describe('Update existing beer', function() {
         }
     });
 
-    it('idBeer should be greater than 0', function() {
+    it('idBeer should be greater than 0', function () {
         expect(beer.idBeer).to.be.a('number');
         expect(beer.idBeer).to.equal(rows[0].idBeer);
     });
 
-    it('name should not be empty', function() {
+    it('name should not be empty', function () {
         expect(beer.name).to.be.a('string');
         expect(beer.name).to.equal(rows[0].name);
     });
 
-    it('graduation should be greater than 0', function() {
+    it('graduation should be greater than 0', function () {
         expect(beer.graduation).to.be.a('number');
         expect(beer.graduation).to.equal(rows[0].graduation);
     });
 
-    it('color should be a valid hex color (#FFF)', function() {
+    it('color should be a valid hex color (#FFF)', function () {
         expect(beer.color).to.be.a('string');
         expect(beer.color).to.equal(rows[0].color);
     });
 
-    it('score should be greater than 0', function() {
+    it('score should be greater than 0', function () {
         expect(beer.score).to.be.a('number');
         expect(beer.score).to.equal(rows[0].score);
     });
 
-    it('price should be greater than 0', function() {
+    it('price should be greater than 0', function () {
         expect(beer.price).to.be.a('number');
         expect(beer.price).to.equal(rows[0].price);
     });
 
-    it('idCategory should be greater than 0', function() {
+    it('idCategory should be greater than 0', function () {
         expect(beer.idCategory).to.be.a('number');
         expect(beer.idCategory).to.equal(rows[0].idCategory);
     });
 
-    it('purchasedAt should not be null', function() {
+    it('purchasedAt should not be null', function () {
         expect(beer.purchasedAt).to.be.a.dateString();
         expect(beer.purchasedAt).to.equal(rows[0].purchasedAt);
     });
 
-    it('drinkedAt should not be null', function() {
+    it('drinkedAt should not be null', function () {
         expect(beer.drinkedAt).to.be.a.dateString();
         expect(beer.drinkedAt).to.equal(rows[0].drinkedAt);
     });
 
-    it('createdAt should not be null', function() {
+    it('createdAt should not be null', function () {
         expect(beer.createdAt).to.be.a.dateString();
         expect(beer.createdAt).to.equal(rows[0].createdAt);
     });
 
-    it('dateUpdate should not be null', function() {
+    it('dateUpdate should not be null', function () {
         expect(beer.updatedAt).to.be.a.dateString();
         expect(beer.updatedAt).to.equal(rows[0].updatedAt);
     });
 });
 
-describe('Delete existing beer', function() {
-    before(async function() {
+describe('Delete existing beer', function () {
+    before(async function () {
         try {
             rows = await knex(Beer.getTableName).limit(1).orderByRaw('rand()');
 
@@ -377,54 +377,54 @@ describe('Delete existing beer', function() {
         }
     });
 
-    it('idCategory should be 0', function() {
+    it('idCategory should be 0', function () {
         expect(beer.idBeer).to.be.a('number');
         expect(beer.idBeer).to.equal(0);
     });
 
-    it('name should be empty', function() {
+    it('name should be empty', function () {
         expect(beer.name).to.be.a('string');
         expect(beer.name).to.equal('');
     });
 
-    it('graduation should be 0', function() {
+    it('graduation should be 0', function () {
         expect(beer.graduation).to.be.a('number');
         expect(beer.graduation).to.equal(0);
     });
 
-    it('color should be #FFF', function() {
+    it('color should be #FFF', function () {
         expect(beer.color).to.be.a('string');
         expect(beer.color).to.equal('#FFF');
     });
 
-    it('score should be 0', function() {
+    it('score should be 0', function () {
         expect(beer.score).to.be.a('number');
         expect(beer.score).to.equal(0);
     });
 
-    it('price should be 0', function() {
+    it('price should be 0', function () {
         expect(beer.price).to.be.a('number');
         expect(beer.price).to.equal(0);
     });
 
-    it('idCategory should be 0', function() {
+    it('idCategory should be 0', function () {
         expect(beer.idCategory).to.be.a('number');
         expect(beer.idCategory).to.equal(0);
     });
 
-    it('purchasedAt should be null', function() {
+    it('purchasedAt should be null', function () {
         expect(beer.purchasedAt).to.equal(null);
     });
 
-    it('drinkedAt should be null', function() {
+    it('drinkedAt should be null', function () {
         expect(beer.drinkedAt).to.equal(null);
     });
 
-    it('createdAt should be null', function() {
+    it('createdAt should be null', function () {
         expect(beer.createdAt).to.equal(null);
     });
 
-    it('dateUpdate should be null', function() {
+    it('dateUpdate should be null', function () {
         expect(beer.updatedAt).to.equal(null);
     });
 });

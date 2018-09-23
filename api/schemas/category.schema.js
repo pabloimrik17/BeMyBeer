@@ -34,8 +34,7 @@ exports.createCategory = {
 
 exports.updateCategory = {
     definitions: {},
-    $schema: 'http://json-schema.org/draft-06/schema#',
-    $id: 'http://example.com/example.json',
+    $schema: 'http://json-schema.org/draft-07/schema#',
     type: 'object',
     properties: {
         name: {

@@ -59,7 +59,7 @@ class ObjectModel {
         });
     }
 
-    async get() {
+    async _get() {
         const sql = `
             SELECT ${this._lodash.join(this._dbProperties)}
             FROM ${this._tableName}
@@ -79,7 +79,13 @@ class ObjectModel {
         }
     }
 
-    async save() {
+    async getFiltered() {
+        await this._get();
+
+        return this._getFilteredObject();
+    }
+
+    async _save() {
         const sql = `
             INSERT INTO ${this._tableName}
             SET ?
@@ -100,11 +106,50 @@ class ObjectModel {
             this.id = result[0].insertId;
             this[this._primaryKey] = result[0].insertId;
 
-            await this.get();
+            await this._get();
         } catch (e) {
             console.error(e);
             throw this._apiErrors.OBJECT_MODEL_SAVE_QUERY_ERROR;
         }
+    }
+
+    async saveAndRetrieveFiltered() {
+        await this._save();
+
+        return this._getFilteredObject();
+    }
+
+    async _update(updateData) {
+        const sql = `
+            UPDATE ${this._tableName}
+            SET ?
+            WHERE ${this._primaryKey} = ?
+        `;
+
+        const _dataToUpdate = Object.assign({}, updateData);
+
+        Object.keys(updateData).forEach((key) => {
+            if (!this._dbProperties.includes(key)) {
+                delete _dataToUpdate[key];
+            }
+        });
+
+        _dataToUpdate.updatedAt = this._getCurrentDate();
+
+        try {
+            await this._db.get().query(sql, [updateData, this.id]);
+
+            await this._get();
+        } catch (e) {
+            console.error(e);
+            throw this._apiErrors.OBJECT_MODEL_UPDATE_QUERY_ERROR;
+        }
+    }
+
+    async updateAndRetrieveFiltered(updateData) {
+        await this._update(updateData);
+
+        return this._getFilteredObject();
     }
 
     async delete() {
@@ -125,32 +170,7 @@ class ObjectModel {
         this[this._primaryKey] = 0;
     }
 
-    async update(updateData = {}) {
-        const sql = `
-            UPDATE ${this._tableName}
-            SET ?
-            WHERE ${this._primaryKey} = ?
-        `;
-
-        Object.keys(updateData).forEach((key) => {
-            if (!this._dbProperties.includes(key)) {
-                delete updateData[key];
-            }
-        });
-
-        updateData.updatedAt = this._getCurrentDate();
-
-        try {
-            await this._db.get().query(sql, [updateData, this.id]);
-
-            await this.get();
-        } catch (e) {
-            console.error(e);
-            throw this._apiErrors.OBJECT_MODEL_UPDATE_QUERY_ERROR;
-        }
-    }
-
-    parseObjectToJson() {
+    _getFilteredObject() {
         const newObject = {};
 
         this._dbProperties.forEach((dbProperty) => {

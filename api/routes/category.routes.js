@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const categories = await Category.getAll();
+        const categories = await new Category().getAll();
         ObjectResponser.responseSuccess(res, categories);
     } catch (error) {
         ObjectResponser.responseError(res, error);
@@ -16,14 +16,14 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', checkIdParam(), async (req, res) => {
-    const idCategory = parseInt(req.params.id);
+    const idCategory = parseInt(req.params.id, 10);
 
     try {
         validationResult(req).throw();
         const category = new Category(idCategory);
-        await category.get();
+        const categoryResponse = await category.getFiltered();
 
-        ObjectResponser.responseSuccess(res, category);
+        ObjectResponser.responseSuccess(res, categoryResponse);
     } catch (error) {
         ObjectResponser.responseError(res, error);
     }
@@ -31,11 +31,13 @@ router.get('/:id', checkIdParam(), async (req, res) => {
 
 router.post('/', checkBody(schemas.createCategory), async (req, res) => {
     try {
+        validationResult(req).throw();
+
         const category = new Category();
         category.init(req.body);
-        await category.save();
+        const categoryResponse = await category.saveAndRetrieveFiltered();
 
-        ObjectResponser.responseSuccess(res, category);
+        ObjectResponser.responseSuccess(res, categoryResponse);
     } catch (error) {
         ObjectResponser.responseError(res, error);
     }
@@ -44,20 +46,19 @@ router.post('/', checkBody(schemas.createCategory), async (req, res) => {
 router.put('/:id', checkIdParam(), checkBody(schemas.updateCategory), async (req, res) => {
     try {
         validationResult(req).throw();
+        const idCategory = parseInt(req.params.id, 10);
 
-        const idCategory = parseInt(req.params.id);
         const category = new Category(idCategory);
+        const categoryResponse = await category.updateAndRetrieveFiltered(req.body);
 
-        await category.update(req.body);
-
-        ObjectResponser.responseSuccess(res, category);
+        ObjectResponser.responseSuccess(res, categoryResponse);
     } catch (error) {
         ObjectResponser.responseError(res, error);
     }
 });
 
 router.delete('/:id', checkIdParam(), async (req, res) => {
-    const idCategory = parseInt(req.params.id);
+    const idCategory = parseInt(req.params.id, 10);
 
     try {
         validationResult(req).throw();

@@ -16,12 +16,12 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', checkIdParam(), async (req, res) => {
-    const idBeer = parseInt(req.params.id);
+    const idBeer = parseInt(req.params.id, 10);
 
     try {
         validationResult(req).throw();
         const beer = new Beer(idBeer);
-        await beer.get();
+        await beer._get();
 
         ObjectResponser.responseSuccess(res, beer);
     } catch (error) {
@@ -33,7 +33,7 @@ router.post('/', checkBody(schemas.createBeer), async (req, res) => {
     try {
         const beer = new Beer();
         beer.init(req.body);
-        await beer.save();
+        await beer._save();
 
         ObjectResponser.responseSuccess(res, beer);
     } catch (error) {
@@ -45,11 +45,11 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateBeer), async (req, re
     try {
         validationResult(req).throw();
 
-        const idBeer = parseInt(req.params.id);
+        const idBeer = parseInt(req.params.id, 10);
         const beer = new Beer(idBeer);
 
         // beer.init(req.body);
-        await beer.update(req.body);
+        await beer._update(req.body);
 
         ObjectResponser.responseSuccess(res, beer);
     } catch (error) {
