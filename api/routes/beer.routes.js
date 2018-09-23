@@ -21,9 +21,9 @@ router.get('/:id', checkIdParam(), async (req, res) => {
     try {
         validationResult(req).throw();
         const beer = new Beer(idBeer);
-        await beer._get();
+        const beerResponse = await beer.getFiltered();
 
-        ObjectResponser.responseSuccess(res, beer);
+        ObjectResponser.responseSuccess(res, beerResponse);
     } catch (error) {
         ObjectResponser.responseError(res, error);
     }
@@ -31,11 +31,12 @@ router.get('/:id', checkIdParam(), async (req, res) => {
 
 router.post('/', checkBody(schemas.createBeer), async (req, res) => {
     try {
+        validationResult(req).throw();
         const beer = new Beer();
         beer.init(req.body);
-        await beer._save();
+        const beerResponse = await beer.saveAndRetrieveFiltered();
 
-        ObjectResponser.responseSuccess(res, beer);
+        ObjectResponser.responseSuccess(res, beerResponse);
     } catch (error) {
         ObjectResponser.responseError(res, error);
     }
@@ -48,10 +49,9 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateBeer), async (req, re
         const idBeer = parseInt(req.params.id, 10);
         const beer = new Beer(idBeer);
 
-        // beer.init(req.body);
-        await beer._update(req.body);
+        const beerResponse = await beer.updateAndRetrieveFiltered(req.body);
 
-        ObjectResponser.responseSuccess(res, beer);
+        ObjectResponser.responseSuccess(res, beerResponse);
     } catch (error) {
         ObjectResponser.responseError(res, error);
     }
