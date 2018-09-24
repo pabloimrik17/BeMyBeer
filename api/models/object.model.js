@@ -139,6 +139,10 @@ class ObjectModel {
             throw apiErrors.OBJECT_MODEL_UPDATE_QUERY_ERROR;
         }
     }
+
+    static _getCurrentDate() {
+        return moment().utc().format('YYYY-MM-DD HH:mm:ss');
+    }
 }
 
 module.exports = ObjectModel;
