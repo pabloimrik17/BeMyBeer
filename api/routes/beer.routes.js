@@ -10,26 +10,51 @@ router.get('/', async (req, res) => {
         const beers = await Beer.getAll();
         ObjectResponser.responseSuccess(res, beers);
     } catch (error) {
-        ObjectResponser.responseError(res, error)
+        ObjectResponser.responseError(res, error);
     }
 });
 
 router.get('/:id', checkIdParam(), async (req, res) => {
-   const idBeer = req.params.id;
-   
-   try {
-       validationResult(req).throw();
-       const beer = new Beer(idBeer);
-       await beer.get();
+    const idBeer = parseInt(req.params.id);
 
-       ObjectResponser.responseSuccess(res, beer)
-   } catch (error) {
-       ObjectResponser.responseError(res, error)
-   }
+    try {
+        validationResult(req).throw();
+        const beer = new Beer(idBeer);
+        await beer.get();
+
+        ObjectResponser.responseSuccess(res, beer);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
+    }
 });
 
 router.post('/', checkBody(schemas.createBeer), async (req, res) => {
+    try {
+        const beer = new Beer();
+        beer.init(req.body);
+        await beer.save();
 
+        ObjectResponser.responseSuccess(res, beer);
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
+    }
+});
+
+router.put('/:id', checkIdParam(), checkBody(schemas.updateBeer), async (req, res) => {
+    try {
+        validationResult(req).throw();
+
+        const idBeer = parseInt(req.params.id);
+        const beer = new Beer(idBeer);
+
+        //beer.init(req.body);
+        await beer.update(req.body);
+
+        ObjectResponser.responseSuccess(res, beer);
+
+    } catch (error) {
+        ObjectResponser.responseError(res, error);
+    }
 });
 
 module.exports = router;

@@ -22,6 +22,8 @@ module.exports = {
                     return moment.utc(field.string(), 'YYYY-MM-DD HH:mm:ss').format();
                 } else if (field.type == 'TIMESTAMP') {
                     return moment.utc(field.string(), 'YYYY-MM-DD HH:mm:ss').format();
+                } else if (field.type == 'DATE') {
+                    return moment.utc(field.string(), 'YYYY-MM-DD').format('YYYY-MM-DD');
                 }
 
                 return next();
