@@ -53,3 +53,53 @@ describe('Expect to have all class properties', () => {
         expect(objectModel).to.have.property('updatedAt');
     });
 });
+
+describe('Expect to have all class methods', () => {
+    it('Should have a constructor', () => {
+        expect(objectModel.constructor).to.exist;
+    });
+
+    it('Should have a _getCurrentDate method', () => {
+        expect(objectModel._getCurrentDate).to.exist;
+    });
+
+    it('Should have a getAll method', () => {
+        expect(objectModel.getAll).to.exist;
+    });
+
+    it('Should have a init method', () => {
+        expect(objectModel.init).to.exist;
+    });
+
+    it('Should have a _get method', () => {
+        expect(objectModel._get).to.exist;
+    });
+
+    it('Should have a getFiltered method', () => {
+        expect(objectModel.getFiltered).to.exist;
+    });
+
+    it('Should have a _save method', () => {
+        expect(objectModel._save).to.exist;
+    });
+
+    it('Should have a saveAndRetrieveFiltered method', () => {
+        expect(objectModel.saveAndRetrieveFiltered).to.exist;
+    });
+
+    it('Should have a _update method', () => {
+        expect(objectModel._update).to.exist;
+    });
+
+    it('Should have a updateAndRetrieveFiltered method', () => {
+        expect(objectModel.updateAndRetrieveFiltered).to.exist;
+    });
+
+    it('Should have a delete method', () => {
+        expect(objectModel.delete).to.exist;
+    });
+
+    it('Should have a _getFilteredObject method', () => {
+        expect(objectModel._getFilteredObject).to.exist;
+    });
+});

@@ -8,7 +8,13 @@ function importTest(name, path) {
 
 const { knex, expect } = require('./common.test');
 
-describe('MODEL TEST SUITE', async function () {
+describe ('TEST SUITE', () => {
+    describe('UNIT TEST SUITE', () => {
+        importTest('Object Model', './models/objectModel.class.test')
+    })
+});
+
+/*describe('MODEL TEST SUITE', async function () {
     this.timeout(20000);
 
     before(async function () {
@@ -31,4 +37,4 @@ describe('MODEL TEST SUITE', async function () {
             expect(e).to.be.empty;
         }
     });
-});
+});*/
