@@ -57,4 +57,18 @@ router.put('/:id', checkIdParam(), checkBody(schemas.updateBeer), async (req, re
     }
 });
 
+router.delete('/:id', checkIdParam(), async (req, res) => {
+    const idBeer = parseInt(req.params.id, 10);
+
+    try {
+        validationResult(req).throw();
+        const beer = new Beer(idBeer);
+        await beer.delete();
+
+        ObjectResponser.responseSuccess(res);
+    } catch (error) {
+        ObjectResponser.responseError(res);
+    }
+});
+
 module.exports = router;
