@@ -38,3 +38,4 @@ class Beer extends ObjectModel {
 }
 
 module.exports = Beer;
+exports._definition = _definition;

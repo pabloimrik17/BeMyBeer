@@ -6,7 +6,7 @@ const moment = require('moment');
 const { apiErrors } = require('../shared/common.api');
 
 class ObjectModel {
-    constructor(idObject = 0, primaryKey, tableName, dbProperties) {
+    constructor(idObject = 0, primaryKey = '', tableName = '', dbProperties = []) {
         this._db = db;
         this._lodash = lodash;
         this._moment = moment;

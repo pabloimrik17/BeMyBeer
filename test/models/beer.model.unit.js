@@ -1,6 +1,93 @@
-const { expect, knex, _ } = require('../common.test');
+const {expect} = require('../common.test');
+const Beer   = require('../../api/models/beer.model');
 
-const Beer = require('../../api/models/beer.model');
+let beer = null;
+
+before(() => {
+    beer = new Beer();
+});
+
+after(() => {
+    beer = null;
+});
+
+describe('Expect to have all class properties', () => {
+    it('Should have idBeer property', () => {
+        expect(beer).to.have.property('idBeer');
+    });
+
+    it('Should have name property', () => {
+        expect(beer).to.have.property('name');
+    });
+
+    it('Should have graduation property', () => {
+        expect(beer).to.have.property('graduation');
+    });
+
+    it('Should have color property', () => {
+        expect(beer).to.have.property('color');
+    });
+
+    it('Should have score property', () => {
+        expect(beer).to.have.property('score');
+    });
+
+    it('Should have price property', () => {
+        expect(beer).to.have.property('price');
+    });
+
+    it('Should have idCategory property', () => {
+        expect(beer).to.have.property('idCategory');
+    });
+
+    it('Should have datePurchased property', () => {
+        expect(beer).to.have.property('datePurchased');
+    });
+
+    it('Should have dateDrinked property', () => {
+        expect(beer).to.have.property('dateDrinked');
+    });
+});
+
+describe('Expect to all class properties match their type', () => {
+    it('idBeer property should match type', () => {
+        expect(beer.idBeer).that.is.a('number');
+    });
+
+    it('name property should match type', () => {
+        expect(beer.name).that.is.a('string');
+    });
+
+    it('graduation property should match type', () => {
+        expect(beer.graduation).that.is.a('number');
+    });
+
+    it('color property should match type', () => {
+        expect(beer.color).that.is.a('string');
+    });
+
+    it('score property should match type', () => {
+        expect(beer.score).that.is.a('number');
+    });
+
+    it('price property should match type', () => {
+        expect(beer.price).that.is.a('number');
+    });
+
+    it('idCategory property should match type', () => {
+        expect(beer.idCategory).that.is.a('number');
+    });
+
+    it('datePurchased property should match type', () => {
+        expect(beer.datePurchased).that.is.a('date');
+    });
+
+    it('dateDrinked property should match type', () => {
+        expect(beer.dateDrinked).that.is.a('date');
+    });
+});
+
+/*const Beer = require('../../api/models/beer.model');
 const BeerSeeder = require('../seeders/beer.seeder');
 
 let beer;
@@ -427,4 +514,4 @@ describe('Delete existing beer', function () {
     it('dateUpdate should be null', function () {
         expect(beer.updatedAt).to.equal(null);
     });
-});
+});*/
