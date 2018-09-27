@@ -2,7 +2,9 @@ const {expect} = require('../common.test');
 const sinon = require('sinon');
 const ObjectModel = require('../../api/models/object.model');
 const lodash = require('lodash');
+const moment = require('moment');
 const db = require('../../api/shared/database')
+
 
 let objectModel = null;
 
@@ -150,15 +152,37 @@ describe('Expect to all class properties match their type', () => {
 });
 
 describe('_getCurrentDate', () => {
+    let sandbox = sinon.createSandbox();
+    let momentProto = moment.fn;
 
-})
+    before(() => {
+        sandbox.spy(momentProto, 'utc');
+        sandbox.spy(momentProto, 'format');
+    });
+
+    after(() => {
+        sandbox.restore();
+    });
+
+    it('utc function should be called', () => {
+        objectModel._moment.fn = momentProto;
+        objectModel._getCurrentDate();
+        expect(momentProto.utc.called).to.be.true;
+    });
+
+    it('format function should be called with \'YYYY-MM-DD HH:mm:ss\' as argument', () => {
+        objectModel._moment.fn = momentProto;
+        objectModel._getCurrentDate();
+        expect(momentProto.format.called).to.be.true;
+        expect(momentProto.format.calledWithExactly('YYYY-MM-DD HH:mm:ss')).to.be.true;
+    });
+});
 
 describe('getAll', () => {
     let query;
     let isEmpty;
 
     before(() => {
-
         // TODO
         /*query = sinon.stub(objectModel, '_db').returns(
             {
@@ -193,3 +217,22 @@ describe('getAll', () => {
         expect(isEmpty.called).to.be.true;
     })
 });
+
+describe('init', () => {
+    let sandbox = sinon.createSandbox();
+
+    before(() => {
+        sandbox.spy(Object.keys);
+        sandbox.spy([].forEach);
+    });
+
+    after(() => {
+        sandbox.restore();
+    });
+
+    it('keys function should be called.', async () => {
+        objectModel.init();
+        expect(Object.keys.called).to.be.true;
+    })
+
+})

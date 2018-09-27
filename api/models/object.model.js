@@ -26,6 +26,7 @@ class ObjectModel {
 
     _getCurrentDate() {
         return this._moment().utc().format('YYYY-MM-DD HH:mm:ss');
+
     }
 
     async getAll() {
