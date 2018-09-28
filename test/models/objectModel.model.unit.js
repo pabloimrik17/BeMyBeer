@@ -1,3 +1,9 @@
+//https://markus.oberlehner.net/blog/test-driven-development-with-javascript-using-ava-and-sinonjs/
+// https://github.com/avajs/ava
+// https://www.pluralsight.com/blog/software-development/6-examples-of-hard-to-test-javascript
+// https://www.andrewmunsell.com/blog/dependency-injection-for-modern-javascript-using-es6-classes-and-es7-decorators/
+// https://medium.com/@fleeboy/dependency-injection-in-javascript-9db9ea6e4288
+
 const {expect} = require('../common.test');
 const sinon = require('sinon');
 const ObjectModel = require('../../api/models/object.model');
@@ -215,7 +221,7 @@ describe('getAll', () => {
         objectModel._lodash.isEmpty = isEmpty;
         await objectModel.getAll();
         expect(isEmpty.called).to.be.true;
-    })
+    });
 });
 
 describe('init', () => {
@@ -231,8 +237,7 @@ describe('init', () => {
     });
 
     it('keys function should be called.', async () => {
-        objectModel.init();
+        objectModel.init({prueba: 2});
         expect(Object.keys.called).to.be.true;
-    })
-
-})
+    });
+});

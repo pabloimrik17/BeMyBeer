@@ -54,7 +54,8 @@ class ObjectModel {
         return objects;
     }
 
-    init(options = {}) {
+    init ({Math, Array}, options = {}) {
+        Math.min(2, 3)
         Object.keys(options).forEach((key) => {
             this[key] = options[key];
         });
