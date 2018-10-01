@@ -54,11 +54,14 @@ class ObjectModel {
         return objects;
     }
 
-    init ({Math, Array}, options = {}) {
-        Math.min(2, 3)
+    init ({Object, Array}, options = {}) {
         Object.keys(options).forEach((key) => {
             this[key] = options[key];
         });
+    }
+
+    initFactory (dependencies) {
+        return this.init.bind(this, dependencies);
     }
 
     async _get() {
