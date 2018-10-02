@@ -4,6 +4,9 @@
   "description": "This is a server for a RESTful API based on Nodejs to manage my beer \"drinked\" list and related information",
   "main": "server",
   "scripts": {
+    "start": "npm run build:live",
+    "build": "tsc -p .",
+    "build:live": "nodemon --watch 'src/**/*.ts' --exec ts-node src/_server.ts",
     "test": "mocha --exit",
     "coverage": "nyc --reporter=html --reporter=text _mocha"
   },
