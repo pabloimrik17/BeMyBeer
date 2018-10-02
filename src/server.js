@@ -1,3 +1,6 @@
+// https://basarat.gitbooks.io/typescript/docs/quick/nodejs.html
+// https://github.com/Microsoft/TypeScript-Node-Starter
+// http://www.syntaxsuccess.com/viewarticle/using-typescript-with-nodejs
 require('dotenv').config();
 
 const express = require('express');

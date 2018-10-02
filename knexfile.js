@@ -4,7 +4,7 @@
 // Update with your config settings.
 
 require('dotenv').config();
-const { moment } = require('./api/shared/common.api');
+const {moment} = require('./src/api/shared/common.api');
 
 module.exports = {
 
