@@ -3,8 +3,7 @@ import {Express} from 'express'
 import express from 'express';
 import expressValidator from 'express-validator';
 import Database from './api/shared/Database'
-//const Database = require('./api/shared/Database');
-//const routes = require('./api/routes/routes');
+import router from './api/routes/_routes'
 
 require('dotenv').config();
 
@@ -18,7 +17,7 @@ export default class App {
     this.app.use(bodyParser.json())
     this.app.use(bodyParser.urlencoded({extended: false}))
     this.app.use(expressValidator())
-    //this.app.use(process.env.API_ENTRY_POINT, routes)
+    this.app.use(process.env.API_ENTRY_POINT, router)
 
     this.port = parseInt(process.env.PORT) || 3000;
 
