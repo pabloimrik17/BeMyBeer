@@ -1,5 +1,5 @@
 const {expect} = require('../common.test');
-const Beer   = require('../../api/models/beer.model');
+const Beer = require('../../api/classes/beer.model');
 
 let beer = null;
 
@@ -87,7 +87,7 @@ describe('Expect to all class properties match their type', () => {
     });
 });
 
-/*const Beer = require('../../api/models/beer.model');
+/*const Beer = require('../../api/classes/beer.model');
 const BeerSeeder = require('../seeders/beer.seeder');
 
 let beer;

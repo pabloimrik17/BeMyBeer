@@ -2,7 +2,7 @@ import bodyParser from 'body-parser'
 import {Express} from 'express'
 import express from 'express';
 import expressValidator from 'express-validator';
-import Database from './api/shared/Database'
+import Database, {database} from './api/shared/Database'
 import router from './api/routes/_routes'
 
 require('dotenv').config();
@@ -21,7 +21,8 @@ export default class App {
 
     this.port = parseInt(process.env.PORT) || 3000;
 
-    this.db = new Database();
+    // this.db = new Database();
+    this.db = database
   }
 
   async run () {

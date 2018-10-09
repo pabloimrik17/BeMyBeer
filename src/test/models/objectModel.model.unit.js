@@ -6,7 +6,7 @@
 
 const {expect} = require('../common.test');
 const sinon = require('sinon');
-const ObjectModel = require('../../api/models/object.model');
+const ObjectModel = require('../../api/classes/object.model');
 const lodash = require('lodash');
 const moment = require('moment');
 const db = require('../../api/shared/database')

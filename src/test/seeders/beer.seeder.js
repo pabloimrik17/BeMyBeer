@@ -1,8 +1,8 @@
 const { faker, knex, _ } = require('../common.test');
 
 const ObjectSeeder = require('./object.seeder');
-const Beer = require('../../api/models/beer.model');
-const Category = require("../../api/models/category.model");
+const Beer = require('../../api/classes/beer.model');
+const Category = require('../../api/classes/category.model');
 
 const _MIN_OBJECTS_TO_GENERATE_ = 10;
 const _MAX_OBJECTS_TO_GENERATE_ = 50;

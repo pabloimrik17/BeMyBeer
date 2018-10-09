@@ -22,7 +22,7 @@ describe ('Test Suite', () => {
         }
     });
 
-    importTest('Category Class', './models/category.class.test');
+    importTest('Category Class', './classes/category.class.test');
 
     after(async function () {
         try {

@@ -2,7 +2,7 @@ const express = require('express');
 const { checkIdParam, checkBody, validationResult } = require('../middleware/routes.middleware');
 const { ObjectResponser } = require('../shared/common.api');
 const schemas = require('../schemas/beer.schema');
-const Beer = require('../models/beer.model');
+const Beer = require('../classes/beer.model');
 
 const router = express.Router();
 

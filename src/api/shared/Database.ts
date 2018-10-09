@@ -39,3 +39,5 @@ export default class Database {
     this.mode = mode
   }
 }
+
+export const database = new Database()

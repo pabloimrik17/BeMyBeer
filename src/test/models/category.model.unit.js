@@ -1,6 +1,6 @@
 const { expect, knex, _ } = require('../common.test');
 
-const Category = require('../../api/models/category.model');
+const Category = require('../../api/classes/category.model');
 const CategorySeeder = require('../seeders/category.seeder');
 
 let category;
