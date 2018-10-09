@@ -8,5 +8,9 @@
         "linebreak-style": ["error", "windows"],
         "indent": ["error", 4],
         "no-underscore-dangle": ["off"]
-    }
+    },
+    "parser": "typescript-eslint-parser",
+    "plugins": [
+        "typescript"
+    ]
 }

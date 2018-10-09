@@ -2,7 +2,7 @@
   "name": "bemybeer",
   "version": "0.1.0",
   "description": "This is a server for a RESTful API based on Nodejs to manage my beer \"drinked\" list and related information",
-  "main": "server",
+  "main": "dist/_server.js",
   "scripts": {
     "start": "npm run serve",
     "build": "npm run && npm run build-ts && npm run tslint",
@@ -55,6 +55,7 @@
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-typescript": "^0.12.0",
     "faker": "^4.1.0",
     "istanbul": "^0.4.5",
     "knex": "^0.14.6",
@@ -63,6 +64,7 @@
     "nyc": "^13.0.0",
     "sinon": "^6.3.4",
     "ts-node": "^7.0.1",
-    "typescript": "^3.1.1"
+    "typescript": "^3.1.1",
+    "typescript-eslint-parser": "^20.0.0"
   }
 }

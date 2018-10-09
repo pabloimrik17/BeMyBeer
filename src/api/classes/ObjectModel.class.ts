@@ -1,62 +1,60 @@
-import * as moment from 'moment'
-import {database} from '../shared/Database'
-import {isEmpty} from 'lodash'
-import apiErrors from '../shared/apiResponser/ApiErrors'
-import {FieldPacket, QueryError, RowDataPacket} from 'mysql2'
+import apiErrors from '../shared/apiResponser/ApiErrors';
+import { database } from '../shared/Database';
+import { isEmpty } from 'lodash';
+import { FieldPacket } from 'mysql2';
+import { CategoryDb } from './Category.class';
+import * as moment from 'moment';
 
-export default class ObjectModel {
-  private id: number
-  private createdAt: string
-  private updatedAt: string
-  private dbProperties: Array<string>
-  private primaryKey: string
-  private tableName: string
 
-  constructor (id: number, primaryKey: string, tableName: string, dbProperties: Array<string>) {
-    this.primaryKey = primaryKey
-    this.tableName = tableName
-    this.dbProperties = dbProperties
-    this.id = 0
-    this.createdAt = null
-    this.updatedAt = null
+export default abstract class ObjectModel {
+    protected abstract readonly dbProperties: Array<string>;
+    protected abstract readonly primaryKey: string;
+    protected abstract readonly tableName: string;
+    private id: number;
+    private createdAt: string;
+    private updatedAt: string;
 
-    if (id > 0) {
-      this.id = id
-    }
-  }
+    protected constructor(id: number) {
+        this.id = 0;
+        this.createdAt = null;
+        this.updatedAt = null;
 
-  private getCurrentDate (): string {
-    return moment.utc().format('YYYY-MM-DD HH:mm:ss')
-  }
-
-  public async getAll (): Promise<Array<any>> {
-    const objects: Array<any> = []
-
-    const sql: string = `
-      SELECT ${this.dbProperties.join(', ')}
-      FROM ${this.tableName}
-      ORBER BY ${this.primaryKey}   
-    `
-
-    try {
-      // TODO DI
-      const [error, rows]: [any, FieldPacket[]] = await database.Pool.query(sql)
-      debugger
-
-      /*rows.forEach((row: RowDataPacket) => {
-        // TODO DI
-        if (!isEmpty(row)) {
-          objects.push(row)
+        if (id > 0) {
+            this.id = id;
         }
-      })*/
-    } catch (error) {
-      console.error(error)
-      // TODO DI
-      throw apiErrors.OBJECT_MODEL_GET_ALL
     }
 
-    return objects
-  }
+    public async getAll(): Promise<Array<any>> {
+        const objects: Array<any> = [];
 
+        const sql: string = `
+          SELECT ${this.dbProperties.join(', ')}
+          FROM ${this.tableName}
+          ORBER BY ${this.primaryKey}   
+        `;
 
+        try {
+            // TODO DI
+            const [error, rows]: [any, FieldPacket[]] = await database.Pool.query(sql);
+            rows.forEach((row: FieldPacket) => {
+                // TODO DI
+                if (!isEmpty(row)) {
+                    objects.push(row);
+                }
+            });
+        } catch (error) {
+            console.error(error);
+            // TODO DI
+            throw apiErrors.OBJECT_MODEL_GET_ALL;
+        }
+
+        return objects;
+    }
+
+    protected abstract init(data: any): void;
+
+    private getCurrentDate(): string {
+        return moment.utc().format('YYYY-MM-DD HH:mm:ss');
+    }
 }
+
