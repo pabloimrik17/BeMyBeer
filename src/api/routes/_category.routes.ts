@@ -1,4 +1,4 @@
-import express, {Router} from 'express'
+import express, {Router, Request, Response} from 'express'
 import {Category, CategoryDb} from '../classes/Category.class'
 import ApiResponser from '../shared/apiResponser/ApiResponser'
 import {checkBody, checkIdParam} from '../middleware/routes.middleware'
@@ -7,7 +7,7 @@ import {createCategory, updateCategory} from '../schemas/_category.schema'
 
 const router: Router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const category: Category = new Category();
     const categories: Array<CategoryDb> = await category.getAllDb<CategoryDb>()
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', checkIdParam(), async (req, res) => {
+router.get('/:id', checkIdParam(), async (req: Request, res: Response) => {
   const idCategory = parseInt(req.params.id, 10);
 
   try {
@@ -31,7 +31,7 @@ router.get('/:id', checkIdParam(), async (req, res) => {
   }
 });
 
-router.post('/', checkBody(createCategory), async (req, res) => {
+router.post('/', checkBody(createCategory), async (req: Request, res: Response) => {
   try {
     validationResult(req).throw();
 
@@ -44,7 +44,7 @@ router.post('/', checkBody(createCategory), async (req, res) => {
   }
 });
 
-router.put('/:id', checkIdParam(), checkBody(updateCategory), async (req, res) => {
+router.put('/:id', checkIdParam(), checkBody(updateCategory), async (req: Request, res: Response) => {
   try {
     validationResult(req).throw();
     const idCategory = parseInt(req.params.id, 10);
@@ -58,7 +58,7 @@ router.put('/:id', checkIdParam(), checkBody(updateCategory), async (req, res) =
   }
 });
 
-router.delete('/:id', checkIdParam(), async (req, res) => {
+router.delete('/:id', checkIdParam(), async (req: Request, res: Response) => {
   const idCategory = parseInt(req.params.id, 10);
 
   try {

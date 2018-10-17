@@ -14,10 +14,10 @@ export class CategoryDb {
   }
 }
 
-export class Category extends ObjectModel implements CategoryDb {
+export class Category extends ObjectModel {
+  protected dbProperties: Array<string> = Object.keys(new CategoryDb());
   protected primaryKey: string = 'idCategory';
   protected tableName: string = 'category';
-  protected dbProperties: Array<string> = Object.keys(new CategoryDb());
 
   public idCategory: number
   public idParent: number
