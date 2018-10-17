@@ -14,7 +14,7 @@ export class CategoryDb {
   }
 }
 
-export class Category extends ObjectModel {
+export default class Category extends ObjectModel {
   protected dbProperties: Array<string> = Object.keys(new CategoryDb());
   protected primaryKey: string = 'idCategory';
   protected tableName: string = 'category';

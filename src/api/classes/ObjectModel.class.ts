@@ -1,3 +1,5 @@
+//https://stackoverflow.com/questions/43669697/dependency-injection-recommended-pattern-for-injecting-npm-modules
+
 import apiErrors from '../shared/apiResponser/ApiErrors';
 import {database} from '../shared/Database';
 import DateModel from './DateModel'
@@ -157,5 +159,9 @@ export default abstract class ObjectModel {
       console.error(apiErrors.OBJECT_MODEL_UPDATE_NO_ID)
       throw apiErrors.OBJECT_MODEL_UPDATE_NO_ID
     }
+  }
+
+  public prueba() {
+    console.log('hola')
   }
 }
