@@ -4,12 +4,13 @@
 // https://www.andrewmunsell.com/blog/dependency-injection-for-modern-javascript-using-es6-classes-and-es7-decorators/
 // https://medium.com/@fleeboy/dependency-injection-in-javascript-9db9ea6e4288
 
-const {expect} = require('../common.test');
+/*
+const {expect} = require('../../integration/common.mocha');
 const sinon = require('sinon');
-const ObjectModel = require('../../api/classes/object.model');
+const ObjectModel = require('../../../api/classes/object.model');
 const lodash = require('lodash');
 const moment = require('moment');
-const db = require('../../api/shared/database')
+const db = require('../../../api/shared/Database')
 
 
 let objectModel = null;
@@ -193,7 +194,7 @@ describe('hola', () => {
 
         before(() => {
             // TODO
-            /*query = sinon.stub(objectModel, '_db').returns(
+            /!*query = sinon.stub(objectModel, '_db').returns(
                 {
                     get: () => {
                         return new Promise(resolve(
@@ -203,7 +204,7 @@ describe('hola', () => {
                             })
                         )
                     }
-                });*/
+                });*!/
             query = sinon.stub().returns([[{}]]);
             isEmpty = sinon.stub(lodash, 'isEmpty').returns(true);
         });
@@ -258,3 +259,4 @@ describe('hola', () => {
         });
     });
 })
+*/

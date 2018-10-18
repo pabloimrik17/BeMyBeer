@@ -12,7 +12,7 @@ export class BeerDb {
   public dateDrinked: string
 }
 
-export class Beer extends ObjectModel {
+export default class Beer extends ObjectModel {
   protected dbProperties: Array<string> = Object.keys(new BeerDb())
   protected primaryKey: string = 'idBeer'
   protected tableName: string = 'beer'

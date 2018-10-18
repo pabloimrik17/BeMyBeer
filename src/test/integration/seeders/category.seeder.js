@@ -1,7 +1,7 @@
-const {faker, knex, _} = require('../common.test');
+const {faker, knex, _} = require('../common.mocha');
 
 const ObjectSeeder = require('./object.seeder');
-const Category = require('../../api/classes/category.model');
+const Category = require('../../../api/classes/category.model');
 
 const _definition = {
     primaryKey: Category.getPrimaryKey,

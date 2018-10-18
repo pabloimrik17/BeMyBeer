@@ -1,5 +1,5 @@
-const {expect} = require('../common.test');
-const Beer = require('../../api/classes/beer.model');
+const {expect} = require('../../integration/common.mocha');
+const Beer = require('../../../api/classes/beer.model');
 
 let beer = null;
 

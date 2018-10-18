@@ -1,7 +1,8 @@
-const { expect, knex, _ } = require('../common.test');
+/*
+const { expect, knex, _ } = require('../../integration/common.mocha');
 
-const Category = require('../../api/classes/category.model');
-const CategorySeeder = require('../seeders/category.seeder');
+const Category = require('../../../api/classes/category.model');
+const CategorySeeder = require('../../integration/seeders/category.seeder');
 
 let category;
 let categories;
@@ -282,3 +283,4 @@ describe('Delete existing Category', function() {
         expect(category.updatedAt).to.equal(null);
     });
 });
+*/

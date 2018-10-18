@@ -2,12 +2,12 @@
 
 require('dotenv').config({ path: '../../.env' });
 
-const knexConfig = require('../../knexfile');
+const knexConfig = require('../../../knexfile');
 const Knex = require('knex');
 // TODO QUITAR STRING FIJO
 const knex = Knex(knexConfig.development);
 
-const database = require('../api/shared/database');
+const database = require('../../api/shared/Database');
 
 const chai = require('chai');
 const faker = require('faker/locale/es');

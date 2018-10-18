@@ -1,6 +1,6 @@
-import Category from '../../api/classes/Category.class'
+import Category from '../../../api/classes/Category.class'
 
-jest.mock('../../api/classes/Category.class')
+jest.mock('../../../api/classes/Category.class')
 let category: Category
 
 describe('Category Class Unit', () => {
