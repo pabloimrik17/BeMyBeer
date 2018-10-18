@@ -1,6 +1,6 @@
 import express, {Router, Response, Request} from 'express'
 import ApiResponser from '../shared/apiResponser/ApiResponser'
-import {Beer, BeerDb} from '../classes/Beer.class'
+import Beer, {BeerDb} from '../classes/Beer.class'
 import {checkBody, checkIdParam} from '../middleware/routes.middleware'
 import {validationResult} from 'express-validator/check'
 import {createBeer, updateBeer} from '../schemas/_beer.schema'

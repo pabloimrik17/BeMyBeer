@@ -1,5 +1,5 @@
 import express, {Router, Request, Response} from 'express'
-import {Category, CategoryDb} from '../classes/Category.class'
+import Category, {CategoryDb} from '../classes/Category.class'
 import ApiResponser from '../shared/apiResponser/ApiResponser'
 import {checkBody, checkIdParam} from '../middleware/routes.middleware'
 import {validationResult} from 'express-validator/check'

@@ -1,10 +1,13 @@
 //https://stackoverflow.com/questions/43669697/dependency-injection-recommended-pattern-for-injecting-npm-modules
+//https://medium.com/@samueleresca/inversion-of-control-and-dependency-injection-in-typescript-3040d568aabe
 
 import apiErrors from '../shared/apiResponser/ApiErrors';
 import {database} from '../shared/Database';
 import DateModel from './DateModel'
 import {DatabaseDate} from '../Interfaces/DatabaseDate'
+import {injectable} from 'inversify'
 
+@injectable()
 export default abstract class ObjectModel {
   protected abstract dbProperties: Array<string>;
   protected abstract primaryKey: string;
