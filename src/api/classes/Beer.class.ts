@@ -1,4 +1,9 @@
 import ObjectModel from './ObjectModel.class'
+import {inject, injectable} from 'inversify'
+import {APPLICACION_TYPES, THIRD_PARTY_TYPES} from '../ioc/THIRD_PARTY_TYPES'
+import Database, {database as importedDatabase} from '../shared/Database'
+import {Lodash} from '../ioc/interfaces'
+import * as npmLodash from 'lodash'
 
 export class BeerDb {
   public idBeer: number
@@ -12,6 +17,7 @@ export class BeerDb {
   public dateDrinked: string
 }
 
+@injectable()
 export default class Beer extends ObjectModel {
   protected dbProperties: Array<string> = Object.keys(new BeerDb())
   protected primaryKey: string = 'idBeer'
@@ -28,8 +34,10 @@ export default class Beer extends ObjectModel {
   public dateDrinked: string
 
 
-  constructor (id: number = 0) {
-    super(id)
+  constructor(idBeer = 0,
+              @inject(APPLICACION_TYPES.Database) database: Database = importedDatabase,
+              @inject(THIRD_PARTY_TYPES.Lodash) lodash: Lodash = npmLodash) {
+    super(idBeer, database, lodash)
     this.idBeer = 0
     this.name = ''
     this.graduation = 0
@@ -40,8 +48,8 @@ export default class Beer extends ObjectModel {
     this.datePurchased = ''
     this.dateDrinked = ''
 
-    if (id > 0) {
-      this.idBeer = id
+    if (idBeer > 0) {
+      this.idBeer = idBeer
     }
   }
 }

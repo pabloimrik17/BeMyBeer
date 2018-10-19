@@ -1,8 +1,9 @@
 import ObjectModel from './ObjectModel.class';
 import {inject, injectable} from 'inversify'
-import {THIRD_PARTY_TYPES} from '../ioc/THIRD_PARTY_TYPES'
+import {APPLICACION_TYPES, THIRD_PARTY_TYPES} from '../ioc/THIRD_PARTY_TYPES'
 import {Lodash} from '../ioc/interfaces'
 import * as npmLodash from 'lodash'
+import Database, {database as importedDatabase} from '../shared/Database'
 
 // DB DEFINITIONS
 
@@ -28,8 +29,10 @@ export default class Category extends ObjectModel {
   public idParent: number
   public name: string
 
-  constructor(idCategory = 0, @inject(THIRD_PARTY_TYPES.Lodash) lodash: Lodash = npmLodash) {
-    super(idCategory, lodash)
+  constructor(idCategory = 0,
+              @inject(APPLICACION_TYPES.Database) database: Database = importedDatabase,
+              @inject(THIRD_PARTY_TYPES.Lodash) lodash: Lodash = npmLodash) {
+    super(idCategory, database, lodash)
     this.idCategory = 0;
     this.name = '';
     this.idParent = 0;

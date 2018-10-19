@@ -1,17 +1,22 @@
 import 'reflect-metadata'
 import ObjectModel from '../../../api/classes/ObjectModel.class'
-import {Lodash} from '../../../api/ioc/interfaces'
+import * as lodash from 'lodash'
+import {database} from '../../../api/shared/Database'
 
-test('Object Model', () => {
-  const LodashMocked = jest.fn<Lodash>(() => ({
-    forEach: jest.fn().mockReturnValue(true)
-  }))
+let objectModel: ObjectModel
 
-  const lodashMocked = new LodashMocked()
+describe('Object Model', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    objectModel = new ObjectModel(0, database, lodash)
+  })
 
-  const objectModel: ObjectModel = new ObjectModel(0, lodashMocked)
+  test('For Each Should Be Called Two Times', () => {
+    objectModel.prueba()
+    expect(lodash.forEach).toHaveBeenCalledTimes(2)
+  })
 
-  objectModel.prueba()
-
-  expect(lodashMocked.forEach).toHaveBeenCalledTimes(3)
+  test('hola', () => {
+    expect(database.mode).toBe('HOLA')
+  })
 })
