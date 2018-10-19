@@ -5,25 +5,35 @@ import apiErrors from '../shared/apiResponser/ApiErrors';
 import {database} from '../shared/Database';
 import DateModel from './DateModel'
 import {DatabaseDate} from '../Interfaces/DatabaseDate'
-import {injectable} from 'inversify'
+import {inject, injectable} from 'inversify'
+import {THIRD_PARTY_TYPES} from '../ioc/THIRD_PARTY_TYPES'
+import {Lodash} from '../ioc/interfaces'
+import IObjectModel from '../Interfaces/IObjectModel'
+import AbstractObjectModel from './AbstractObjectModel'
+import * as npmLodash from 'lodash'
 
 @injectable()
-export default abstract class ObjectModel {
-  protected abstract dbProperties: Array<string>;
-  protected abstract primaryKey: string;
-  protected abstract tableName: string;
+export default class ObjectModel extends AbstractObjectModel implements IObjectModel {
+  protected dbProperties: Array<string>
+  protected primaryKey: string
+  protected tableName: string
 
-  private id: number;
-  private createdAt: string;
-  private updatedAt: string;
+  private _id: number
+  private _createdAt: string
+  private _updatedAt: string
 
-  constructor (id: number) {
-    this.id = 0;
-    this.createdAt = null;
-    this.updatedAt = null;
+  private _lodash: Lodash
+
+  constructor(id: number, @inject(THIRD_PARTY_TYPES.Lodash) lodash: Lodash = npmLodash) {
+    super()
+    this._id = 0
+    this._createdAt = null
+    this._updatedAt = null
+
+    this._lodash = lodash
 
     if (id > 0) {
-      this.id = id;
+      this._id = id
     }
   }
 
@@ -84,7 +94,7 @@ export default abstract class ObjectModel {
     `;
 
     try {
-      const [rows, columnsInfo]: [any, any] = await database.Pool.query(sql, [this.id]);
+      const [rows, columnsInfo]: [any, any] = await database.Pool.query(sql, [this._id])
       return rows[0]
     } catch (e) {
       console.error(e);
@@ -103,7 +113,7 @@ export default abstract class ObjectModel {
     try {
       const [result, error]: [any, any] = await database.Pool.query(sql, insertData)
 
-      this.id = result.insertId;
+      this._id = result.insertId;
       (<any>this)[this.primaryKey] = result.insertId;
 
       const insertedData: T = await this.getDb<T>();
@@ -116,7 +126,7 @@ export default abstract class ObjectModel {
   }
 
   public async update<T> (data: T): Promise<T> {
-    if (this.id > 0) {
+    if (this._id > 0) {
       const sql: string = `
             UPDATE ${this.tableName}
             SET ?
@@ -126,7 +136,7 @@ export default abstract class ObjectModel {
       const updateData: T & DatabaseDate = ObjectModel.setUpdatedDate(this.parseDataToDb(data))
 
       try {
-        await database.Pool.query(sql, [updateData, this.id]);
+        await database.Pool.query(sql, [updateData, this._id])
 
         const updatedData: T = await this.getDb<T>();
 
@@ -142,7 +152,7 @@ export default abstract class ObjectModel {
   }
 
   public async delete (): Promise<void> {
-    if (this.id > 0) {
+    if (this._id > 0) {
       const sql: string = `
       DELETE
       FROM ${this.tableName}
@@ -150,13 +160,13 @@ export default abstract class ObjectModel {
     `;
 
       try {
-        await database.Pool.query(sql, [this.id]);
+        await database.Pool.query(sql, [this._id])
       } catch (e) {
         console.error(e);
         throw apiErrors.OBJECT_MODEL_DELETE_QUERY_ERROR;
       }
 
-      this.id = 0;
+      this._id = 0;
       (<any>this)[this.primaryKey] = 0;
     } else {
       console.error(apiErrors.OBJECT_MODEL_UPDATE_NO_ID)
@@ -165,6 +175,12 @@ export default abstract class ObjectModel {
   }
 
   public prueba() {
-    console.log('hola')
+    this._lodash.forEach([1, 2, 3, 4, 5], (item: number) => {
+      console.log(item)
+    })
+
+    this._lodash.forEach([1, 2, 3, 4, 5], (item: number) => {
+      console.log(item)
+    })
   }
 }
