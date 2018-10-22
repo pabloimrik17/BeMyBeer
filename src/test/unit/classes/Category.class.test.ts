@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import Category from '../../../api/classes/Category.class'
 
 jest.mock('../../../api/classes/Category.class')

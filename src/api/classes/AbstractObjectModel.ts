@@ -3,7 +3,6 @@ export default abstract class AbstractObjectModel {
   protected abstract primaryKey: string
   protected abstract tableName: string
 
-
   protected constructor() {
   }
 }

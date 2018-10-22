@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import Beer from '../../../api/classes/Beer.class'
 
 jest.mock('../../../api/classes/Beer.class')
@@ -9,12 +10,13 @@ describe('Beer Class Unit', () => {
     beer = new Beer()
   })
 
-  test('Expect Beer Constructor to be called', () => {
-    expect(Beer).toBeCalledTimes(1)
-  })
+  describe('Constructor', () => {
+    test('Expect Beer Constructor to be called', () => {
+      expect(Beer).toBeCalledTimes(1)
+    })
 
-  test('Expect Beer object to exist', () => {
-    expect(Beer).toBeCalledTimes(1)
-    expect(beer).toBeTruthy()
+    test('Expect Beer object to exist', () => {
+      expect(beer).toBeTruthy()
+    })
   })
 })
