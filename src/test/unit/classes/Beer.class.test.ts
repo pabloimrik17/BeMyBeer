@@ -1,14 +1,14 @@
-import 'reflect-metadata'
-import Beer from '../../../api/classes/Beer.class'
+import 'reflect-metadata';
+import Beer from '../../../api/classes/Beer.class';
 
-jest.mock('../../../api/classes/Beer.class')
-let beer: Beer
+jest.mock('../../../api/classes/Beer.class');
+let beer: Beer;
 
 describe('Beer Class Unit', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-    beer = new Beer()
-  })
+    beforeEach(() => {
+        jest.clearAllMocks();
+        beer = new Beer();
+    });
 
   describe('Constructor', () => {
     test('Expect Beer Constructor to be called', () => {

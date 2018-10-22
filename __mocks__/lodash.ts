@@ -1,3 +1,3 @@
-const lodash = jest.genMockFromModule('lodash')
+const lodash = jest.genMockFromModule('lodash');
 
-export default lodash
+module.exports = lodash;
