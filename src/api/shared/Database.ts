@@ -2,20 +2,20 @@ import moment from 'moment';
 import mysql, { Connection } from 'mysql2/promise';
 
 export default class Database {
-  private _pool: Connection;
-  private _mode: string;
+    private _pool: Connection;
+    private _mode: string;
 
     constructor() {
-      this._pool = undefined;
-      this._mode = undefined;
+        this._pool = undefined;
+        this._mode = undefined;
     }
 
     get Pool(): Connection {
-      return this._pool;
+        return this._pool;
     }
 
     public async connect(mode: string): Promise<void> {
-      this._pool = await mysql.createConnection({
+        this._pool = await mysql.createConnection({
             host: process.env.DATABASE_HOST_IP,
             user: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASS,
@@ -36,7 +36,7 @@ export default class Database {
                 return next();
             },
         });
-      this._mode = mode;
+        this._mode = mode;
     }
 }
 
