@@ -1,9 +1,7 @@
 // https://stackoverflow.com/questions/43669697/dependency-injection-recommended-pattern-for-injecting-npm-modules
 // https://medium.com/@samueleresca/inversion-of-control-and-dependency-injection-in-typescript-3040d568aabe
 
-import { inject, injectable } from 'inversify';
-import * as npmLodash from 'lodash';
-import 'reflect-metadata';
+
 import { DatabaseDate } from '../Interfaces/DatabaseDate';
 import IObjectModel from '../Interfaces/IObjectModel';
 import { Lodash } from '../ioc/interfaces';
@@ -12,36 +10,40 @@ import apiErrors from '../shared/apiResponser/ApiErrors';
 import Database from '../shared/Database';
 import AbstractObjectModel from './AbstractObjectModel';
 import DateModel from './DateModel';
+import { inject } from 'inversify';
 
-
-@injectable()
 export default class ObjectModel extends AbstractObjectModel implements IObjectModel {
     protected dbProperties: Array<string>;
     protected primaryKey: string;
     protected tableName: string;
 
-    private _id: number;
     private _createdAt: string;
     private _updatedAt: string;
 
     private _database: Database;
     private _lodash: Lodash;
+    private _dateModel: DateModel;
 
-    constructor(id: number,
-                @inject(APPLICACION_TYPES.Database) database: Database = new Database(),
-                @inject(THIRD_PARTY_TYPES.Lodash) lodash: Lodash = npmLodash,
+    constructor(@inject(APPLICACION_TYPES.Database)database: Database,
+                @inject(THIRD_PARTY_TYPES.Lodash)lodash: Lodash,
+                @inject(APPLICACION_TYPES.DateModel)dateModel: DateModel,
     ) {
         super();
-        this._id = 0;
+        this._Id = 0;
         this._createdAt = undefined;
         this._updatedAt = undefined;
 
         this._database = database;
         this._lodash = lodash;
+        this._dateModel = dateModel;
+    }
 
-        if (id > 0) {
-            this._id = id;
-        }
+    private get _Id(): number {
+        return (<any>this)[this.primaryKey] as number;
+    }
+
+    private set _Id(value: number) {
+        (<any>this)[this.primaryKey] = value;
     }
 
     private static setDatabaseDates<T>(data: T & Object): T & DatabaseDate {
@@ -87,7 +89,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     `;
 
         try {
-            const [rows, columnsInfo]: [any, any] = await this._database.Pool.query(sql, [this._id]);
+            const [rows, columnsInfo]: [any, any] = await this._database.Pool.query(sql, [this._Id]);
             return rows[0];
         } catch (e) {
             console.error(e);
@@ -106,7 +108,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
         try {
             const [result, error]: [any, any] = await this._database.Pool.query(sql, insertData);
 
-            this._id = result.insertId;
+            this._Id = result.insertId;
             (<any>this)[this.primaryKey] = result.insertId;
 
             const insertedData: T = await this.getDb<T>();
@@ -119,7 +121,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     }
 
     public async update<T>(data: T): Promise<T> {
-        if (this._id > 0) {
+        if (this._Id > 0) {
             const sql: string = `
             UPDATE ${this.tableName}
             SET ?
@@ -129,7 +131,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
             const updateData: T & DatabaseDate = ObjectModel.setUpdatedDate(this.parseDataToDb(data));
 
             try {
-                await this._database.Pool.query(sql, [updateData, this._id]);
+                await this._database.Pool.query(sql, [updateData, this._Id]);
 
                 const updatedData: T = await this.getDb<T>();
 
@@ -145,7 +147,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     }
 
     public async delete(): Promise<void> {
-        if (this._id > 0) {
+        if (this._Id > 0) {
             const sql: string = `
               DELETE
               FROM ${this.tableName}
@@ -153,13 +155,13 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
             `;
 
             try {
-                await this._database.Pool.query(sql, [this._id]);
+                await this._database.Pool.query(sql, [this._Id]);
             } catch (e) {
                 console.error(e);
                 throw apiErrors.OBJECT_MODEL_DELETE_QUERY_ERROR;
             }
 
-            this._id = 0;
+            this._Id = 0;
             (<any>this)[this.primaryKey] = 0;
         } else {
             console.error(apiErrors.OBJECT_MODEL_UPDATE_NO_ID);

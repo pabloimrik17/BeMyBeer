@@ -5,6 +5,7 @@ import ObjectModel from '../classes/ObjectModel.class';
 import Database from '../shared/Database';
 import { Lodash, Moment } from './interfaces';
 import { APPLICACION_TYPES, THIRD_PARTY_TYPES } from './THIRD_PARTY_TYPES';
+import DateModel from '../classes/DateModel';
 
 const thirdPartyDependencies: ContainerModule = new ContainerModule((bind) => {
     bind<Lodash>(THIRD_PARTY_TYPES.Lodash).toConstantValue(lodash);
@@ -14,6 +15,7 @@ const thirdPartyDependencies: ContainerModule = new ContainerModule((bind) => {
 const applicationDependencies: ContainerModule = new ContainerModule((bind) => {
     bind<ObjectModel>(APPLICACION_TYPES.ObjectModel).to(ObjectModel);
     bind<Database>(APPLICACION_TYPES.Database).to(Database);
+    bind<DateModel>(APPLICACION_TYPES.DateModel).to(DateModel);
 });
 
 const container: Container = new Container();

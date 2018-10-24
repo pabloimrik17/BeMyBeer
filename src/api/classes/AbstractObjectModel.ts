@@ -1,8 +1,12 @@
-export default abstract class AbstractObjectModel {
-  protected abstract dbProperties: Array<string>
-  protected abstract primaryKey: string
-  protected abstract tableName: string
+import 'reflect-metadata';
+import { injectable } from 'inversify';
 
-  protected constructor() {
-  }
+@injectable()
+export default abstract class AbstractObjectModel {
+    protected abstract dbProperties: Array<string>;
+    protected abstract primaryKey: string;
+    protected abstract tableName: string;
+
+    protected constructor() {
+    }
 }

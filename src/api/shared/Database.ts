@@ -1,6 +1,9 @@
+import 'reflect-metadata';
 import moment from 'moment';
 import mysql, { Connection } from 'mysql2/promise';
+import { injectable } from 'inversify';
 
+@injectable()
 export default class Database {
     private _pool: Connection;
     private _mode: string;

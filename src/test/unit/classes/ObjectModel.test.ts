@@ -1,6 +1,8 @@
 import * as lodash from 'lodash';
 import ObjectModel from '../../../api/classes/ObjectModel.class';
 import Database from '../../../api/shared/Database';
+import { APPLICACION_TYPES } from '../../../api/ioc/THIRD_PARTY_TYPES';
+import { container } from '../../../api/ioc/ioc';
 
 
 let objectModel: ObjectModel;
@@ -12,7 +14,8 @@ describe('Object Model', () => {
         jest.clearAllMocks();
         database = new Database();
         poolSpy = jest.spyOn(database, 'Pool', 'get');
-        objectModel = new ObjectModel(0, database);
+        const a = container.get<ObjectModel>(APPLICACION_TYPES.ObjectModel);
+        const b = '';
 
     });
 

@@ -1,13 +1,19 @@
-import * as importedMoment from 'moment';
-import { Moment } from '../ioc/interfaces';
+import 'reflect-metadata';
+import { inject, injectable } from 'inversify';
+import { THIRD_PARTY_TYPES } from '../ioc/THIRD_PARTY_TYPES';
+import { Moment } from 'moment';
 
+@injectable()
 export default class DateModel {
     public static readonly DATE_FORMAT: string = 'YYYY-MM-DD HH:mm:ss';
 
-    constructor() {
+    private _moment: Moment;
+
+    constructor(@inject(THIRD_PARTY_TYPES.Moment)moment: Moment) {
+        this._moment = moment;
     }
 
-    public static getCurrentDate(moment: Moment = importedMoment): string {
-        return moment.utc().format(DateModel.DATE_FORMAT);
+    public getCurrentDate(): string {
+        return this._moment.utc().format(DateModel.DATE_FORMAT);
     }
 }

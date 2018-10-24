@@ -1,9 +1,10 @@
 export const THIRD_PARTY_TYPES = {
-  Lodash: Symbol('Lodash'),
-  Moment: Symbol('Moment'),
-}
+    Lodash: Symbol('Lodash'),
+    Moment: Symbol('Moment'),
+};
 
 export const APPLICACION_TYPES = {
-  ObjectModel: Symbol('ObjectModel'),
-  Database: Symbol('Database')
-}
+    ObjectModel: Symbol('ObjectModel'),
+    Database: Symbol('Database'),
+    DateModel: Symbol('DateModel'),
+};
