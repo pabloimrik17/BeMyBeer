@@ -1,6 +1,7 @@
 import { Container, ContainerModule } from 'inversify';
 import * as lodash from 'lodash';
 import * as moment from 'moment';
+import DateModel from '../classes/DateModel';
 import ObjectModel from '../classes/ObjectModel.class';
 import Database from '../shared/Database';
 import { Lodash, Moment } from './interfaces';
@@ -14,6 +15,7 @@ const thirdPartyDependencies: ContainerModule = new ContainerModule((bind) => {
 const applicationDependencies: ContainerModule = new ContainerModule((bind) => {
   bind<ObjectModel>(APPLICACION_TYPES.ObjectModel).to(ObjectModel);
   bind<Database>(APPLICACION_TYPES.Database).to(Database);
+  bind<DateModel>(APPLICACION_TYPES.DateModel).to(DateModel);
 });
 
 const container: Container = new Container();
