@@ -1,11 +1,11 @@
 import { Container, ContainerModule } from 'inversify';
 import * as lodash from 'lodash';
 import * as moment from 'moment';
+import DateModel from '../classes/DateModel';
 import ObjectModel from '../classes/ObjectModel.class';
 import Database from '../shared/Database';
 import { Lodash, Moment } from './interfaces';
 import { APPLICACION_TYPES, THIRD_PARTY_TYPES } from './THIRD_PARTY_TYPES';
-import DateModel from '../classes/DateModel';
 
 const thirdPartyDependencies: ContainerModule = new ContainerModule((bind) => {
     bind<Lodash>(THIRD_PARTY_TYPES.Lodash).toConstantValue(lodash);

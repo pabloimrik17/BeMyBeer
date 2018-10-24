@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
 import { THIRD_PARTY_TYPES } from '../ioc/THIRD_PARTY_TYPES';
-import { Moment } from 'moment';
+import { Moment } from '../ioc/interfaces';
 
 @injectable()
 export default class DateModel {
-    public static readonly DATE_FORMAT: string = 'YYYY-MM-DD HH:mm:ss';
+  public static readonly DATE_FORMAT: string = 'YYYY-MM-DD HH:mm:ss';
 
     private _moment: Moment;
 
@@ -13,7 +13,9 @@ export default class DateModel {
         this._moment = moment;
     }
 
-    public getCurrentDate(): string {
-        return this._moment.utc().format(DateModel.DATE_FORMAT);
-    }
+  public getCurrentDate(): string {
+    const currentDate = this._moment.utc();
+
+    return currentDate.format(DateModel.DATE_FORMAT);
+  }
 }
