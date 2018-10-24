@@ -46,21 +46,62 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
         (<any>this)[this.primaryKey] = value;
     }
 
-    private static setDatabaseDates<T>(data: T & Object): T & DatabaseDate {
-        const currentDate: string = DateModel.getCurrentDate();
+    public async save<T>(data: T): Promise<T> {
+        const sql: string = `
+      INSERT INTO ${this.tableName}
+      SET ?
+    `;
+
+        const insertData: T & DatabaseDate = this._setDatabaseDates(this.parseDataToDb(data));
+
+        try {
+            const [result, error]: [any, any] = await this._database.Pool.query(sql, insertData);
+
+            this._Id = result.insertId;
+            (<any>this)[this.primaryKey] = result.insertId;
+
+            const insertedData: T = await this.getDb<T>();
+
+            return insertedData;
+        } catch (e) {
+            console.error(e);
+            throw apiErrors.OBJECT_MODEL_SAVE_QUERY_ERROR;
+        }
+    }
+
+    public async update<T>(data: T): Promise<T> {
+        if (this._Id > 0) {
+            const sql: string = `
+            UPDATE ${this.tableName}
+            SET ?
+            WHERE ${this.primaryKey} = ?
+        `;
+
+            const updateData: T & DatabaseDate = this._setUpdatedDate(this.parseDataToDb(data));
+
+            try {
+                await this._database.Pool.query(sql, [updateData, this._Id]);
+
+                const updatedData: T = await this.getDb<T>();
+
+                return updatedData;
+            } catch (e) {
+                console.error(e);
+                throw apiErrors.OBJECT_MODEL_UPDATE_QUERY_ERROR;
+            }
+        } else {
+            console.error(apiErrors.OBJECT_MODEL_UPDATE_NO_ID);
+            throw apiErrors.OBJECT_MODEL_UPDATE_NO_ID;
+        }
+    }
+
+    private _setDatabaseDates<T>(data: T & Object): T & DatabaseDate {
+        const currentDate: string = this._dateModel.getCurrentDate();
 
         return Object.assign(Object.create(data), data, {
             createdAt: currentDate,
             updatedAt: currentDate,
         });
-    }
-
-    private static setCreatedDate<T>(data: T & Object): T & DatabaseDate {
-        return Object.assign(Object.create(data), data, { createdAt: DateModel.getCurrentDate() });
-    }
-
-    private static setUpdatedDate<T>(data: T & Object): T & DatabaseDate {
-        return Object.assign(Object.create(data), data, { updatedAt: DateModel.getCurrentDate() });
     }
 
     public async getAllDb<T>(): Promise<Array<T>> {
@@ -97,53 +138,12 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
         }
     }
 
-    public async save<T>(data: T): Promise<T> {
-        const sql: string = `
-      INSERT INTO ${this.tableName}
-      SET ?
-    `;
-
-        const insertData: T & DatabaseDate = ObjectModel.setDatabaseDates(this.parseDataToDb(data));
-
-        try {
-            const [result, error]: [any, any] = await this._database.Pool.query(sql, insertData);
-
-            this._Id = result.insertId;
-            (<any>this)[this.primaryKey] = result.insertId;
-
-            const insertedData: T = await this.getDb<T>();
-
-            return insertedData;
-        } catch (e) {
-            console.error(e);
-            throw apiErrors.OBJECT_MODEL_SAVE_QUERY_ERROR;
-        }
+    private _setCreatedDate<T>(data: T & Object): T & DatabaseDate {
+        return Object.assign(Object.create(data), data, { createdAt: this._dateModel.getCurrentDate() });
     }
 
-    public async update<T>(data: T): Promise<T> {
-        if (this._Id > 0) {
-            const sql: string = `
-            UPDATE ${this.tableName}
-            SET ?
-            WHERE ${this.primaryKey} = ?
-        `;
-
-            const updateData: T & DatabaseDate = ObjectModel.setUpdatedDate(this.parseDataToDb(data));
-
-            try {
-                await this._database.Pool.query(sql, [updateData, this._Id]);
-
-                const updatedData: T = await this.getDb<T>();
-
-                return updatedData;
-            } catch (e) {
-                console.error(e);
-                throw apiErrors.OBJECT_MODEL_UPDATE_QUERY_ERROR;
-            }
-        } else {
-            console.error(apiErrors.OBJECT_MODEL_UPDATE_NO_ID);
-            throw apiErrors.OBJECT_MODEL_UPDATE_NO_ID;
-        }
+    private _setUpdatedDate<T>(data: T & Object): T & DatabaseDate {
+        return Object.assign(Object.create(data), data, { updatedAt: this._dateModel.getCurrentDate() });
     }
 
     public async delete(): Promise<void> {
