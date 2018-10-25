@@ -1,16 +1,16 @@
-import express, {Router, Request, Response} from 'express'
-import Category, {CategoryDb} from '../classes/Category.class'
-import ApiResponser from '../shared/apiResponser/ApiResponser'
-import {checkBody, checkIdParam} from '../middleware/routes.middleware'
-import {validationResult} from 'express-validator/check'
-import {createCategory, updateCategory} from '../schemas/_category.schema'
+import express, { Request, Response, Router } from 'express';
+import { validationResult } from 'express-validator/check';
+import Category, { CategoryDb } from '../classes/Category.class';
+import { checkBody, checkIdParam } from '../middleware/routes.middleware';
+import { createCategory, updateCategory } from '../schemas/_category.schema';
+import ApiResponser from '../shared/apiResponser/ApiResponser';
 
-const router: Router = express.Router()
+const router: Router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
     const category: Category = new Category();
-    const categories: Array<CategoryDb> = await category.getAllDb<CategoryDb>()
+    const categories: Array<CategoryDb> = await category.getAllDb<CategoryDb>();
     ApiResponser.responseSuccess(res, categories);
   } catch (error) {
     ApiResponser.responseError(res, error);
@@ -72,4 +72,4 @@ router.delete('/:id', checkIdParam(), async (req: Request, res: Response) => {
   }
 });
 
-export default router
+export default router;

@@ -1,7 +1,8 @@
-import 'reflect-metadata';
+import { injectable } from 'inversify';
 import moment from 'moment';
 import mysql, { Connection } from 'mysql2/promise';
-import { injectable } from 'inversify';
+import 'reflect-metadata';
+import DateModel from '../classes/DateModel';
 
 @injectable()
 export default class Database {
@@ -13,7 +14,7 @@ export default class Database {
         this._mode = undefined;
     }
 
-    get Pool(): Connection {
+  public get Pool(): Connection {
         return this._pool;
     }
 
@@ -29,9 +30,9 @@ export default class Database {
             timezone: process.env.TIMEZONE,
             typeCast: (field, next) => {
                 if (field.type === 'DATETIME') {
-                    return moment.utc(field.string(), 'YYYY-MM-DD HH:mm:ss').format();
+                  return moment.utc(field.string(), DateModel.DATE_FORMAT).format();
                 } else if (field.type === 'TIMESTAMP') {
-                    return moment.utc(field.string(), 'YYYY-MM-DD HH:mm:ss').format();
+                  return moment.utc(field.string(), DateModel.DATE_FORMAT).format();
                 } else if (field.type === 'DATE') {
                     return moment.utc(field.string(), 'YYYY-MM-DD').format('YYYY-MM-DD');
                 }

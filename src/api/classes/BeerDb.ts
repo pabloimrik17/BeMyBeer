@@ -1,7 +1,8 @@
-import BeerDb from './BeerDb';
-import ObjectModel from './ObjectModel.class';
+import { injectable } from 'inversify';
+import 'reflect-metadata';
 
-export default class Beer extends ObjectModel {
+@injectable()
+export default class BeerDb {
   public idBeer: number;
   public name: string;
   public graduation: number;
@@ -11,12 +12,8 @@ export default class Beer extends ObjectModel {
   public idCategory: number;
   public datePurchased: string;
   public dateDrinked: string;
-  protected dbProperties: Array<string> = Object.keys(new BeerDb());
-  protected primaryKey: string = 'idBeer';
-  protected tableName: string = 'beer';
 
-  constructor(idBeer = 0) {
-    super(idBeer);
+  constructor() {
     this.idBeer = 0;
     this.name = '';
     this.graduation = 0;
@@ -26,9 +23,5 @@ export default class Beer extends ObjectModel {
     this.idCategory = 0;
     this.datePurchased = '';
     this.dateDrinked = '';
-
-    if (idBeer > 0) {
-      this.idBeer = idBeer;
-    }
   }
 }
