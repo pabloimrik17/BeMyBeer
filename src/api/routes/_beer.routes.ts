@@ -1,11 +1,12 @@
-import express, {Router, Response, Request} from 'express'
-import ApiResponser from '../shared/apiResponser/ApiResponser'
-import Beer, {BeerDb} from '../classes/Beer.class'
-import {checkBody, checkIdParam} from '../middleware/routes.middleware'
-import {validationResult} from 'express-validator/check'
-import {createBeer, updateBeer} from '../schemas/_beer.schema'
+import express, { Request, Response, Router } from 'express';
+import ApiResponser from '../shared/apiResponser/ApiResponser';
+import Beer from '../classes/Beer.class';
+import { checkBody, checkIdParam } from '../middleware/routes.middleware';
+import { validationResult } from 'express-validator/check';
+import { createBeer, updateBeer } from '../schemas/_beer.schema';
+import BeerDb from '../classes/BeerDb';
 
-const router: Router = express.Router()
+const router: Router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
@@ -66,4 +67,4 @@ router.delete('/:id', checkIdParam(), async (req: Request, res: Response) => {
   }
 });
 
-export default router
+export default router;

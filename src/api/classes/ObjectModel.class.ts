@@ -28,45 +28,61 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
 
   constructor(id: number = 0) {
     super();
-    this._id = 0;
+    this.Id = 0;
     this._createdAt = undefined;
     this._updatedAt = undefined;
 
     if (id > 0) {
-      this._id = id;
+      this.Id = id;
     }
   }
 
-  get Database(): Database {
+  public get Database(): Database {
     return this._database;
   }
 
-  set Database(value: Database) {
+  public set Database(value: Database) {
     this._database = value;
   }
 
-  get DateModel(): DateModel {
+  public get DateModel(): DateModel {
     return this._dateModel;
   }
 
-  set DateModel(value: DateModel) {
+  public set DateModel(value: DateModel) {
     this._dateModel = value;
   }
 
+  public get Id(): number {
+    return (<any>this)[this.primaryKey] || this._id;
+  }
+
+  public set Id(value: number) {
+    if ((<any>this)[this.primaryKey]) {
+      (<any>this)[this.primaryKey] = value;
+    }
+
+    this._id = value;
+  }
+
   public async getDb<T>(): Promise<T> {
-    const sql: string = `
+    if (this.Id > 0) {
+      const sql: string = `
           SELECT ${this.getDbColumnsToQuery()}
           FROM ${this.tableName}
           WHERE ${this.primaryKey} = ?
         `;
 
-    try {
-      const [rows, columnsInfo]: [any, any] = await this.Database.Pool.query(sql, [this._id]);
-      return rows[0];
-    } catch (e) {
-      // TODO DI
-      console.error(e);
-      throw new Error(apiErrors.OBJECT_MODEL.GET_QUERY.message);
+      try {
+        const [rows, columnsInfo]: [any, any] = await this.Database.Pool.query(sql, [this.Id]);
+        return rows[0];
+      } catch (e) {
+        // TODO DI
+        console.error(e);
+        throw new Error(apiErrors.OBJECT_MODEL.GET_QUERY.message);
+      }
+    } else {
+      throw new Error(apiErrors.OBJECT_MODEL.COMMON_NO_ID.message);
     }
   }
 
@@ -98,7 +114,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     try {
       const [result, error]: [any, any] = await this.Database.Pool.query(sql, insertData);
 
-      this._id = result.insertId;
+      this.Id = result.insertId;
       (<any>this)[this.primaryKey] = result.insertId;
 
       const insertedData: T = await this.getDb<T>();
@@ -111,7 +127,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   }
 
   public async update<T>(data: T): Promise<T> {
-    if (this._id > 0) {
+    if (this.Id > 0) {
       const sql: string = `
                 UPDATE ${this.tableName}
                 SET ?
@@ -121,7 +137,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
       const updateData: T & DatabaseDate = this._setUpdatedDate(this.parseDataToDb(data));
 
       try {
-        await this.Database.Pool.query(sql, [updateData, this._id]);
+        await this.Database.Pool.query(sql, [updateData, this.Id]);
 
         const updatedData: T = await this.getDb<T>();
 
@@ -137,7 +153,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   }
 
   public async delete(): Promise<void> {
-    if (this._id > 0) {
+    if (this.Id > 0) {
       const sql: string = `
               DELETE
               FROM ${this.tableName}
@@ -145,13 +161,13 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
             `;
 
       try {
-        await this.Database.Pool.query(sql, [this._id]);
+        await this.Database.Pool.query(sql, [this.Id]);
       } catch (e) {
         console.error(e);
         throw new Error(apiErrors.OBJECT_MODEL.DELETE_QUERY.message);
       }
 
-      this._id = 0;
+      this.Id = 0;
       (<any>this)[this.primaryKey] = 0;
     } else {
       console.error(apiErrors.OBJECT_MODEL.COMMON_NO_ID);

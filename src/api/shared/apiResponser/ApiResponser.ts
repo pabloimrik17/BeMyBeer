@@ -1,5 +1,5 @@
-import apiErrors from './ApiErrors'
-import {Response} from 'express'
+import { apiErrors } from './ApiErrors';
+import { Response } from 'express';
 
 export interface ApiResponse {
   responseCode: number
@@ -14,7 +14,7 @@ export type ResponseErrorOptions = {
 
 export default class ApiResponser {
   // TODO TIPAR CON OBJECT MODEL
-  static responseSuccess (res: Response, data: Object = {}) {
+  static responseSuccess(res: Response, data: Object = {}) {
     const responseObject: ApiResponse = {
       responseCode: apiErrors.DEFAULT.SUCCESS.code,
       responseMessage: apiErrors.DEFAULT.SUCCESS.message,
@@ -25,9 +25,9 @@ export default class ApiResponser {
     res.json(responseObject);
   }
 
-  static responseError (res: Response, error: any, options: ResponseErrorOptions = {
+  static responseError(res: Response, error: any, options: ResponseErrorOptions = {
     data: {},
-    canContinue: true
+    canContinue: true,
   }) {
     const responseObject: ApiResponse = {
       responseCode: typeof error === 'undefined' ? apiErrors.DEFAULT.ERROR.code : error.code,

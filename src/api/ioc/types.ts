@@ -10,4 +10,6 @@ export const ClassTypes = {
   DateModel: Symbol('DateModel'),
   CategoryDb: Symbol('CategoryDb'),
   BeerDb: Symbol('BeerDb'),
+  Category: Symbol('Category'),
+  Beer: Symbol('Beer'),
 };

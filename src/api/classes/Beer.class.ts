@@ -15,9 +15,9 @@ export default class Beer extends ObjectModel {
   protected primaryKey: string = 'idBeer';
   protected tableName: string = 'beer';
 
-  constructor(idBeer = 0) {
-    super(idBeer);
-    this.idBeer = 0;
+  constructor() {
+    super();
+    this.Id = 0;
     this.name = '';
     this.graduation = 0;
     this.color = '';
@@ -26,9 +26,5 @@ export default class Beer extends ObjectModel {
     this.idCategory = 0;
     this.datePurchased = '';
     this.dateDrinked = '';
-
-    if (idBeer > 0) {
-      this.idBeer = idBeer;
-    }
   }
 }

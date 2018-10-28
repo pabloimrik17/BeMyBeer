@@ -1,15 +1,18 @@
 import express, { Request, Response, Router } from 'express';
 import { validationResult } from 'express-validator/check';
-import Category, { CategoryDb } from '../classes/Category.class';
+import Category from '../classes/Category.class';
 import { checkBody, checkIdParam } from '../middleware/routes.middleware';
 import { createCategory, updateCategory } from '../schemas/_category.schema';
 import ApiResponser from '../shared/apiResponser/ApiResponser';
+import CategoryDb from '../classes/CategoryDb';
+import { container } from '../ioc/ioc';
+import { ClassTypes } from '../ioc/types';
 
 const router: Router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const category: Category = new Category();
+    const category: Category = container.get<Category>(ClassTypes.Category);
     const categories: Array<CategoryDb> = await category.getAllDb<CategoryDb>();
     ApiResponser.responseSuccess(res, categories);
   } catch (error) {
@@ -22,7 +25,8 @@ router.get('/:id', checkIdParam(), async (req: Request, res: Response) => {
 
   try {
     validationResult(req).throw();
-    const category = new Category(idCategory);
+    const category = container.get<Category>(ClassTypes.Category);
+    category.Id = idCategory;
     const categoryResponse = await category.getDb<CategoryDb>();
 
     ApiResponser.responseSuccess(res, categoryResponse);
@@ -35,7 +39,7 @@ router.post('/', checkBody(createCategory), async (req: Request, res: Response) 
   try {
     validationResult(req).throw();
 
-    const category = new Category();
+    const category = container.get<Category>(ClassTypes.Category);
     const categoryResponse = await category.save<CategoryDb>(req.body);
 
     ApiResponser.responseSuccess(res, categoryResponse);
@@ -49,7 +53,8 @@ router.put('/:id', checkIdParam(), checkBody(updateCategory), async (req: Reques
     validationResult(req).throw();
     const idCategory = parseInt(req.params.id, 10);
 
-    const category = new Category(idCategory);
+    const category = container.get<Category>(ClassTypes.Category);
+    category.Id = idCategory;
     const categoryResponse = await category.update<CategoryDb>(req.body);
 
     ApiResponser.responseSuccess(res, categoryResponse);
@@ -63,7 +68,8 @@ router.delete('/:id', checkIdParam(), async (req: Request, res: Response) => {
 
   try {
     validationResult(req).throw();
-    const category = new Category(idCategory);
+    const category = container.get<Category>(ClassTypes.Category);
+    category.Id = idCategory;
     await category.delete();
 
     ApiResponser.responseSuccess(res);

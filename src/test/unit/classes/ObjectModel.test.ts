@@ -39,15 +39,18 @@ describe('Object Model', () => {
 
       expect(DateModel).toBeCalledTimes(1);
       expect(Database).toBeCalledTimes(1);
+      expect(objectModel.Id).toBe(0);
       expect(objectModel).toBeTruthy();
     });
   });
 
   describe('getDb', () => {
     test('Expect to return one database row', async () => {
+      const idObject: number = 1;
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.Id = idObject;
 
       const row = await objectModel.getDb<Object>();
 
@@ -58,10 +61,24 @@ describe('Object Model', () => {
       expect(row).toBe(mockedSelectReturnedRows[0]);
     });
 
-    test('Expect getDb exception to be throwed', async () => {
+    test('Expect getDb to throw error because no id', async () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+
+      mockedQuery = jest.fn(() => new Promise((resolve, reject) => reject(undefined)));
+
+      await expect(objectModel.getDb())
+        .rejects
+        .toThrowError(apiErrors.OBJECT_MODEL.COMMON_NO_ID.message);
+    });
+
+    test('Expect getDb exception to be throwed', async () => {
+      const idObject: number = 1;
+      const objectModel: ObjectModel = new ObjectModel();
+      objectModel.Database = database;
+      objectModel.DateModel = dateModel;
+      objectModel.Id = idObject;
 
       mockedQuery = jest.fn(() => new Promise((resolve, reject) => reject(undefined)));
 
