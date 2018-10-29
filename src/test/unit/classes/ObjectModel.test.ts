@@ -24,7 +24,7 @@ describe('Object Model', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    database = database = new Database(mysql2Imported);
+    database = database = new Database(mysql2Imported, importedMoment);
     mockedQuery = jest.fn<Connection>((sql: string) => new Promise(resolve => resolve(mockedSelectQueryReturn)));
     Object.defineProperty(database, 'Pool', {
       get: jest.fn(() => ({ query: mockedQuery })),

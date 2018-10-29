@@ -1,3 +1,4 @@
+import * as momentImported from 'moment';
 import * as mysql2Imported from 'mysql2/promise';
 import { ConnectionOptions } from 'mysql2/promise';
 import 'reflect-metadata';
@@ -20,7 +21,7 @@ describe('Category', () => {
 
   describe('Constructor', () => {
     test('Expect object to be instantiated properly', () => {
-      database = new Database(mysql2Imported);
+      database = new Database(mysql2Imported, momentImported);
       database = container.get<Database>(ClassTypes.Database);
 
       expect(database).toBeTruthy();
@@ -29,14 +30,14 @@ describe('Category', () => {
   });
 
   describe('Connect', () => {
-    test('Expect connect to set pool property with a new connection and set the mode (environment)', async () => {
-      const connectionOptions: ConnectionOptions = Object.assign({}, defaultConnectionOptions, { database: process.env.TEST_DATABASE_NAME });
+    test('Expect connect to set pool property with a new connection', async () => {
+      const connectionOptions: ConnectionOptions = defaultConnectionOptions;
       const connection = { config: {}, threadId: 1 };
       const createConnectionMocked: SpyInstance = jest.spyOn(mysql2Imported, 'createConnection').mockImplementation(() => {
         return new Promise(resolve => resolve(connection));
       });
 
-      database = new Database(mysql2Imported);
+      database = new Database(mysql2Imported, momentImported);
       await database.connect();
 
       expect(createConnectionMocked).toBeCalledTimes(1);
