@@ -11,7 +11,7 @@ export default class Category extends ObjectModel {
 
   constructor() {
     super();
-    this.Id = 0;
+    this.idCategory = 0;
     this.name = '';
     this.idParent = 0;
   }

@@ -28,12 +28,12 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
 
   constructor(id: number = 0) {
     super();
-    this.Id = 0;
+    this._id = 0;
     this._createdAt = undefined;
     this._updatedAt = undefined;
 
     if (id > 0) {
-      this.Id = id;
+      this._id = id;
     }
   }
 
@@ -58,7 +58,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   }
 
   public set Id(value: number) {
-    if ((<any>this)[this.primaryKey]) {
+    if ((<any>this)[this.primaryKey] !== undefined) {
       (<any>this)[this.primaryKey] = value;
     }
 

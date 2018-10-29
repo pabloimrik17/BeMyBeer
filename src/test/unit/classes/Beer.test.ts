@@ -30,13 +30,15 @@ describe('Beer', () => {
     });
 
     test('Expect idBeer to be 0 when 0 value supplied in constructor', () => {
-      beer = new Beer(0);
+      beer = new Beer();
+      beer.Id = 0;
 
       expect(beer.idBeer).toBe(0);
     });
 
     test('Expect idBeer to be equal to value greater than 0 supplied in constructor', () => {
-      beer = new Beer(2);
+      beer = new Beer();
+      beer.Id = 2;
 
       expect(beer.idBeer).toBe(2);
     });

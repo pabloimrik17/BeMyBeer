@@ -24,13 +24,15 @@ describe('Category', () => {
     });
 
     test('Expect idCategory to be 0 when 0 value supplied in constructor', () => {
-      category = new Category(0);
+      category = new Category();
+      category.Id = 0;
 
       expect(category.idCategory).toBe(0);
     });
 
     test('Expect idCategory to be equal to value greater than 0 supplied in constructor', () => {
-      category = new Category(2);
+      category = new Category();
+      category.Id = 2;
 
       expect(category.idCategory).toBe(2);
     });

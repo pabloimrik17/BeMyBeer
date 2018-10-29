@@ -1,10 +1,10 @@
 import express, { Request, Response, Router } from 'express';
-import ApiResponser from '../shared/apiResponser/ApiResponser';
-import Beer from '../classes/Beer.class';
-import { checkBody, checkIdParam } from '../middleware/routes.middleware';
 import { validationResult } from 'express-validator/check';
-import { createBeer, updateBeer } from '../schemas/_beer.schema';
+import Beer from '../classes/Beer.class';
 import BeerDb from '../classes/BeerDb';
+import { checkBody, checkIdParam } from '../middleware/routes.middleware';
+import { createBeer, updateBeer } from '../schemas/_beer.schema';
+import ApiResponser from '../shared/apiResponser/ApiResponser';
 
 const router: Router = express.Router();
 
@@ -22,7 +22,9 @@ router.get('/:id', checkIdParam(), async (req: Request, res: Response) => {
 
   try {
     validationResult(req).throw();
-    const beerResponse = await new Beer(idBeer).getDb<BeerDb>();
+    const beer: Beer = new Beer();
+    beer.Id = idBeer;
+    const beerResponse = await beer.getDb<BeerDb>();
 
     ApiResponser.responseSuccess(res, beerResponse);
   } catch (error) {
@@ -46,7 +48,9 @@ router.put('/:id', checkIdParam(), checkBody(updateBeer), async (req: Request, r
     validationResult(req).throw();
 
     const idBeer = parseInt(req.params.id, 10);
-    const beerResponse = await new Beer(idBeer).update<BeerDb>(req.body);
+    const beer: Beer = new Beer();
+    beer.Id = idBeer;
+    const beerResponse = await beer.update<BeerDb>(req.body);
 
     ApiResponser.responseSuccess(res, beerResponse);
   } catch (error) {
@@ -59,7 +63,9 @@ router.delete('/:id', checkIdParam(), async (req: Request, res: Response) => {
 
   try {
     validationResult(req).throw();
-    await new Beer(idBeer).delete();
+    const beer: Beer = new Beer();
+    beer.Id = idBeer;
+    await beer.delete();
 
     ApiResponser.responseSuccess(res);
   } catch (error) {

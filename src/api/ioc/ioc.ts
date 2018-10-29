@@ -4,13 +4,13 @@ import * as moment from 'moment';
 import * as mysql2 from 'mysql2/promise';
 import BeerDb from '../classes/Beer.class';
 import Beer from '../classes/Beer.class';
+import Category from '../classes/Category.class';
 import CategoryDb from '../classes/CategoryDb';
 import DateModel from '../classes/DateModel';
 import ObjectModel from '../classes/ObjectModel.class';
-import Database, { database } from '../shared/Database';
+import Database from '../shared/Database';
 import { Lodash, Moment, Mysql2 } from './interfaces';
 import { ClassTypes, NpmTypes } from './types';
-import Category from '../classes/Category.class';
 
 const npmDependencies: ContainerModule = new ContainerModule((bind) => {
   bind<Lodash>(NpmTypes.Lodash).toConstantValue(lodash);
@@ -20,7 +20,7 @@ const npmDependencies: ContainerModule = new ContainerModule((bind) => {
 
 const classDependencies: ContainerModule = new ContainerModule((bind) => {
   bind<ObjectModel>(ClassTypes.ObjectModel).to(ObjectModel);
-  bind<Database>(ClassTypes.Database).toConstantValue(database);
+  bind<Database>(ClassTypes.Database).to(Database).inSingletonScope();
   bind<DateModel>(ClassTypes.DateModel).to(DateModel);
   bind<CategoryDb>(ClassTypes.CategoryDb).to(CategoryDb);
   bind<BeerDb>(ClassTypes.BeerDb).to(BeerDb);

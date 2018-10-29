@@ -1,4 +1,5 @@
 import * as importedMoment from 'moment';
+import * as mysql2Imported from 'mysql2/promise';
 import { Connection } from 'mysql2/promise';
 import DateModel from '../../../api/classes/DateModel';
 import ObjectModel from '../../../api/classes/ObjectModel.class';
@@ -23,7 +24,7 @@ describe('Object Model', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    database = new Database();
+    database = database = new Database(mysql2Imported);
     mockedQuery = jest.fn<Connection>((sql: string) => new Promise(resolve => resolve(mockedSelectQueryReturn)));
     Object.defineProperty(database, 'Pool', {
       get: jest.fn(() => ({ query: mockedQuery })),

@@ -17,7 +17,7 @@ export default class Beer extends ObjectModel {
 
   constructor() {
     super();
-    this.Id = 0;
+    this.idBeer = 0;
     this.name = '';
     this.graduation = 0;
     this.color = '';

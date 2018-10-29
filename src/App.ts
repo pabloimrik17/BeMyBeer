@@ -1,33 +1,34 @@
-import bodyParser from 'body-parser'
-import {Express} from 'express'
-import express from 'express';
+import bodyParser from 'body-parser';
+import express, { Express } from 'express';
 import expressValidator from 'express-validator';
-import Database, {database} from './api/shared/Database'
-import router from './api/routes/_routes'
+import { container } from './api/ioc/ioc';
+import { ClassTypes } from './api/ioc/types';
+import router from './api/routes/_routes';
+import Database from './api/shared/Database';
 
 require('dotenv').config();
 
 export default class App {
-  private readonly app: Express
-  private readonly port: number
-  private readonly db: Database
+  private readonly app: Express;
+  private readonly port: number;
+  private readonly db: Database;
 
-  constructor () {
-    this.app = express()
-    this.app.use(bodyParser.json())
-    this.app.use(bodyParser.urlencoded({extended: false}))
-    this.app.use(expressValidator())
-    this.app.use(process.env.API_ENTRY_POINT, router)
+  constructor() {
+    this.app = express();
+    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(expressValidator());
+    this.app.use(process.env.API_ENTRY_POINT, router);
 
     this.port = parseInt(process.env.PORT) || 3000;
 
     // this.db = new Database();
-    this.db = database
+    this.db = container.get<Database>(ClassTypes.Database);
   }
 
-  async run () {
+  async run() {
     try {
-      await this.db.connect(process.env.CURRENT_ENVIROMENT)
+      await this.db.connect();
       this.app.listen(this.port, () => {
         console.log(`App listeting on http://localhost:${this.port}`);
       });
