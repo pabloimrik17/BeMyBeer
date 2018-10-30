@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Connection, ConnectionOptions } from 'mysql2/promise';
 import 'reflect-metadata';
 import DateModel from '../classes/DateModel';
-import { Moment, Mysql2 } from '../ioc/interfaces';
+import { Knex, Moment, Mysql2 } from '../ioc/interfaces';
 import { NpmTypes } from '../ioc/types';
 
 require('dotenv').config();
@@ -16,13 +16,17 @@ export default class Database {
 
   private _mysql2: Mysql2;
   private _moment: Moment;
+  private _knex: any & Knex;
 
   constructor(@inject(NpmTypes.Mysql2) mysql2: Mysql2,
+              @inject(NpmTypes.Knex) knex: Knex,
               @inject(NpmTypes.Moment) moment: Moment) {
     this._pool = undefined;
     this._mode = undefined;
+
     this._mysql2 = mysql2;
     this._moment = moment;
+    this._knex = knex;
   }
 
   public get Pool(): Connection {
@@ -42,6 +46,10 @@ export default class Database {
 
     this._pool = await this._mysql2.createConnection(mergedOptions);
     this._mode = process.env.CURRENT_ENVIROMENT;
+  }
+
+  public async migrateLatest() {
+    await this._knex.migrate.latest();
   }
 }
 

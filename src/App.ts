@@ -1,36 +1,40 @@
 import bodyParser from 'body-parser';
 import express, { Express } from 'express';
 import expressValidator from 'express-validator';
-import { container } from './api/ioc/ioc';
+import { inject, injectable } from 'inversify';
+import 'reflect-metadata';
 import { ClassTypes } from './api/ioc/types';
 import router from './api/routes/_routes';
 import Database from './api/shared/Database';
 
 require('dotenv').config();
 
+@injectable()
 export default class App {
-  private readonly app: Express;
-  private readonly port: number;
-  private readonly db: Database;
+  private readonly _app: Express;
+  private readonly _port: number;
+  private readonly _database: Database;
 
-  constructor() {
-    this.app = express();
-    this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded({ extended: false }));
-    this.app.use(expressValidator());
-    this.app.use(process.env.API_ENTRY_POINT, router);
+  constructor(@inject(ClassTypes.Database) database: Database) {
+    this._app = express();
+    this._app.use(bodyParser.json());
+    this._app.use(bodyParser.urlencoded({ extended: false }));
+    this._app.use(expressValidator());
+    this._app.use(process.env.API_ENTRY_POINT, router);
 
-    this.port = parseInt(process.env.PORT) || 3000;
+    this._port = parseInt(process.env.PORT) || 3000;
 
-    // this.db = new Database();
-    this.db = container.get<Database>(ClassTypes.Database);
+    debugger;
+    this._database = database;
   }
 
   async run() {
     try {
-      await this.db.connect();
-      this.app.listen(this.port, () => {
-        console.log(`App listeting on http://localhost:${this.port}`);
+      await this._database.connect();
+      // await this._database.migrateLatest();
+
+      this._app.listen(this._port, () => {
+        console.log(`App listeting on http://localhost:${this._port}`);
       });
     } catch (e) {
       console.error(e);

@@ -1,3 +1,4 @@
+import * as importedKnex from 'knex';
 import * as importedMoment from 'moment';
 import * as mysql2Imported from 'mysql2/promise';
 import { Connection } from 'mysql2/promise';
@@ -24,7 +25,7 @@ describe('Object Model', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    database = database = new Database(mysql2Imported, importedMoment);
+    database = database = new Database(mysql2Imported, importedKnex, importedMoment);
     mockedQuery = jest.fn<Connection>((sql: string) => new Promise(resolve => resolve(mockedSelectQueryReturn)));
     Object.defineProperty(database, 'Pool', {
       get: jest.fn(() => ({ query: mockedQuery })),
