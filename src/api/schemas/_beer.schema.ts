@@ -105,7 +105,7 @@ export const getAllBeers = {
       examples: [
         '2018-09-16',
       ],
-      changeme: null as any,
+      changeme: undefined as any,
       pattern: '^(.*)$',
     },
     createdAt: {
@@ -220,7 +220,7 @@ export const createBeer = {
       examples: [
         '2018-09-16',
       ],
-      changeme: null as any,
+      changeme: undefined as any,
       pattern: '^(.*)$',
     },
   },
@@ -310,7 +310,7 @@ export const updateBeer = {
       examples: [
         '2018-09-16T22:00:00.000Z',
       ],
-      changeme: null as any,
+      changeme: undefined as any,
       pattern: '^(.*)$',
     },
   },

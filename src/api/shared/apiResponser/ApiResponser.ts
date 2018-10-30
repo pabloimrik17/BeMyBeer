@@ -1,16 +1,16 @@
-import { apiErrors } from './ApiErrors';
 import { Response } from 'express';
+import { apiErrors } from './ApiErrors';
 
 export interface ApiResponse {
-  responseCode: number
-  responseMessage: string
-  responseData: Array<any> | Object
+  responseCode: number;
+  responseMessage: string;
+  responseData: Array<any> | Object;
 }
 
 export type ResponseErrorOptions = {
   data: any
   canContinue: boolean
-}
+};
 
 export default class ApiResponser {
   // TODO TIPAR CON OBJECT MODEL

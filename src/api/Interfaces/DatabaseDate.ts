@@ -1,5 +1,4 @@
 export interface DatabaseDate {
-  createdAt: string
-  updatedAt: string
-
+  createdAt: string;
+  updatedAt: string;
 }

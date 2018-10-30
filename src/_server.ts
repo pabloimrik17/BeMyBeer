@@ -1,6 +1,6 @@
-import App from './App'
+import App from './App';
 
-async function main () {
+async function main() {
   const app: App = new App();
   await app.run();
 }

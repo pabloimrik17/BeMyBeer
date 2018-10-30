@@ -2,6 +2,8 @@ import express, { Request, Response, Router } from 'express';
 import { validationResult } from 'express-validator/check';
 import Beer from '../classes/Beer.class';
 import BeerDb from '../classes/BeerDb';
+import { container } from '../ioc/ioc';
+import { ClassTypes } from '../ioc/types';
 import { checkBody, checkIdParam } from '../middleware/routes.middleware';
 import { createBeer, updateBeer } from '../schemas/_beer.schema';
 import ApiResponser from '../shared/apiResponser/ApiResponser';
@@ -10,7 +12,7 @@ const router: Router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const beers = await new Beer().getAllDb<BeerDb>();
+    const beers = await container.get<Beer>(ClassTypes.Beer).getAllDb<BeerDb>();
     ApiResponser.responseSuccess(res, beers);
   } catch (error) {
     ApiResponser.responseError(res, error);
@@ -22,7 +24,7 @@ router.get('/:id', checkIdParam(), async (req: Request, res: Response) => {
 
   try {
     validationResult(req).throw();
-    const beer: Beer = new Beer();
+    const beer: Beer = container.get<Beer>(ClassTypes.Beer);
     beer.Id = idBeer;
     const beerResponse = await beer.getDb<BeerDb>();
 
@@ -35,7 +37,7 @@ router.get('/:id', checkIdParam(), async (req: Request, res: Response) => {
 router.post('/', checkBody(createBeer), async (req: Request, res: Response) => {
   try {
     validationResult(req).throw();
-    const beerResponse = await new Beer().save<BeerDb>(req.body);
+    const beerResponse = await container.get<Beer>(ClassTypes.Beer).save<BeerDb>(req.body);
 
     ApiResponser.responseSuccess(res, beerResponse);
   } catch (error) {
@@ -48,7 +50,7 @@ router.put('/:id', checkIdParam(), checkBody(updateBeer), async (req: Request, r
     validationResult(req).throw();
 
     const idBeer = parseInt(req.params.id, 10);
-    const beer: Beer = new Beer();
+    const beer: Beer = container.get<Beer>(ClassTypes.Beer);
     beer.Id = idBeer;
     const beerResponse = await beer.update<BeerDb>(req.body);
 
@@ -63,7 +65,7 @@ router.delete('/:id', checkIdParam(), async (req: Request, res: Response) => {
 
   try {
     validationResult(req).throw();
-    const beer: Beer = new Beer();
+    const beer: Beer = container.get<Beer>(ClassTypes.Beer);
     beer.Id = idBeer;
     await beer.delete();
 
