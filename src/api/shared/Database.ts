@@ -29,8 +29,16 @@ export default class Database {
     return this._pool;
   }
 
+  public static databaseConnectionOption(): ConnectionOptions {
+    return {
+      database: process.env.CURRENT_ENVIROMENT === process.env.PROD_ENVIROMENT
+        ? process.env.PROD_DATABASE_NAME
+        : process.env.TEST_DATABASE_NAME,
+    };
+  }
+
   public async connect(options?: ConnectionOptions): Promise<void> {
-    const mergedOptions: ConnectionOptions = Object.assign({}, defaultConnectionOptions, options);
+    const mergedOptions: ConnectionOptions = Object.assign({}, defaultConnectionOptions, Database.databaseConnectionOption(), options);
 
     this._pool = await this._mysql2.createConnection(mergedOptions);
     this._mode = process.env.CURRENT_ENVIROMENT;
@@ -41,9 +49,6 @@ export const defaultConnectionOptions: ConnectionOptions = {
   host: process.env.DATABASE_HOST_IP,
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASS,
-  database: process.env.CURRENT_ENVIROMENT === exports.MODE_PRODUCTION
-    ? process.env.PROD_DATABASE_NAME
-    : process.env.TEST_DATABASE_NAME,
   connectTimeout: 3000,
   timezone: process.env.TIMEZONE,
   typeCast: (field, next) => {
