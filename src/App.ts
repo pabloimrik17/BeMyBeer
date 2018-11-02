@@ -1,6 +1,5 @@
 import bodyParser from 'body-parser';
 import express, { Express } from 'express';
-import expressValidator from 'express-validator';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import { ClassTypes } from './api/ioc/types';
@@ -11,7 +10,7 @@ require('dotenv').config();
 
 @injectable()
 export default class App {
-  private readonly _app: Express;
+  public readonly _app: Express;
   private readonly _port: number;
   private readonly _database: Database;
 
@@ -19,12 +18,11 @@ export default class App {
     this._app = express();
     this._app.use(bodyParser.json());
     this._app.use(bodyParser.urlencoded({ extended: false }));
-    this._app.use(expressValidator());
+    // this._app.use(expressValidator());
     this._app.use(process.env.API_ENTRY_POINT, router);
 
-    this._port = parseInt(process.env.PORT) || 3000;
+    this._port = parseInt(process.env.PORT, 10) || 3000;
 
-    debugger;
     this._database = database;
   }
 

@@ -13,7 +13,7 @@ import AbstractObjectModel from './AbstractObjectModel';
 import DateModel from './DateModel';
 
 export default class ObjectModel extends AbstractObjectModel implements IObjectModel {
-  protected dbProperties: Array<string> = [];
+  protected dbProperties: string[] = [];
   protected primaryKey: string = '';
   protected tableName: string = '';
 
@@ -86,7 +86,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     }
   }
 
-  public async getAllDb<T>(): Promise<Array<T>> {
+  public async getAllDb<T>(): Promise<T[]> {
     const sql: string = `
           SELECT ${this.getDbColumnsToQuery()}
           FROM ${this.tableName}

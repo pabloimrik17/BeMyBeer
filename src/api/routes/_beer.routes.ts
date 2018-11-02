@@ -10,13 +10,17 @@ import ApiResponser from '../shared/apiResponser/ApiResponser';
 
 const router: Router = express.Router();
 
-router.get('/', async (req: Request, res: Response) => {
+export const getAll = async (req: Request, res: Response) => {
   try {
     const beers = await container.get<Beer>(ClassTypes.Beer).getAllDb<BeerDb>();
     ApiResponser.responseSuccess(res, beers);
   } catch (error) {
     ApiResponser.responseError(res, error);
   }
+};
+
+router.get('/', async (req: Request, res: Response) => {
+  await getAll(req, res);
 });
 
 router.get('/:id', checkIdParam(), async (req: Request, res: Response) => {

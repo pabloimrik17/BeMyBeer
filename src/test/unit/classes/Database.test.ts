@@ -1,4 +1,3 @@
-import * as knexImported from 'knex';
 import * as momentImported from 'moment';
 import * as mysql2Imported from 'mysql2/promise';
 import { ConnectionOptions } from 'mysql2/promise';
@@ -22,7 +21,7 @@ describe('Category', () => {
 
   describe('Constructor', () => {
     test('Expect object to be instantiated properly', () => {
-      database = new Database(mysql2Imported, knexImported, momentImported);
+      database = new Database(mysql2Imported, momentImported);
       database = container.get<Database>(ClassTypes.Database);
 
       expect(database).toBeTruthy();
@@ -64,7 +63,7 @@ describe('Category', () => {
         return new Promise(resolve => resolve(connection));
       });
 
-      database = new Database(mysql2Imported, knexImported, momentImported);
+      database = new Database(mysql2Imported, momentImported);
       await database.connect();
 
       expect(createConnectionMocked).toBeCalledTimes(1);
@@ -82,7 +81,7 @@ describe('Category', () => {
         return new Promise(resolve => resolve(connection));
       });
 
-      database = new Database(mysql2Imported, knexImported, momentImported);
+      database = new Database(mysql2Imported, momentImported);
       await database.connect();
 
       expect(createConnectionMocked).toBeCalledTimes(1);
@@ -102,7 +101,7 @@ describe('Category', () => {
         return new Promise(resolve => resolve(connection));
       });
 
-      database = new Database(mysql2Imported, knexImported, momentImported);
+      database = new Database(mysql2Imported, momentImported);
       await database.connect();
 
       expect(createConnectionMocked).toBeCalledTimes(1);
