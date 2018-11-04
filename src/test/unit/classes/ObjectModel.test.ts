@@ -2,7 +2,7 @@ import * as importedMoment from 'moment';
 import * as mysql2Imported from 'mysql2/promise';
 import { Connection } from 'mysql2/promise';
 import DateModel from '../../../api/classes/DateModel';
-import ObjectModel from '../../../api/classes/ObjectModel.class';
+import ObjectModel from '../../../api/classes/ObjectModel';
 import { apiErrors } from '../../../api/shared/apiResponser/ApiErrors';
 import Database from '../../../api/shared/Database';
 import SpyInstance = jest.SpyInstance;
@@ -14,11 +14,11 @@ let database: Database;
 let dateModel: DateModel;
 let mockedQuery: SpyInstance = undefined;
 
-const mockedSelectReturnedRows: Array<Object> = [<Object>{}, <Object>{}];
+const mockedSelectReturnedRows: Object[] = [<Object>{}, <Object>{}];
 const mockedSelectQueryReturn = [mockedSelectReturnedRows, []];
 const insertId: number = 1;
 const mockedInsertResult: Object = { insertId };
-const mockedInsertQueryReturn: Array<any> = [mockedInsertResult, []];
+const mockedInsertQueryReturn: any[] = [mockedInsertResult, []];
 
 describe('Object Model', () => {
   beforeEach(() => {

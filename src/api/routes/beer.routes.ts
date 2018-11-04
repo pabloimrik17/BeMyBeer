@@ -1,11 +1,11 @@
 import express, { Request, Response, Router } from 'express';
 import { validationResult } from 'express-validator/check';
-import Beer from '../classes/Beer.class';
+import Beer from '../classes/Beer';
 import BeerDb from '../classes/BeerDb';
 import { container } from '../ioc/ioc';
 import { ClassTypes } from '../ioc/types';
 import { checkBody, checkIdParam } from '../middleware/routes.middleware';
-import { createBeer, updateBeer } from '../schemas/_beer.schema';
+import { createBeer, updateBeer } from '../schemas/beer.schema';
 import ApiResponser from '../shared/apiResponser/ApiResponser';
 
 const router: Router = express.Router();

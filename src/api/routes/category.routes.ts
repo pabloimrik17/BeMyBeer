@@ -1,19 +1,20 @@
 import express, { Request, Response, Router } from 'express';
 import { validationResult } from 'express-validator/check';
-import Category from '../classes/Category.class';
+import Category from '../classes/Category';
 import CategoryDb from '../classes/CategoryDb';
 import { container } from '../ioc/ioc';
 import { ClassTypes } from '../ioc/types';
 import { checkBody, checkIdParam } from '../middleware/routes.middleware';
-import { createCategory, updateCategory } from '../schemas/_category.schema';
+import { createCategory, updateCategory } from '../schemas/category.schema';
 import ApiResponser from '../shared/apiResponser/ApiResponser';
 
 const router: Router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const categories: Array<CategoryDb> = await container.get<Category>(ClassTypes.Category).getAllDb<CategoryDb>();
+    const categories: CategoryDb[] = await container.get<Category>(ClassTypes.Category).getAllDb<CategoryDb>();
     ApiResponser.responseSuccess(res, categories);
+
   } catch (error) {
     ApiResponser.responseError(res, error);
   }

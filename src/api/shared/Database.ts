@@ -11,23 +11,23 @@ require('dotenv').config();
 @injectable()
 export default class Database {
 
-  private _pool: Connection;
-  private _mode: string;
+  private pool: Connection;
+  private mode: string;
 
-  private _mysql2: Mysql2;
-  private _moment: Moment;
+  private mysql2: Mysql2;
+  private moment: Moment;
 
   constructor(@inject(NpmTypes.Mysql2) mysql2: Mysql2,
               @inject(NpmTypes.Moment) moment: Moment) {
-    this._pool = undefined;
-    this._mode = undefined;
+    this.pool = undefined;
+    this.mode = undefined;
 
-    this._mysql2 = mysql2;
-    this._moment = moment;
+    this.mysql2 = mysql2;
+    this.moment = moment;
   }
 
   public get Pool(): Connection {
-    return this._pool;
+    return this.pool;
   }
 
   public static databaseConnectionOption(): ConnectionOptions {
@@ -46,8 +46,8 @@ export default class Database {
       options,
     );
 
-    this._pool = await this._mysql2.createConnection(mergedOptions);
-    this._mode = process.env.CURRENT_ENVIROMENT;
+    this.pool = await this.mysql2.createConnection(mergedOptions);
+    this.mode = process.env.CURRENT_ENVIROMENT;
   }
 }
 

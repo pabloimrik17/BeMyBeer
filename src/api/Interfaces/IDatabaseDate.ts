@@ -1,4 +1,4 @@
-export interface DatabaseDate {
+export interface IDatabaseDate {
   createdAt: string;
   updatedAt: string;
 }

@@ -1,5 +1,5 @@
 import BeerDb from './BeerDb';
-import ObjectModel from './ObjectModel.class';
+import ObjectModel from './ObjectModel';
 
 export default class Beer extends ObjectModel {
   public idBeer: number;
@@ -11,7 +11,7 @@ export default class Beer extends ObjectModel {
   public idCategory: number;
   public datePurchased: string;
   public dateDrinked: string;
-  protected dbProperties: Array<string> = Object.keys(new BeerDb());
+  protected dbProperties: string[] = Object.keys(new BeerDb());
   protected primaryKey: string = 'idBeer';
   protected tableName: string = 'beer';
 

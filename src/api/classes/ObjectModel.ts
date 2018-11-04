@@ -1,10 +1,9 @@
 // https://stackoverflow.com/questions/43669697/dependency-injection-recommended-pattern-for-injecting-npm-modules
 // https://medium.com/@samueleresca/inversion-of-control-and-dependency-injection-in-typescript-3040d568aabe
 
-
 import { inject } from 'inversify';
 import 'reflect-metadata';
-import { DatabaseDate } from '../Interfaces/DatabaseDate';
+import { IDatabaseDate } from '../Interfaces/IDatabaseDate';
 import IObjectModel from '../Interfaces/IObjectModel';
 import { ClassTypes } from '../ioc/types';
 import { apiErrors } from '../shared/apiResponser/ApiErrors';
@@ -17,44 +16,44 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   protected primaryKey: string = '';
   protected tableName: string = '';
 
-  private _id: number;
-  private _createdAt: string;
-  private _updatedAt: string;
+  private id: number;
+  private createdAt: string;
+  private updatedAt: string;
 
   @inject(ClassTypes.Database)
-  private _database: Database;
+  private database: Database;
   @inject(ClassTypes.DateModel)
-  private _dateModel: DateModel;
+  private dateModel: DateModel;
 
   constructor(id: number = 0) {
     super();
-    this._id = 0;
-    this._createdAt = undefined;
-    this._updatedAt = undefined;
+    this.id = 0;
+    this.createdAt = undefined;
+    this.updatedAt = undefined;
 
     if (id > 0) {
-      this._id = id;
+      this.id = id;
     }
   }
 
   public get Database(): Database {
-    return this._database;
+    return this.database;
   }
 
   public set Database(value: Database) {
-    this._database = value;
+    this.database = value;
   }
 
   public get DateModel(): DateModel {
-    return this._dateModel;
+    return this.dateModel;
   }
 
   public set DateModel(value: DateModel) {
-    this._dateModel = value;
+    this.dateModel = value;
   }
 
   public get Id(): number {
-    return (<any>this)[this.primaryKey] || this._id;
+    return (<any>this)[this.primaryKey] || this.id;
   }
 
   public set Id(value: number) {
@@ -62,7 +61,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
       (<any>this)[this.primaryKey] = value;
     }
 
-    this._id = value;
+    this.id = value;
   }
 
   public async getDb<T>(): Promise<T> {
@@ -109,7 +108,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
           SET ?
         `;
 
-    const insertData: T & DatabaseDate = this._setDatabaseDates(this.parseDataToDb(data));
+    const insertData: T & IDatabaseDate = this.setDatabaseDates(this.parseDataToDb(data));
 
     try {
       const [result, error]: [any, any] = await this.Database.Pool.query(sql, insertData);
@@ -134,7 +133,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
                 WHERE ${this.primaryKey} = ?
             `;
 
-      const updateData: T & DatabaseDate = this._setUpdatedDate(this.parseDataToDb(data));
+      const updateData: T & IDatabaseDate = this.setUpdatedDate(this.parseDataToDb(data));
 
       try {
         await this.Database.Pool.query(sql, [updateData, this.Id]);
@@ -175,7 +174,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     }
   }
 
-  private _setDatabaseDates<T>(data: T & Object): T & DatabaseDate {
+  private setDatabaseDates<T>(data: T & Object): T & IDatabaseDate {
     const currentDate: string = this.DateModel.getCurrentDate();
 
     return Object.assign(Object.create(data), data, {
@@ -184,7 +183,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     });
   }
 
-  private _setUpdatedDate<T>(data: T & Object): T & DatabaseDate {
+  private setUpdatedDate<T>(data: T & Object): T & IDatabaseDate {
     return Object.assign(Object.create(data), data, { updatedAt: this.DateModel.getCurrentDate() });
   }
 
@@ -195,14 +194,14 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   }
 
   private parseDataToDb<T>(data: T) {
-    const _dataToUpdate: T = Object.assign({}, data);
+    const dataToUpdate: T = Object.assign({}, data);
 
-    Object.keys(_dataToUpdate).forEach((key: string) => {
+    Object.keys(dataToUpdate).forEach((key: string) => {
       if (!this.dbProperties.includes(key)) {
-        delete (<any>_dataToUpdate)[key];
+        delete (<any>dataToUpdate)[key];
       }
     });
 
-    return _dataToUpdate;
+    return dataToUpdate;
   }
 }

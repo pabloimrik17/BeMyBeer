@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import Beer from '../../../api/classes/Beer.class';
+import Beer from '../../../api/classes/Beer';
 
 let beer: Beer;
 

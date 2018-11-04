@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import Category from '../../../api/classes/Category.class';
+import Category from '../../../api/classes/Category';
 
 let category: Category;
 

@@ -232,7 +232,7 @@ export const updateBeer = {
   $id: 'http://example.com/root.json',
   type: 'object',
   title: 'The Root Schema',
-  required: [] as Array<string>,
+  required: [] as string[],
   properties: {
     name: {
       $id: '#/properties/name',
