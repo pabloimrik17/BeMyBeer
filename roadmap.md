@@ -26,4 +26,5 @@
   * Brewery Class methods
   * Endpoints responses /api/breweries
   
-  
+#Version 0.2.0
+Redis Cache (https://blog.manifold.co/build-super-fast-apps-in-node-js-using-redis-cache-d3d55bbdc375)
