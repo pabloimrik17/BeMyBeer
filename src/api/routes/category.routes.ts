@@ -1,81 +1,30 @@
 import express, { Request, Response, Router } from 'express';
-import { validationResult } from 'express-validator/check';
-import Category from '../classes/Category';
-import CategoryDb from '../classes/CategoryDb';
+import CategoryRoutesController from '../controllers/CategoryRoutesController';
 import { container } from '../ioc/ioc';
-import { ClassTypes } from '../ioc/types';
+import { classTypes } from '../ioc/types';
 import { checkBody, checkIdParam } from '../middleware/routes.middleware';
 import { createCategory, updateCategory } from '../schemas/category.schema';
-import ApiResponser from '../shared/apiResponser/ApiResponser';
 
 const router: Router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
-  try {
-    const categories: CategoryDb[] = await container.get<Category>(ClassTypes.Category).getAllDb<CategoryDb>();
-    ApiResponser.responseSuccess(res, categories);
-
-  } catch (error) {
-    ApiResponser.responseError(res, error);
-  }
+  await container.get<CategoryRoutesController>(classTypes.CategoryRoutesController).getAll(req, res);
 });
 
 router.get('/:id', checkIdParam(), async (req: Request, res: Response) => {
-  const idCategory = parseInt(req.params.id, 10);
-
-  try {
-    validationResult(req).throw();
-    const category = container.get<Category>(ClassTypes.Category);
-    category.Id = idCategory;
-    const categoryResponse = await category.getDb<CategoryDb>();
-
-    ApiResponser.responseSuccess(res, categoryResponse);
-  } catch (error) {
-    ApiResponser.responseError(res, error);
-  }
+  await container.get<CategoryRoutesController>(classTypes.CategoryRoutesController).getById(req, res);
 });
 
 router.post('/', checkBody(createCategory), async (req: Request, res: Response) => {
-  try {
-    validationResult(req).throw();
-
-    const category = container.get<Category>(ClassTypes.Category);
-    const categoryResponse = await category.save<CategoryDb>(req.body);
-
-    ApiResponser.responseSuccess(res, categoryResponse);
-  } catch (error) {
-    ApiResponser.responseError(res, error);
-  }
+  await container.get<CategoryRoutesController>(classTypes.CategoryRoutesController).create(req, res);
 });
 
 router.put('/:id', checkIdParam(), checkBody(updateCategory), async (req: Request, res: Response) => {
-  try {
-    validationResult(req).throw();
-    const idCategory = parseInt(req.params.id, 10);
-
-    const category = container.get<Category>(ClassTypes.Category);
-    category.Id = idCategory;
-    const categoryResponse = await category.update<CategoryDb>(req.body);
-
-    ApiResponser.responseSuccess(res, categoryResponse);
-  } catch (error) {
-    ApiResponser.responseError(res, error);
-  }
+  await container.get<CategoryRoutesController>(classTypes.CategoryRoutesController).update(req, res);
 });
 
 router.delete('/:id', checkIdParam(), async (req: Request, res: Response) => {
-  const idCategory = parseInt(req.params.id, 10);
-
-  try {
-    validationResult(req).throw();
-    const category = container.get<Category>(ClassTypes.Category);
-    category.Id = idCategory;
-    await category.delete();
-
-    ApiResponser.responseSuccess(res);
-  } catch (error) {
-    ApiResponser.responseError(res, error);
-  }
+  await container.get<CategoryRoutesController>(classTypes.CategoryRoutesController).delete(req, res);
 });
 
 export default router;

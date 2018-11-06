@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import { Moment } from '../ioc/interfaces';
-import { NpmTypes } from '../ioc/types';
+import { npmTypes } from '../ioc/types';
 
 @injectable()
 export default class DateModel {
@@ -9,7 +9,7 @@ export default class DateModel {
 
   private moment: Moment;
 
-  constructor(@inject(NpmTypes.Moment)moment: Moment) {
+  constructor(@inject(npmTypes.Moment)moment: Moment) {
     this.moment = moment;
   }
 

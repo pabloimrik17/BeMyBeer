@@ -5,7 +5,7 @@ import { inject } from 'inversify';
 import 'reflect-metadata';
 import { IDatabaseDate } from '../Interfaces/IDatabaseDate';
 import IObjectModel from '../Interfaces/IObjectModel';
-import { ClassTypes } from '../ioc/types';
+import { classTypes } from '../ioc/types';
 import { apiErrors } from '../shared/apiResponser/ApiErrors';
 import Database from '../shared/Database';
 import AbstractObjectModel from './AbstractObjectModel';
@@ -20,9 +20,9 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   private createdAt: string;
   private updatedAt: string;
 
-  @inject(ClassTypes.Database)
+  @inject(classTypes.Database)
   private database: Database;
-  @inject(ClassTypes.DateModel)
+  @inject(classTypes.DateModel)
   private dateModel: DateModel;
 
   constructor(id: number = 0) {
@@ -98,9 +98,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
       try {
         await this.Database.Pool.query(sql, [updateData, this.Id]);
 
-        const updatedData: T = await this.getDb<T>();
-
-        return updatedData;
+        return await this.getDb<T>();
       } catch (e) {
         console.error(e);
         throw new Error(apiErrors.OBJECT_MODEL.UPDATE_QUERY.message);
@@ -142,9 +140,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
       this.Id = result.insertId;
       (<any>this)[this.primaryKey] = result.insertId;
 
-      const insertedData: T = await this.getDb<T>();
-
-      return insertedData;
+      return await this.getDb<T>();
     } catch (e) {
       console.error(e);
       throw new Error(apiErrors.OBJECT_MODEL.SAVE_QUERY.message);

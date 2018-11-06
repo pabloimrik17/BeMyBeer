@@ -4,7 +4,7 @@ import { Connection, ConnectionOptions } from 'mysql2/promise';
 import 'reflect-metadata';
 import DateModel from '../classes/DateModel';
 import { Moment, Mysql2 } from '../ioc/interfaces';
-import { NpmTypes } from '../ioc/types';
+import { npmTypes } from '../ioc/types';
 
 require('dotenv').config();
 
@@ -17,8 +17,8 @@ export default class Database {
   private mysql2: Mysql2;
   private moment: Moment;
 
-  constructor(@inject(NpmTypes.Mysql2) mysql2: Mysql2,
-              @inject(NpmTypes.Moment) moment: Moment) {
+  constructor(@inject(npmTypes.Mysql2) mysql2: Mysql2,
+              @inject(npmTypes.Moment) moment: Moment) {
     this.pool = undefined;
     this.mode = undefined;
 

@@ -1,9 +1,9 @@
 import { container } from './api/ioc/ioc';
-import { ClassTypes } from './api/ioc/types';
+import { classTypes } from './api/ioc/types';
 import App from './App';
 
 async function main() {
-  const app: App = container.get<App>(ClassTypes.App);
+  const app: App = container.get<App>(classTypes.App);
   await app.run();
 }
 

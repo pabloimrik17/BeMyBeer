@@ -2,7 +2,7 @@ import bodyParser from 'body-parser';
 import express, { Express } from 'express';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { ClassTypes } from './api/ioc/types';
+import { classTypes } from './api/ioc/types';
 import routes from './api/routes/routes';
 import Database from './api/shared/Database';
 
@@ -14,7 +14,7 @@ export default class App {
   private readonly port: number;
   private readonly database: Database;
 
-  constructor(@inject(ClassTypes.Database) database: Database) {
+  constructor(@inject(classTypes.Database) database: Database) {
     this.app = express();
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));

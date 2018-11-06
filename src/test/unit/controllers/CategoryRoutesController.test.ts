@@ -1,8 +1,8 @@
 import { decorate, injectable } from 'inversify';
 import { Request } from 'jest-express/lib/request';
 import { Response } from 'jest-express/lib/response';
-import Beer from '../../../api/classes/Beer';
-import BeerRoutesController from '../../../api/controllers/BeerRoutesController';
+import Category from '../../../api/classes/Category';
+import CategoryRoutesController from '../../../api/controllers/CategoryRoutesController';
 import { container } from '../../../api/ioc/ioc';
 import { classTypes } from '../../../api/ioc/types';
 import ApiResponser from '../../../api/shared/apiResponser/ApiResponser';
@@ -12,18 +12,18 @@ jest.mock('express', () => {
   return require('jest-express');
 });
 
-decorate(injectable(), Beer);
+decorate(injectable(), Category);
 decorate(injectable(), Database);
 decorate(injectable(), ApiResponser);
 
 jest.mock('../../../api/shared/Database');
-jest.mock('../../../api/classes/Beer');
+jest.mock('../../../api/classes/Category');
 jest.mock('../../../api/shared/apiResponser/ApiResponser');
 
 let req: Request = undefined;
 let res: Response = undefined;
 
-describe('Beer Routes', () => {
+describe('Category Routes', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     req = new Request();
@@ -35,16 +35,16 @@ describe('Beer Routes', () => {
       const getAllDbReturn = [{ id: 1 }, { id: 2 }];
       const mockedGetAllDb = jest.fn(() => getAllDbReturn);
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           getAllDb: mockedGetAllDb,
         };
       });
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.getAll(req, res);
 
-      expect(Beer).toBeCalledTimes(1);
+      expect(Category).toBeCalledTimes(1);
       expect(mockedGetAllDb).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledWith(res, getAllDbReturn);
@@ -56,16 +56,16 @@ describe('Beer Routes', () => {
         throw mockedError;
       });
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           getAllDb: mockedGetAllDb,
         };
       });
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.getAll(req, res);
 
-      expect(Beer).toBeCalledTimes(1);
+      expect(Category).toBeCalledTimes(1);
       expect(mockedGetAllDb).toThrowError(mockedError);
       expect(ApiResponser.responseError).toBeCalledTimes(1);
       expect(ApiResponser.responseError).toBeCalledWith(res, mockedError);
@@ -78,7 +78,7 @@ describe('Beer Routes', () => {
       const mockGetDb = jest.fn(() => getDbReturn);
       const id: number = 1;
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           getDb: mockGetDb,
         };
@@ -86,10 +86,10 @@ describe('Beer Routes', () => {
 
       req.params = { id };
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.getById(req, res);
 
-      expect(Beer).toBeCalledTimes(1);
+      expect(Category).toBeCalledTimes(1);
       expect(mockGetDb).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledWith(res, getDbReturn);
@@ -101,15 +101,15 @@ describe('Beer Routes', () => {
         throw mockedError;
       });
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           getDb: mockGetDb,
         };
       });
 
-      const getDbSpy = jest.spyOn(container.get<Beer>(classTypes.Beer), 'getDb');
+      const getDbSpy = jest.spyOn(container.get<Category>(classTypes.Category), 'getDb');
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.getById(req, res);
 
       expect(getDbSpy).toThrowError(mockedError);
@@ -123,16 +123,16 @@ describe('Beer Routes', () => {
       const saveReturn = { id: 1 };
       const mockSave = jest.fn(() => saveReturn);
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           save: mockSave,
         };
       });
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.create(req, res);
 
-      expect(Beer).toBeCalledTimes(1);
+      expect(Category).toBeCalledTimes(1);
       expect(mockSave).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledWith(res, saveReturn);
@@ -144,15 +144,15 @@ describe('Beer Routes', () => {
         throw mockedError;
       });
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           save: mockGetDb,
         };
       });
 
-      const getDbSpy = jest.spyOn(container.get<Beer>(classTypes.Beer), 'save');
+      const getDbSpy = jest.spyOn(container.get<Category>(classTypes.Category), 'save');
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.create(req, res);
 
       expect(getDbSpy).toThrowError(mockedError);
@@ -166,16 +166,16 @@ describe('Beer Routes', () => {
       const updateReturn = { id: 1 };
       const mockUpdate = jest.fn(() => updateReturn);
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           update: mockUpdate,
         };
       });
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.update(req, res);
 
-      expect(Beer).toBeCalledTimes(1);
+      expect(Category).toBeCalledTimes(1);
       expect(mockUpdate).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledWith(res, updateReturn);
@@ -187,15 +187,15 @@ describe('Beer Routes', () => {
         throw mockedError;
       });
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           update: mockupdate,
         };
       });
 
-      const getDbSpy = jest.spyOn(container.get<Beer>(classTypes.Beer), 'update');
+      const getDbSpy = jest.spyOn(container.get<Category>(classTypes.Category), 'update');
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.update(req, res);
 
       expect(getDbSpy).toThrowError(mockedError);
@@ -209,16 +209,16 @@ describe('Beer Routes', () => {
       const deleteReturn = { id: 1 };
       const mockDelete = jest.fn(() => deleteReturn);
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           delete: mockDelete,
         };
       });
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.delete(req, res);
 
-      expect(Beer).toBeCalledTimes(1);
+      expect(Category).toBeCalledTimes(1);
       expect(mockDelete).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledTimes(1);
       expect(ApiResponser.responseSuccess).toBeCalledWith(res);
@@ -230,15 +230,15 @@ describe('Beer Routes', () => {
         throw mockedError;
       });
 
-      (<any>Beer).mockImplementation(() => {
+      (<any>Category).mockImplementation(() => {
         return {
           delete: mockDelete,
         };
       });
 
-      const getDbSpy = jest.spyOn(container.get<Beer>(classTypes.Beer), 'delete');
+      const getDbSpy = jest.spyOn(container.get<Category>(classTypes.Category), 'delete');
 
-      const beerRoutes: BeerRoutesController = container.get<BeerRoutesController>(classTypes.BeerRoutesController);
+      const beerRoutes: CategoryRoutesController = container.get<CategoryRoutesController>(classTypes.CategoryRoutesController);
       await beerRoutes.delete(req, res);
 
       expect(getDbSpy).toThrowError(mockedError);

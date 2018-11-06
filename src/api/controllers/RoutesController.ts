@@ -1,11 +1,11 @@
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { ClassTypes } from '../ioc/types';
+import { classTypes } from '../ioc/types';
 import ApiResponser from '../shared/apiResponser/ApiResponser';
 
 @injectable()
 export default abstract class RoutesController {
-  @inject(ClassTypes.ApiResponser)
+  @inject(classTypes.ApiResponser)
   private apiResponser: ApiResponser;
 
   public abstract async getAll(req: any, res: any): Promise<void>;

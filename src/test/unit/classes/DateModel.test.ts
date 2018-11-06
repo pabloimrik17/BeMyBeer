@@ -2,7 +2,7 @@ import * as importedMoment from 'moment';
 import 'reflect-metadata';
 import DateModel from '../../../api/classes/DateModel';
 import { container } from '../../../api/ioc/ioc';
-import { ClassTypes } from '../../../api/ioc/types';
+import { classTypes } from '../../../api/ioc/types';
 
 describe('Date Model', () => {
   beforeEach(() => {
@@ -11,7 +11,7 @@ describe('Date Model', () => {
 
   describe('Constructor', () => {
     test('Expect all kind of good stuff', () => {
-      const dateModel: DateModel = container.get<DateModel>(ClassTypes.DateModel);
+      const dateModel: DateModel = container.get<DateModel>(classTypes.DateModel);
       expect(dateModel).toBeTruthy();
     });
   });

@@ -1,11 +1,11 @@
-export const NpmTypes = {
+export const npmTypes = {
   Lodash: Symbol('Lodash'),
   Moment: Symbol('Moment'),
   Mysql2: Symbol('Mysql2'),
   Knex: Symbol('Knex'),
 };
 
-export const ClassTypes = {
+export const classTypes = {
   App: Symbol('App'),
   ObjectModel: Symbol('ObjectModel'),
   Database: Symbol('Database'),
@@ -14,6 +14,7 @@ export const ClassTypes = {
   BeerDb: Symbol('BeerDb'),
   Category: Symbol('Category'),
   Beer: Symbol('Beer'),
-  BeerRoutes: Symbol('BeerRoutesController'),
+  BeerRoutesController: Symbol('BeerRoutesController'),
+  CategoryRoutesController: Symbol('CategoryRoutesController'),
   ApiResponser: Symbol('ApiResponser'),
 };

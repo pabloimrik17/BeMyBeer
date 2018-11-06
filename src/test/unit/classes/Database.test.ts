@@ -3,7 +3,7 @@ import * as mysql2Imported from 'mysql2/promise';
 import { ConnectionOptions } from 'mysql2/promise';
 import 'reflect-metadata';
 import { container } from '../../../api/ioc/ioc';
-import { ClassTypes } from '../../../api/ioc/types';
+import { classTypes } from '../../../api/ioc/types';
 import Database, { defaultConnectionOptions } from '../../../api/shared/Database';
 import SpyInstance = jest.SpyInstance;
 
@@ -22,7 +22,7 @@ describe('Category', () => {
   describe('Constructor', () => {
     test('Expect object to be instantiated properly', () => {
       database = new Database(mysql2Imported, momentImported);
-      database = container.get<Database>(ClassTypes.Database);
+      database = container.get<Database>(classTypes.Database);
 
       expect(database).toBeTruthy();
       expect(database.Pool).toBe(undefined);

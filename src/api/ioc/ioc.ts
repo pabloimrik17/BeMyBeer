@@ -10,28 +10,30 @@ import CategoryDb from '../classes/CategoryDb';
 import DateModel from '../classes/DateModel';
 import ObjectModel from '../classes/ObjectModel';
 import BeerRoutesController from '../controllers/BeerRoutesController';
+import CategoryRoutesController from '../controllers/CategoryRoutesController';
 import ApiResponser from '../shared/apiResponser/ApiResponser';
 import Database from '../shared/Database';
 import { Lodash, Moment, Mysql2 } from './interfaces';
-import { ClassTypes, NpmTypes } from './types';
+import { classTypes, npmTypes } from './types';
 
 const npmDependencies: ContainerModule = new ContainerModule((bind) => {
-  bind<Lodash>(NpmTypes.Lodash).toConstantValue(lodash);
-  bind<Moment>(NpmTypes.Moment).toConstantValue(moment);
-  bind<Mysql2>(NpmTypes.Mysql2).toConstantValue(mysql2);
+  bind<Lodash>(npmTypes.Lodash).toConstantValue(lodash);
+  bind<Moment>(npmTypes.Moment).toConstantValue(moment);
+  bind<Mysql2>(npmTypes.Mysql2).toConstantValue(mysql2);
 });
 
 const classDependencies: ContainerModule = new ContainerModule((bind) => {
-  bind<App>(ClassTypes.App).to(App).inSingletonScope();
-  bind<ObjectModel>(ClassTypes.ObjectModel).to(ObjectModel);
-  bind<Database>(ClassTypes.Database).to(Database).inSingletonScope();
-  bind<DateModel>(ClassTypes.DateModel).to(DateModel);
-  bind<CategoryDb>(ClassTypes.CategoryDb).to(CategoryDb);
-  bind<BeerDb>(ClassTypes.BeerDb).to(BeerDb);
-  bind<Category>(ClassTypes.Category).to(Category);
-  bind<Beer>(ClassTypes.Beer).to(Beer);
-  bind<BeerRoutesController>(ClassTypes.BeerRoutes).to(BeerRoutesController);
-  bind<ApiResponser>(ClassTypes.ApiResponser).to(ApiResponser);
+  bind<App>(classTypes.App).to(App).inSingletonScope();
+  bind<ObjectModel>(classTypes.ObjectModel).to(ObjectModel);
+  bind<Database>(classTypes.Database).to(Database).inSingletonScope();
+  bind<DateModel>(classTypes.DateModel).to(DateModel);
+  bind<CategoryDb>(classTypes.CategoryDb).to(CategoryDb);
+  bind<BeerDb>(classTypes.BeerDb).to(BeerDb);
+  bind<Category>(classTypes.Category).to(Category);
+  bind<Beer>(classTypes.Beer).to(Beer);
+  bind<BeerRoutesController>(classTypes.BeerRoutesController).to(BeerRoutesController);
+  bind<CategoryRoutesController>(classTypes.CategoryRoutesController).to(CategoryRoutesController);
+  bind<ApiResponser>(classTypes.ApiResponser).to(ApiResponser);
 });
 
 const container: Container = new Container();

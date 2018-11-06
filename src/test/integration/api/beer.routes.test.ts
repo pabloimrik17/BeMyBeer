@@ -6,10 +6,10 @@
 // import nock, { Scope } from 'nock';
 // import supertest, { Response, SuperTest, Test } from 'supertest';
 // import { container } from '../../../api/ioc/ioc';
-// import { ClassTypes } from '../../../api/ioc/types';
+// import { classTypes } from '../../../api/ioc/types';
 // import App from '../../../App';
 //
-// const app: App = container.get<App>(ClassTypes.App);
+// const app: App = container.get<App>(classTypes.App);
 // const apiRequest: SuperTest<Test> = supertest('http://localhost:3000');
 //
 // require('dotenv').config();

@@ -3,13 +3,13 @@ import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import Beer from '../classes/Beer';
 import BeerDb from '../classes/BeerDb';
-import { ClassTypes } from '../ioc/types';
+import { classTypes } from '../ioc/types';
 import ApiResponser from '../shared/apiResponser/ApiResponser';
 import RoutesController from './RoutesController';
 
 @injectable()
 export default class BeerRoutesController extends RoutesController {
-  @inject(ClassTypes.Beer)
+  @inject(classTypes.Beer)
   private beer: Beer;
 
   async getAll(req: any, res: any): Promise<void> {
@@ -64,8 +64,7 @@ export default class BeerRoutesController extends RoutesController {
     try {
       validationResult(req).throw();
 
-      const idBeer = parseInt(req.params.id, 10);
-      this.beer.Id = idBeer;
+      this.beer.Id = parseInt(req.params.id, 10);
       const beerResponse = await this.beer.update<BeerDb>(req.body);
 
       ApiResponser.responseSuccess(res, beerResponse);

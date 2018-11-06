@@ -32,7 +32,7 @@ interface IApiError {
 
 export const apiErrors: IApiError = {
   DEFAULT: {
-    SUCCESS: {code: 0, message: 'OK'},
+    SUCCESS: { code: 0, message: 'OK' },
     ERROR: { code: -1, message: 'UNKNOWN ERROR' },
   },
   OBJECT_MODEL: {
