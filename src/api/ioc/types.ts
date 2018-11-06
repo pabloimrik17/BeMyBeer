@@ -2,7 +2,8 @@ export const npmTypes = {
   Lodash: Symbol('Lodash'),
   Moment: Symbol('Moment'),
   Mysql2: Symbol('Mysql2'),
-  Knex: Symbol('Knex'),
+  Express: Symbol('Express'),
+  BodyParser: Symbol('BodyParser'),
 };
 
 export const classTypes = {

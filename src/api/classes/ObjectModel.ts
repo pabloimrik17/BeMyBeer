@@ -3,8 +3,8 @@
 
 import { inject } from 'inversify';
 import 'reflect-metadata';
-import { IDatabaseDate } from '../Interfaces/IDatabaseDate';
-import IObjectModel from '../Interfaces/IObjectModel';
+import { IDatabaseDate } from '../interfaces/IDatabaseDate';
+import IObjectModel from '../interfaces/IObjectModel';
 import { classTypes } from '../ioc/types';
 import { apiErrors } from '../shared/apiResponser/ApiErrors';
 import Database from '../shared/Database';

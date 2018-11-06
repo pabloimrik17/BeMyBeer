@@ -1,3 +1,5 @@
+import * as bodyParser from 'body-parser';
+import express, { Express } from 'express';
 import { Container, ContainerModule } from 'inversify';
 import * as lodash from 'lodash';
 import * as moment from 'moment';
@@ -13,13 +15,15 @@ import BeerRoutesController from '../controllers/BeerRoutesController';
 import CategoryRoutesController from '../controllers/CategoryRoutesController';
 import ApiResponser from '../shared/apiResponser/ApiResponser';
 import Database from '../shared/Database';
-import { Lodash, Moment, Mysql2 } from './interfaces';
+import { BodyParser, Lodash, Moment, Mysql2 } from './interfaces';
 import { classTypes, npmTypes } from './types';
 
 const npmDependencies: ContainerModule = new ContainerModule((bind) => {
   bind<Lodash>(npmTypes.Lodash).toConstantValue(lodash);
   bind<Moment>(npmTypes.Moment).toConstantValue(moment);
   bind<Mysql2>(npmTypes.Mysql2).toConstantValue(mysql2);
+  bind<Express>(npmTypes.Express).toConstantValue(express());
+  bind<BodyParser>(npmTypes.BodyParser).toConstantValue(bodyParser);
 });
 
 const classDependencies: ContainerModule = new ContainerModule((bind) => {

@@ -11,6 +11,10 @@ interface IApiErrorDefault {
   ERROR: IApiErrorInfo;
 }
 
+interface ApiErrorApp {
+  RUN: IApiErrorInfo;
+}
+
 interface ApiErrorObjectModel {
   COMMON_NO_ID: IApiErrorInfo;
   GET_QUERY: IApiErrorInfo;
@@ -26,6 +30,7 @@ interface IApiErrorCategoryModel {
 
 interface IApiError {
   DEFAULT: IApiErrorDefault;
+  APP: ApiErrorApp;
   OBJECT_MODEL: ApiErrorObjectModel;
   CATEGORY_MODEL: IApiErrorCategoryModel;
 }
@@ -34,6 +39,9 @@ export const apiErrors: IApiError = {
   DEFAULT: {
     SUCCESS: { code: 0, message: 'OK' },
     ERROR: { code: -1, message: 'UNKNOWN ERROR' },
+  },
+  APP: {
+    RUN: { code: 0, message: 'Something happened connecting to the database or the app port' },
   },
   OBJECT_MODEL: {
     COMMON_NO_ID: { code: 1, message: 'No valid id object' },

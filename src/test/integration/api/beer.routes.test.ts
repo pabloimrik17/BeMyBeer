@@ -1,5 +1,6 @@
 // // http://www.albertgao.xyz/2017/05/24/how-to-test-expressjs-with-jest-and-supertest/
 // // https://codewithhugo.com/testing-an-express-app-with-supertest-moxios-and-jest/
+// https://tobythetesterblog.wordpress.com/2016/05/01/mocking-a-restful-api-using-nock-supertest-mocha-and-chai/
 // // https://github.com/nock/nock
 // // https://www.npmjs.com/package/superagent
 //
