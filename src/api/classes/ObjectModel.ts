@@ -36,6 +36,27 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     }
   }
 
+  public async getDb<T>(): Promise<T> {
+    if (this.isValidId()) {
+      const sql: string = `
+          SELECT ${this.getDbColumnsToQuery()}
+          FROM ${this.tableName}
+          WHERE ${this.primaryKey} = ?
+        `;
+
+      try {
+        const [rows, columnsInfo]: [any, any] = await this.Database.Pool.query(sql, [this.Id]);
+        return rows[0];
+      } catch (e) {
+        // TODO DI
+        console.error(e);
+        throw new Error(apiErrors.OBJECT_MODEL.GET_QUERY.message);
+      }
+    } else {
+      throw new Error(apiErrors.OBJECT_MODEL.COMMON_NO_ID.message);
+    }
+  }
+
   public get Database(): Database {
     return this.database;
   }
@@ -64,23 +85,28 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     this.id = value;
   }
 
-  public async getDb<T>(): Promise<T> {
-    if (this.Id > 0) {
+  public async update<T>(data: T): Promise<T> {
+    if (this.isValidId()) {
       const sql: string = `
-          SELECT ${this.getDbColumnsToQuery()}
-          FROM ${this.tableName}
-          WHERE ${this.primaryKey} = ?
-        `;
+                UPDATE ${this.tableName}
+                SET ?
+                WHERE ${this.primaryKey} = ?
+            `;
+
+      const updateData: T & IDatabaseDate = this.setUpdatedDate(this.parseDataToDb(data));
 
       try {
-        const [rows, columnsInfo]: [any, any] = await this.Database.Pool.query(sql, [this.Id]);
-        return rows[0];
+        await this.Database.Pool.query(sql, [updateData, this.Id]);
+
+        const updatedData: T = await this.getDb<T>();
+
+        return updatedData;
       } catch (e) {
-        // TODO DI
         console.error(e);
-        throw new Error(apiErrors.OBJECT_MODEL.GET_QUERY.message);
+        throw new Error(apiErrors.OBJECT_MODEL.UPDATE_QUERY.message);
       }
     } else {
+      console.error(apiErrors.OBJECT_MODEL.COMMON_NO_ID);
       throw new Error(apiErrors.OBJECT_MODEL.COMMON_NO_ID.message);
     }
   }
@@ -125,34 +151,8 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     }
   }
 
-  public async update<T>(data: T): Promise<T> {
-    if (this.Id > 0) {
-      const sql: string = `
-                UPDATE ${this.tableName}
-                SET ?
-                WHERE ${this.primaryKey} = ?
-            `;
-
-      const updateData: T & IDatabaseDate = this.setUpdatedDate(this.parseDataToDb(data));
-
-      try {
-        await this.Database.Pool.query(sql, [updateData, this.Id]);
-
-        const updatedData: T = await this.getDb<T>();
-
-        return updatedData;
-      } catch (e) {
-        console.error(e);
-        throw new Error(apiErrors.OBJECT_MODEL.UPDATE_QUERY.message);
-      }
-    } else {
-      console.error(apiErrors.OBJECT_MODEL.COMMON_NO_ID);
-      throw new Error(apiErrors.OBJECT_MODEL.COMMON_NO_ID.message);
-    }
-  }
-
   public async delete(): Promise<void> {
-    if (this.Id > 0) {
+    if (this.isValidId()) {
       const sql: string = `
               DELETE
               FROM ${this.tableName}
@@ -172,6 +172,10 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
       console.error(apiErrors.OBJECT_MODEL.COMMON_NO_ID);
       throw new Error(apiErrors.OBJECT_MODEL.COMMON_NO_ID.message);
     }
+  }
+
+  private isValidId(): boolean {
+    return Number.isInteger(this.Id) && this.Id > 0;
   }
 
   private setDatabaseDates<T>(data: T & Object): T & IDatabaseDate {

@@ -1,17 +1,20 @@
 import { Response } from 'express';
+import { injectable } from 'inversify';
+import 'reflect-metadata';
 import { apiErrors } from './ApiErrors';
 
 export interface ApiResponse {
   responseCode: number;
   responseMessage: string;
-  responseData: Array<any> | Object;
+  responseData: any[] | Object;
 }
 
 export type ResponseErrorOptions = {
   data: any
-  canContinue: boolean
+  canContinue: boolean,
 };
 
+@injectable()
 export default class ApiResponser {
   // TODO TIPAR CON OBJECT MODEL
   static responseSuccess(res: Response, data: Object = {}) {

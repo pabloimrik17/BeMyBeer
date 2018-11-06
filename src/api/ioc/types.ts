@@ -14,4 +14,6 @@ export const ClassTypes = {
   BeerDb: Symbol('BeerDb'),
   Category: Symbol('Category'),
   Beer: Symbol('Beer'),
+  BeerRoutes: Symbol('BeerRoutesController'),
+  ApiResponser: Symbol('ApiResponser'),
 };

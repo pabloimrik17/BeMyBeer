@@ -3,12 +3,14 @@ import * as lodash from 'lodash';
 import * as moment from 'moment';
 import * as mysql2 from 'mysql2/promise';
 import App from '../../App';
-import BeerDb from '../classes/BeerDb';
 import Beer from '../classes/Beer';
+import BeerDb from '../classes/BeerDb';
 import Category from '../classes/Category';
 import CategoryDb from '../classes/CategoryDb';
 import DateModel from '../classes/DateModel';
 import ObjectModel from '../classes/ObjectModel';
+import BeerRoutesController from '../controllers/BeerRoutesController';
+import ApiResponser from '../shared/apiResponser/ApiResponser';
 import Database from '../shared/Database';
 import { Lodash, Moment, Mysql2 } from './interfaces';
 import { ClassTypes, NpmTypes } from './types';
@@ -28,6 +30,8 @@ const classDependencies: ContainerModule = new ContainerModule((bind) => {
   bind<BeerDb>(ClassTypes.BeerDb).to(BeerDb);
   bind<Category>(ClassTypes.Category).to(Category);
   bind<Beer>(ClassTypes.Beer).to(Beer);
+  bind<BeerRoutesController>(ClassTypes.BeerRoutes).to(BeerRoutesController);
+  bind<ApiResponser>(ClassTypes.ApiResponser).to(ApiResponser);
 });
 
 const container: Container = new Container();
