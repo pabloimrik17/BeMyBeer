@@ -21,7 +21,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   private updatedAt: string;
 
   @inject(classTypes.Database)
-  private database: Database;
+  protected database: Database;
   @inject(classTypes.DateModel)
   private dateModel: DateModel;
 
@@ -162,14 +162,13 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
       }
 
       this.Id = 0;
-      (<any>this)[this.primaryKey] = 0;
     } else {
       console.error(apiErrors.OBJECT_MODEL.COMMON_NO_ID);
       throw new Error(apiErrors.OBJECT_MODEL.COMMON_NO_ID.message);
     }
   }
 
-  private isValidId(): boolean {
+  protected isValidId(): boolean {
     return Number.isInteger(this.Id) && this.Id > 0;
   }
 
