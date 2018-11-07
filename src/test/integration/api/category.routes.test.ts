@@ -21,12 +21,14 @@ describe('ENDPOINT /api/category', () => {
   beforeAll(async () => {
     jest.setTimeout(12000);
     jest.resetAllMocks();
+  });
 
+  beforeEach(async () => {
     app = container.get<App>(classTypes.App);
     database = container.get<Database>(classTypes.Database);
 
     await app.run();
-  });
+  })
 
   afterAll(async () => {
     await app.stop();

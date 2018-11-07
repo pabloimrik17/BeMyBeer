@@ -162,7 +162,6 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
       }
 
       this.Id = 0;
-      (<any>this)[this.primaryKey] = 0;
     } else {
       console.error(apiErrors.OBJECT_MODEL.COMMON_NO_ID);
       throw new Error(apiErrors.OBJECT_MODEL.COMMON_NO_ID.message);

@@ -1,5 +1,8 @@
 import CategoryDb from './CategoryDb';
 import ObjectModel from './ObjectModel';
+import DateModel from './DateModel';
+import { classTypes } from '../ioc/types';
+import { container } from '../ioc/ioc';
 
 export default class Category extends ObjectModel {
   public idCategory: number;
@@ -20,12 +23,14 @@ export default class Category extends ObjectModel {
     if (this.isValidId()) {
       const query: string = `
         UPDATE beer
-        SET idCategory = 0
+        SET idCategory = NULL,
+            updatedAt  = ?
         WHERE idCategory = ?
       `;
 
       try {
-        await this.database.Pool.query(query, this.Id);
+        await this.database.Pool.query(query, [container.get<DateModel>(classTypes.DateModel).getCurrentDate(), this.Id],
+        );
         await super.delete();
       } catch (e) {
         throw new Error('TODO');

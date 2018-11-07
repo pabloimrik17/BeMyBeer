@@ -118,13 +118,13 @@ describe('Object Model', () => {
 
   describe('save', () => {
     test('Expect to save a record on database and return it', async () => {
+      mockedQuery = jest.fn((sqlQuery: string, dataToInsert: {}) => {
+        return new Promise(resolve => resolve(mockedInsertQueryReturn));
+      });
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
 
-      mockedQuery = jest.fn((sqlQuery: string, dataToInsert: {}) => {
-        new Promise(resolve => resolve(mockedInsertQueryReturn));
-      });
       const dataToInsert = { name: 'name' };
 
       const mockedGetDbReturn = { id: 1, name: 'name' };

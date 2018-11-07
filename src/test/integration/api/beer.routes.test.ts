@@ -23,14 +23,18 @@ describe('ENDPOINT /api/beer', () => {
   beforeAll(async () => {
     jest.setTimeout(12000);
     jest.resetAllMocks();
-    app = container.get<App>(classTypes.App);
-    database = container.get<Database>(classTypes.Database);
-    await app.run();
   });
 
   afterAll(async () => {
     await app.stop();
     jest.setTimeout(5000);
+  });
+
+  beforeEach(async () => {
+    app = container.get<App>(classTypes.App);
+    database = container.get<Database>(classTypes.Database);
+
+    await app.run();
   });
 
   describe('GET /', () => {
