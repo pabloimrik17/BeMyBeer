@@ -16,15 +16,12 @@ import App from '../../../App';
 import faker = require('faker');
 import moment = require('moment');
 
-let app: App = undefined;
-let database: Database = undefined;
+const app: App = container.get<App>(classTypes.App);
+const database: Database = container.get<Database>(classTypes.Database);
 
 describe('ENDPOINT /api/beer', () => {
   beforeAll(async () => {
     jest.setTimeout(12000);
-    jest.resetAllMocks();
-    app = container.get<App>(classTypes.App);
-    database = container.get<Database>(classTypes.Database);
     await app.run();
   });
 

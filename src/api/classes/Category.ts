@@ -15,21 +15,4 @@ export default class Category extends ObjectModel {
     this.name = '';
     this.idParent = 0;
   }
-
-  async delete(): Promise<void> {
-    if (this.isValidId()) {
-      const query: string = `
-        UPDATE beer
-        SET idCategory = 0
-        WHERE idCategory = ?
-      `;
-
-      try {
-        await this.database.Pool.query(query, this.Id);
-        await super.delete();
-      } catch (e) {
-        throw new Error('TODO');
-      }
-    }
-  }
 }

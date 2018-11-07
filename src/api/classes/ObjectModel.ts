@@ -21,7 +21,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   private updatedAt: string;
 
   @inject(classTypes.Database)
-  protected database: Database;
+  private database: Database;
   @inject(classTypes.DateModel)
   private dateModel: DateModel;
 
@@ -169,7 +169,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     }
   }
 
-  protected isValidId(): boolean {
+  private isValidId(): boolean {
     return Number.isInteger(this.Id) && this.Id > 0;
   }
 
