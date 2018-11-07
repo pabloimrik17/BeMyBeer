@@ -38,20 +38,23 @@ export default class App {
     this.app.use(process.env.API_ENTRY_POINT, routes);
 
     this.port = parseInt(process.env.PORT, 10) || 3000;
+    this.server = undefined;
     this.database = database;
   }
 
   public async run() {
-    try {
-      await this.database.connect();
-      // await this.database.migrateLatest();
+    if (!this.server) {
+      try {
+        await this.database.connect();
+        // await this.database.migrateLatest();
 
-      this.server = await this.app.listen(this.port);
+        this.server = await this.app.listen(this.port);
 
-      console.log(`App listeting on http://localhost:${this.port}`);
-    } catch (e) {
-      console.error(e);
-      throw new Error(apiErrors.APP.RUN.message);
+        console.log(`App listeting on http://localhost:${this.port}`);
+      } catch (e) {
+        console.error(e);
+        throw new Error(apiErrors.APP.RUN.message);
+      }
     }
   }
 
