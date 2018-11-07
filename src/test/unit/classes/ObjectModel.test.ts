@@ -122,7 +122,9 @@ describe('Object Model', () => {
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
 
-      mockedQuery = jest.fn((sqlQuery: string, dataToInsert: {}) => new Promise(resolve => resolve(mockedInsertQueryReturn)));
+      mockedQuery = jest.fn((sqlQuery: string, dataToInsert: {}) => {
+        new Promise(resolve => resolve(mockedInsertQueryReturn));
+      });
       const dataToInsert = { name: 'name' };
 
       const mockedGetDbReturn = { id: 1, name: 'name' };

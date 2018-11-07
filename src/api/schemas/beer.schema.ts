@@ -3,7 +3,6 @@ export const getBeer = {};
 export const getAllBeers = {
   definitions: {},
   $schema: 'http://json-schema.org/draft-07/schema#',
-  $id: 'http://example.com/root.json',
   type: 'object',
   title: 'The Root Schema',
   required: [
@@ -134,7 +133,6 @@ export const getAllBeers = {
 export const createBeer = {
   definitions: {},
   $schema: 'http://json-schema.org/draft-07/schema#',
-  $id: 'http://example.com/root.json',
   type: 'object',
   title: 'The Root Schema',
   required: [
@@ -229,7 +227,6 @@ export const createBeer = {
 export const updateBeer = {
   definitions: {},
   $schema: 'http://json-schema.org/draft-07/schema#',
-  $id: 'http://example.com/root.json',
   type: 'object',
   title: 'The Root Schema',
   required: [] as string[],

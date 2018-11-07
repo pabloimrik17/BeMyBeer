@@ -2,16 +2,15 @@
 // https://alexzywiak.github.io/running-migrations-with-knex/index.html
 
 // Update with your config settings.
-
-import {defaultConnectionOptions} from "./src/api/shared/Database";
-
 require('dotenv').config();
 
 module.exports = {
     [process.env.TEST_ENVIROMENT]: {
         client: 'mysql2',
         connection: {
-            defaultConnectionOptions,
+            host: process.env.DATABASE_HOST_IP,
+            user: process.env.DATABASE_USER,
+            password: process.env.DATABASE_PASS,
             database: process.env.TEST_DATABASE_NAME,
         },
     },
@@ -19,7 +18,6 @@ module.exports = {
     [process.env.PROD_ENVIROMENT]: {
         client: 'mysql2',
         connection: {
-            defaultConnectionOptions,
             database: process.env.PROD_DATABASE_NAME,
         },
     },

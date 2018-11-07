@@ -1,5 +1,5 @@
 export default interface IObjectModel {
-  getAllDb<T>(): Promise<Array<T>>;
+  getAllDb<T>(): Promise<T[]>;
 
   getDb<T>(): Promise<T>;
 

@@ -16,6 +16,9 @@ export type ResponseErrorOptions = {
 
 @injectable()
 export default class ApiResponser {
+  public static contentType: string = 'application/json';
+  public static charset: string = 'utf-8';
+
   // TODO TIPAR CON OBJECT MODEL
   static responseSuccess(res: Response, data: Object = {}) {
     const responseObject: ApiResponse = {

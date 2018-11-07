@@ -57,11 +57,14 @@ describe('Category', () => {
 
   describe('Connect', () => {
     test('Expect connect to set pool property with a new connection', async () => {
-      const connectionOptions: ConnectionOptions = Object.assign({}, defaultConnectionOptions, Database.databaseConnectionOption());
+      const connectionOptions: ConnectionOptions = Object.assign(
+        {}, defaultConnectionOptions, Database.databaseConnectionOption(),
+      );
       const connection = { config: {}, threadId: 1 };
-      const createConnectionMocked: SpyInstance = jest.spyOn(mysql2Imported, 'createConnection').mockImplementation(() => {
-        return new Promise(resolve => resolve(connection));
-      });
+      const createConnectionMocked: SpyInstance = jest.spyOn(mysql2Imported, 'createConnection')
+        .mockImplementation(() => {
+          return new Promise(resolve => resolve(connection));
+        });
 
       database = new Database(mysql2Imported, momentImported);
       await database.connect();
@@ -75,11 +78,14 @@ describe('Category', () => {
       const originalEnv: string = process.env.CURRENT_ENVIROMENT;
       process.env.CURRENT_ENVIROMENT = process.env.TEST_ENVIROMENT;
 
-      const connectionOptions: ConnectionOptions = Object.assign({}, defaultConnectionOptions, Database.databaseConnectionOption());
+      const connectionOptions: ConnectionOptions = Object.assign(
+        {}, defaultConnectionOptions, Database.databaseConnectionOption(),
+      );
       const connection = { config: {}, threadId: 1 };
-      const createConnectionMocked: SpyInstance = jest.spyOn(mysql2Imported, 'createConnection').mockImplementation(() => {
-        return new Promise(resolve => resolve(connection));
-      });
+      const createConnectionMocked: SpyInstance = jest.spyOn(mysql2Imported, 'createConnection')
+        .mockImplementation(() => {
+          return new Promise(resolve => resolve(connection));
+        });
 
       database = new Database(mysql2Imported, momentImported);
       await database.connect();
@@ -95,11 +101,14 @@ describe('Category', () => {
       const originalEnv: string = process.env.CURRENT_ENVIROMENT;
       process.env.CURRENT_ENVIROMENT = process.env.PROD_ENVIROMENT;
 
-      const connectionOptions: ConnectionOptions = Object.assign({}, defaultConnectionOptions, Database.databaseConnectionOption());
+      const connectionOptions: ConnectionOptions = Object.assign(
+        {}, defaultConnectionOptions, Database.databaseConnectionOption(),
+      );
       const connection = { config: {}, threadId: 1 };
-      const createConnectionMocked: SpyInstance = jest.spyOn(mysql2Imported, 'createConnection').mockImplementation(() => {
-        return new Promise(resolve => resolve(connection));
-      });
+      const createConnectionMocked: SpyInstance = jest.spyOn(mysql2Imported, 'createConnection')
+        .mockImplementation(() => {
+          return new Promise(resolve => resolve(connection));
+        });
 
       database = new Database(mysql2Imported, momentImported);
       await database.connect();

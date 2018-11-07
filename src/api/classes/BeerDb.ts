@@ -1,8 +1,9 @@
 import { injectable } from 'inversify';
 import 'reflect-metadata';
+import { IBeerDb } from '../interfaces/IBeerDb';
 
 @injectable()
-export default class BeerDb {
+export default class BeerDb implements IBeerDb {
   public idBeer: number;
   public name: string;
   public graduation: number;

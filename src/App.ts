@@ -1,5 +1,6 @@
 import { OptionsUrlencoded } from 'body-parser';
 import { Express } from 'express';
+import { Server } from 'http';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import { BodyParser } from './api/ioc/interfaces';
@@ -14,6 +15,7 @@ require('dotenv').config();
 export default class App {
   public static readonly urlEncodedConfig: OptionsUrlencoded = { extended: false };
 
+  private server: Server;
   public readonly app: Express;
   private readonly port: number;
   private readonly database: Database;
@@ -39,17 +41,26 @@ export default class App {
     this.database = database;
   }
 
-  async run() {
+  public async run() {
     try {
       await this.database.connect();
       // await this.database.migrateLatest();
 
-      this.app.listen(this.port, () => {
-        console.log(`App listeting on http://localhost:${this.port}`);
-      });
+      this.server = await this.app.listen(this.port);
+
+      console.log(`App listeting on http://localhost:${this.port}`);
     } catch (e) {
       console.error(e);
       throw new Error(apiErrors.APP.RUN.message);
     }
+  }
+
+  public async stop() {
+    if (!this.server) {
+      throw new Error('TODO');
+    }
+    await this.database.disconnect();
+    await this.server.close();
+
   }
 }

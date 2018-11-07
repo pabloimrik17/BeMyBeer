@@ -5,7 +5,8 @@ import { npmTypes } from '../ioc/types';
 
 @injectable()
 export default class DateModel {
-  public static readonly DATE_FORMAT: string = 'YYYY-MM-DD HH:mm:ss';
+  public static readonly DATE_FORMAT: string = 'YYYY-MM-DD';
+  public static readonly DATE_TIME_FORMAT: string = 'YYYY-MM-DD HH:mm:ss';
 
   private moment: Moment;
 
@@ -16,6 +17,6 @@ export default class DateModel {
   public getCurrentDate(): string {
     const currentDate = this.moment.utc();
 
-    return currentDate.format(DateModel.DATE_FORMAT);
+    return currentDate.format(DateModel.DATE_TIME_FORMAT);
   }
 }

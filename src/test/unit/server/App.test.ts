@@ -20,7 +20,6 @@ jest.mock('express', () => {
 });
 
 decorate(injectable(), Database);
-
 jest.mock('../../../api/shared/Database');
 
 describe('App', () => {
@@ -51,18 +50,15 @@ describe('App', () => {
     });
 
     test('Expect to throw if exception happens on connection', async () => {
-      const returnError = new Error('MOCKED ERROR');
       const mockedConnect = jest.fn(() => new Promise((resolve, reject) => reject(undefined)));
-
-      (<any>Database).mockImplementation(() => {
-        return {
-          connect: mockedConnect,
-        };
-      });
+      const database = container.get<Database>(classTypes.Database);
+      database.connect = mockedConnect;
 
       const app: App = container.get<App>(classTypes.App);
 
-      await expect(app.run()).rejects.toThrowError(apiErrors.APP.RUN.message);
+      await expect(app.run())
+        .rejects
+        .toThrowError(apiErrors.APP.RUN.message);
     });
   });
 });

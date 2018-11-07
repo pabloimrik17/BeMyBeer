@@ -49,6 +49,14 @@ export default class Database {
     this.pool = await this.mysql2.createConnection(mergedOptions);
     this.mode = process.env.CURRENT_ENVIROMENT;
   }
+
+  public async disconnect() {
+    if (!this.Pool) {
+      throw new Error('TODO');
+    }
+
+    await this.Pool.destroy();
+  }
 }
 
 export const defaultConnectionOptions: ConnectionOptions = {
@@ -59,10 +67,10 @@ export const defaultConnectionOptions: ConnectionOptions = {
   timezone: process.env.TIMEZONE,
   typeCast: (field, next) => {
     if (field.type === 'DATETIME') {
-      return moment.utc(field.string(), DateModel.DATE_FORMAT).format();
+      return moment.utc(field.string(), DateModel.DATE_TIME_FORMAT).format();
     }
     if (field.type === 'TIMESTAMP') {
-      return moment.utc(field.string(), DateModel.DATE_FORMAT).format();
+      return moment.utc(field.string(), DateModel.DATE_TIME_FORMAT).format();
     }
     if (field.type === 'DATE') {
       return moment.utc(field.string(), 'YYYY-MM-DD').format('YYYY-MM-DD');

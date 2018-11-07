@@ -25,7 +25,7 @@ let res: Response = undefined;
 
 describe('Category Routes', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
     req = new Request();
     res = new Response();
   });

@@ -39,10 +39,10 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   public async getDb<T>(): Promise<T> {
     if (this.isValidId()) {
       const sql: string = `
-          SELECT ${this.getDbColumnsToQuery()}
-          FROM ${this.tableName}
-          WHERE ${this.primaryKey} = ?
-        `;
+        SELECT ${this.getDbColumnsToQuery()}
+        FROM ${this.tableName}
+        WHERE ${this.primaryKey} = ?
+      `;
 
       try {
         const [rows, columnsInfo]: [any, any] = await this.Database.Pool.query(sql, [this.Id]);
@@ -88,10 +88,10 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   public async update<T>(data: T): Promise<T> {
     if (this.isValidId()) {
       const sql: string = `
-                UPDATE ${this.tableName}
-                SET ?
-                WHERE ${this.primaryKey} = ?
-            `;
+          UPDATE ${this.tableName}
+          SET ?
+          WHERE ${this.primaryKey} = ?
+      `;
 
       const updateData: T & IDatabaseDate = this.setUpdatedDate(this.parseDataToDb(data));
 
@@ -111,10 +111,10 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
 
   public async getAllDb<T>(): Promise<T[]> {
     const sql: string = `
-          SELECT ${this.getDbColumnsToQuery()}
-          FROM ${this.tableName}
-          ORDER BY ${this.primaryKey}
-        `;
+      SELECT ${this.getDbColumnsToQuery()}
+      FROM ${this.tableName}
+      ORDER BY ${this.primaryKey}
+    `;
 
     try {
       const [rows, columInfo]: [any, any] = await this.Database.Pool.query(sql);
@@ -128,9 +128,9 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
 
   public async save<T>(data: T): Promise<T> {
     const sql: string = `
-          INSERT INTO ${this.tableName}
-          SET ?
-        `;
+      INSERT INTO ${this.tableName}
+      SET ?
+    `;
 
     const insertData: T & IDatabaseDate = this.setDatabaseDates(this.parseDataToDb(data));
 
@@ -138,7 +138,6 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
       const [result, error]: [any, any] = await this.Database.Pool.query(sql, insertData);
 
       this.Id = result.insertId;
-      (<any>this)[this.primaryKey] = result.insertId;
 
       return await this.getDb<T>();
     } catch (e) {
@@ -150,10 +149,10 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   public async delete(): Promise<void> {
     if (this.isValidId()) {
       const sql: string = `
-              DELETE
-              FROM ${this.tableName}
-              WHERE ${this.primaryKey} = ?
-            `;
+        DELETE
+        FROM ${this.tableName}
+        WHERE ${this.primaryKey} = ?
+      `;
 
       try {
         await this.Database.Pool.query(sql, [this.Id]);
