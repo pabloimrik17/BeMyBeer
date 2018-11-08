@@ -5,6 +5,7 @@ import Category from '../../../api/classes/Category';
 import CategoryRoutesController from '../../../api/controllers/CategoryRoutesController';
 import { container } from '../../../api/ioc/ioc';
 import { classTypes } from '../../../api/ioc/types';
+import { apiErrors } from '../../../api/shared/apiResponser/ApiErrors';
 import ApiResponser from '../../../api/shared/apiResponser/ApiResponser';
 import Database from '../../../api/shared/Database';
 
@@ -68,7 +69,7 @@ describe('Category Routes', () => {
       expect(Category).toBeCalledTimes(1);
       expect(mockedGetAllDb).toThrowError(mockedError);
       expect(ApiResponser.responseError).toBeCalledTimes(1);
-      expect(ApiResponser.responseError).toBeCalledWith(res, mockedError);
+      expect(ApiResponser.responseError).toBeCalledWith(res, apiErrors.OBJECT_MODEL.GET_ALL_QUERY);
     });
   });
 
@@ -114,7 +115,7 @@ describe('Category Routes', () => {
 
       expect(getDbSpy).toThrowError(mockedError);
       expect(ApiResponser.responseError).toBeCalledTimes(1);
-      expect(ApiResponser.responseError).toBeCalledWith(res, mockedError);
+      expect(ApiResponser.responseError).toBeCalledWith(res, apiErrors.ROUTES.NO_VALID_ID_PARAM);
     });
   });
 
@@ -157,7 +158,7 @@ describe('Category Routes', () => {
 
       expect(getDbSpy).toThrowError(mockedError);
       expect(ApiResponser.responseError).toBeCalledTimes(1);
-      expect(ApiResponser.responseError).toBeCalledWith(res, mockedError);
+      expect(ApiResponser.responseError).toBeCalledWith(res, apiErrors.OBJECT_MODEL.SAVE_QUERY);
     });
   });
 
@@ -200,7 +201,7 @@ describe('Category Routes', () => {
 
       expect(getDbSpy).toThrowError(mockedError);
       expect(ApiResponser.responseError).toBeCalledTimes(1);
-      expect(ApiResponser.responseError).toBeCalledWith(res, mockedError);
+      expect(ApiResponser.responseError).toBeCalledWith(res, apiErrors.OBJECT_MODEL.UPDATE_QUERY);
     });
   });
 
@@ -243,7 +244,7 @@ describe('Category Routes', () => {
 
       expect(getDbSpy).toThrowError(mockedError);
       expect(ApiResponser.responseError).toBeCalledTimes(1);
-      expect(ApiResponser.responseError).toBeCalledWith(res, mockedError);
+      expect(ApiResponser.responseError).toBeCalledWith(res, apiErrors.ROUTES.NO_VALID_ID_PARAM);
     });
   });
 });

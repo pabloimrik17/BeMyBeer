@@ -1,8 +1,8 @@
-import CategoryDb from './CategoryDb';
-import ObjectModel from './ObjectModel';
-import DateModel from './DateModel';
-import { classTypes } from '../ioc/types';
 import { container } from '../ioc/ioc';
+import { classTypes } from '../ioc/types';
+import CategoryDb from './CategoryDb';
+import DateModel from './DateModel';
+import ObjectModel from './ObjectModel';
 
 export default class Category extends ObjectModel {
   public idCategory: number;
@@ -21,16 +21,23 @@ export default class Category extends ObjectModel {
 
   async delete(): Promise<void> {
     if (this.isValidId()) {
-      const query: string = `
+      const queryBeer: string = `
         UPDATE beer
         SET idCategory = NULL,
             updatedAt  = ?
         WHERE idCategory = ?
       `;
 
+      const queryCategory: string = `
+        UPDATE category
+        SET idParent = NULL,
+            updatedAt  = ?
+        WHERE idParent = ?
+      `;
+
       try {
-        await this.database.Pool.query(query, [container.get<DateModel>(classTypes.DateModel).getCurrentDate(), this.Id],
-        );
+        await this.database.Pool.query(queryBeer, [container.get<DateModel>(classTypes.DateModel).getCurrentDate(), this.Id]);
+        await this.database.Pool.query(queryCategory, [container.get<DateModel>(classTypes.DateModel).getCurrentDate(), this.Id]);
         await super.delete();
       } catch (e) {
         throw new Error('TODO');

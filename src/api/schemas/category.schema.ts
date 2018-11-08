@@ -56,8 +56,5 @@ export const updateCategory = {
       ],
     },
   },
-  required: [
-    'name',
-    'idParent',
-  ],
+  required: [] as string[],
 };
