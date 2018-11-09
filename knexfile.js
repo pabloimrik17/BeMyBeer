@@ -5,19 +5,30 @@
 require('dotenv').config();
 
 module.exports = {
-    [process.env.TEST_ENVIROMENT]: {
+    [process.env.TEST_ENV]: {
         client: 'mysql2',
         connection: {
-            host: process.env.DATABASE_HOST_IP,
-            user: process.env.DATABASE_USER,
-            password: process.env.DATABASE_PASS,
+            host: process.env.TEST_DATABASE_HOST_IP,
+            user: process.env.TEST_DATABASE_USER,
+            password: process.env.TEST_DATABASE_PASS,
             database: process.env.TEST_DATABASE_NAME,
         },
     },
-
-    [process.env.PROD_ENVIROMENT]: {
+    [process.env.DEV_ENV]: {
         client: 'mysql2',
         connection: {
+            host: process.env.DEV_DATABASE_HOST_IP,
+            user: process.env.DEV_DATABASE_USER,
+            password: process.env.DEV_DATABASE_PASS,
+            database: process.env.DEV_DATABASE_NAME,
+        },
+    },
+    [process.env.PROD_ENV]: {
+        client: 'mysql2',
+        connection: {
+            host: process.env.PROD_DATABASE_HOST_IP,
+            user: process.env.PROD_DATABASE_USER,
+            password: process.env.PROD_DATABASE_PASS,
             database: process.env.PROD_DATABASE_NAME,
         },
     },

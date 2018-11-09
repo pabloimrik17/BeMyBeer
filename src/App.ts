@@ -8,6 +8,7 @@ import { classTypes, npmTypes } from './api/ioc/types';
 import routes from './api/routes/routes';
 import { apiErrors } from './api/shared/apiResponser/ApiErrors';
 import Database from './api/shared/Database';
+import EnviromentVariableHandler from './api/shared/EnviromentVariableHandler';
 
 require('dotenv').config();
 
@@ -32,29 +33,34 @@ export default class App {
     //   stream: fs.createWriteStream('./access.log', {flags: 'a'})
     // }));
     //
-    // app.use(logger('dev'));
+    // app.use(logger('dev'));NODE_ENV
 
     // this.app.use(expressValidator());
     this.app.use(process.env.API_ENTRY_POINT, routes);
 
-    this.port = parseInt(process.env.PORT, 10) || 3000;
+    const wantedEnvironment: string = process.env.NODE_ENV === process.env.TEST_ENV
+      ? process.env.DEV_ENV
+      : process.env.NODE_ENV;
+
+    this.port = parseInt(EnviromentVariableHandler.getVariableByEnvironment('SERVER_PORT', wantedEnvironment), 10) || 3000;
     this.database = database;
   }
 
   public async run() {
-    if (!this.server) {
-      try {
-        await this.database.connect();
-        // await this.database.migrateLatest();
+    try {
+      await this.database.connect();
+      // await this.database.migrateLatest();
 
+      if (process.env.NODE_ENV !== process.env.TEST_ENV) {
         this.server = await this.app.listen(this.port);
 
         console.log(`App listeting on http://localhost:${this.port}`);
-      } catch (e) {
-        console.error(e);
-        throw new Error(apiErrors.APP.RUN.message);
       }
+    } catch (e) {
+      console.error(e);
+      throw new Error(apiErrors.APP.RUN.message);
     }
+
   }
 
   public async stop() {

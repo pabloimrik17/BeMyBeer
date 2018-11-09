@@ -14,7 +14,7 @@ jest.mock('mysql2/promise');
 
 let database: Database;
 
-describe('Category', () => {
+describe('Database', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -31,27 +31,33 @@ describe('Category', () => {
 
   describe('databaseConnectionOption', () => {
     test('Expect to return test database when environment is test', () => {
-      const originalEnv: string = process.env.CURRENT_ENVIROMENT;
-      process.env.CURRENT_ENVIROMENT = process.env.TEST_ENVIROMENT;
-
+      process.env.NODE_ENV = process.env.TEST_ENV;
       const databaseConnectionOption: ConnectionOptions = Database.databaseConnectionOption();
 
       expect(databaseConnectionOption.database).toBeTruthy();
       expect(databaseConnectionOption.database).toBe(process.env.TEST_DATABASE_NAME);
 
-      process.env.CURRENT_ENVIROMENT = originalEnv;
+      process.env.NODE_ENV = process.env.TEST_ENV;
+    });
+
+    test('Expect to return dev database when environment is dev', () => {
+      process.env.NODE_ENV = process.env.DEV_ENV;
+      const databaseConnectionOption: ConnectionOptions = Database.databaseConnectionOption();
+
+      expect(databaseConnectionOption.database).toBeTruthy();
+      expect(databaseConnectionOption.database).toBe(process.env.TEST_DATABASE_NAME);
+
+      process.env.NODE_ENV = process.env.TEST_ENV;
     });
 
     test('Expect to return prod database when environment is prod', () => {
-      const originalEnv: string = process.env.CURRENT_ENVIROMENT;
-      process.env.CURRENT_ENVIROMENT = process.env.PROD_ENVIROMENT;
-
+      process.env.NODE_ENV = process.env.PROD_ENV;
       const databaseConnectionOption: ConnectionOptions = Database.databaseConnectionOption();
 
       expect(databaseConnectionOption.database).toBeTruthy();
       expect(databaseConnectionOption.database).toBe(process.env.PROD_DATABASE_NAME);
 
-      process.env.CURRENT_ENVIROMENT = originalEnv;
+      process.env.NODE_ENV = process.env.TEST_ENV;
     });
   });
 
@@ -75,8 +81,8 @@ describe('Category', () => {
     });
 
     test('Expect connect to test database when enviroment is test', async () => {
-      const originalEnv: string = process.env.CURRENT_ENVIROMENT;
-      process.env.CURRENT_ENVIROMENT = process.env.TEST_ENVIROMENT;
+      const originalEnv: string = process.env.NODE_ENV;
+      process.env.NODE_ENV = process.env.DEV_ENV;
 
       const connectionOptions: ConnectionOptions = Object.assign(
         {}, defaultConnectionOptions, Database.databaseConnectionOption(),
@@ -94,12 +100,12 @@ describe('Category', () => {
       expect(createConnectionMocked).toBeCalledWith(connectionOptions);
       expect(createConnectionMocked.mock.calls[0][0]['database']).toBe(process.env.TEST_DATABASE_NAME);
 
-      process.env.CURRENT_ENVIROMENT = originalEnv;
+      process.env.NODE_ENV = originalEnv;
     });
 
     test('Expect connect to prod database when enviroment is prod', async () => {
-      const originalEnv: string = process.env.CURRENT_ENVIROMENT;
-      process.env.CURRENT_ENVIROMENT = process.env.PROD_ENVIROMENT;
+      const originalEnv: string = process.env.NODE_ENV;
+      process.env.NODE_ENV = process.env.PROD_ENV;
 
       const connectionOptions: ConnectionOptions = Object.assign(
         {}, defaultConnectionOptions, Database.databaseConnectionOption(),
@@ -117,7 +123,7 @@ describe('Category', () => {
       expect(createConnectionMocked).toBeCalledWith(connectionOptions);
       expect(createConnectionMocked.mock.calls[0][0]['database']).toBe(process.env.PROD_DATABASE_NAME);
 
-      process.env.CURRENT_ENVIROMENT = originalEnv;
+      process.env.NODE_ENV = originalEnv;
     });
   });
 });

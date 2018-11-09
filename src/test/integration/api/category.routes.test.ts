@@ -20,13 +20,15 @@ describe('ENDPOINT /api/category', () => {
     jest.setTimeout(12000);
     jest.resetAllMocks();
     faker.seed(parseInt(moment.utc().toString(), 10));
-  });
 
-  beforeEach(async () => {
     app = container.get<App>(classTypes.App);
     database = container.get<Database>(classTypes.Database);
 
     await app.run();
+  });
+
+  beforeEach(async () => {
+
   });
 
   afterAll(async () => {

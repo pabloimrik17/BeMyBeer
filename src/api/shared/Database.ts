@@ -5,6 +5,7 @@ import 'reflect-metadata';
 import DateModel from '../classes/DateModel';
 import { Moment, Mysql2 } from '../ioc/interfaces';
 import { npmTypes } from '../ioc/types';
+import EnviromentVariableHandler from './EnviromentVariableHandler';
 
 require('dotenv').config();
 
@@ -31,11 +32,8 @@ export default class Database {
   }
 
   public static databaseConnectionOption(): ConnectionOptions {
-    return {
-      database: process.env.CURRENT_ENVIROMENT === process.env.PROD_ENVIROMENT
-        ? process.env.PROD_DATABASE_NAME
-        : process.env.TEST_DATABASE_NAME,
-    };
+    // LINKED TO XXX_DATABASE_NAME ENV
+    return { database: EnviromentVariableHandler.getVariableByEnvironment('DATABASE_NAME') };
   }
 
   public async connect(options?: ConnectionOptions): Promise<void> {
@@ -47,7 +45,7 @@ export default class Database {
     );
 
     this.pool = await this.mysql2.createConnection(mergedOptions);
-    this.mode = process.env.CURRENT_ENVIROMENT;
+    this.mode = process.env.NODE_ENV;
   }
 
   public async disconnect() {
@@ -60,9 +58,9 @@ export default class Database {
 }
 
 export const defaultConnectionOptions: ConnectionOptions = {
-  host: process.env.DATABASE_HOST_IP,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASS,
+  host: EnviromentVariableHandler.getVariableByEnvironment('DATABASE_HOST_IP'),
+  user: 'root',
+  password: 'root',
   connectTimeout: 3000,
   timezone: process.env.TIMEZONE,
   typeCast: (field, next) => {

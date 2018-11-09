@@ -14,7 +14,7 @@ const faker = require('faker/locale/es');
 const moment = require('moment');
 const _ = require('lodash');
 
-database.connect(process.env.TEST_ENVIROMENT);
+database.connect(process.env.DEV_ENV);
 
 const expect = chai.expect;
 chai.use(require('chai-date-string'));

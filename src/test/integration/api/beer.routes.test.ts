@@ -26,6 +26,12 @@ describe('ENDPOINT /api/beer', () => {
     jest.setTimeout(12000);
     jest.resetAllMocks();
     faker.seed(parseInt(moment.utc().toString(), 10));
+
+    app = container.get<App>(classTypes.App);
+    database = container.get<Database>(classTypes.Database);
+
+    await app.run();
+
   });
 
   afterAll(async () => {
@@ -34,10 +40,7 @@ describe('ENDPOINT /api/beer', () => {
   });
 
   beforeEach(async () => {
-    app = container.get<App>(classTypes.App);
-    database = container.get<Database>(classTypes.Database);
 
-    await app.run();
   });
 
   describe('GET /', () => {
