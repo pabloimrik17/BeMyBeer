@@ -59,8 +59,8 @@ export default class Database {
 
 export const defaultConnectionOptions: ConnectionOptions = {
   host: EnviromentVariableHandler.getVariableByEnvironment('DATABASE_HOST_IP'),
-  user: 'root',
-  password: 'root',
+  user: EnviromentVariableHandler.getVariableByEnvironment('DATABASE_USER'),
+  password: EnviromentVariableHandler.getVariableByEnvironment('DATABASE_PASS'),
   connectTimeout: 3000,
   timezone: process.env.TIMEZONE,
   typeCast: (field, next) => {
@@ -71,7 +71,7 @@ export const defaultConnectionOptions: ConnectionOptions = {
       return moment.utc(field.string(), DateModel.DATE_TIME_FORMAT).format();
     }
     if (field.type === 'DATE') {
-      return moment.utc(field.string(), 'YYYY-MM-DD').format('YYYY-MM-DD');
+      return moment.utc(field.string(), DateModel.DATE_FORMAT).format(DateModel.DATE_FORMAT);
     }
 
     return next();
