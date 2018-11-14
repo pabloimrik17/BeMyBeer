@@ -31,7 +31,7 @@ export default class CacheManager {
     }
   }
 
-  public async storeWithExpiration(key: string, value: any, expirationInSecs: number = 3): Promise<void> {
+  public async storeWithExpiration(key: string, value: any, expirationInSecs: number = 100): Promise<void> {
     try {
       await this.startServerIfNotActive();
 
