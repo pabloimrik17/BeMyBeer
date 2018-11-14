@@ -4,6 +4,7 @@ export const npmTypes = {
   Mysql2: Symbol('Mysql2'),
   Express: Symbol('Express'),
   BodyParser: Symbol('BodyParser'),
+  Redis: Symbol('Redis'),
 };
 
 export const classTypes = {
@@ -18,4 +19,6 @@ export const classTypes = {
   BeerRoutesController: Symbol('BeerRoutesController'),
   CategoryRoutesController: Symbol('CategoryRoutesController'),
   ApiResponser: Symbol('ApiResponser'),
+  CacheManager: Symbol('CacheManager'),
+  Cache: Symbol('Cache'),
 };

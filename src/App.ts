@@ -36,6 +36,7 @@ export default class App {
     // app.use(logger('dev'));NODE_ENV
 
     // this.app.use(expressValidator());
+
     this.app.use(process.env.API_ENTRY_POINT, routes);
 
     const wantedEnvironment: string = process.env.NODE_ENV === process.env.TEST_ENV

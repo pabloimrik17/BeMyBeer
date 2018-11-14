@@ -1,6 +1,9 @@
 import { Response } from 'express';
 import { injectable } from 'inversify';
 import 'reflect-metadata';
+import { container } from '../../ioc/ioc';
+import { classTypes } from '../../ioc/types';
+import CacheManager from '../CacheManager';
 import { apiErrors } from './ApiErrors';
 
 export interface ApiResponse {
@@ -20,12 +23,24 @@ export default class ApiResponser {
   public static charset: string = 'utf-8';
 
   // TODO TIPAR CON OBJECT MODEL
-  static responseSuccess(res: Response, data: Object = {}) {
+  static async responseSuccess(res: Response, data: Object = {}) {
     const responseObject: ApiResponse = {
       responseCode: apiErrors.DEFAULT.SUCCESS.code,
       responseMessage: apiErrors.DEFAULT.SUCCESS.message,
       responseData: data,
     };
+
+    if (data) {
+      try {
+        const cacheManager: CacheManager = container.get<CacheManager>(classTypes.CacheManager);
+        const cachedData = await cacheManager.retrieve(res.req.originalUrl);
+        if (!cachedData) {
+          cacheManager.storeWithExpiration(res.req.originalUrl, data);
+        }
+      } catch (e) {
+        throw new Error('TODO RESPONSE CACHE');
+      }
+    }
 
     res.status(200);
     res.json(responseObject);

@@ -16,7 +16,7 @@ export default class BeerRoutesController extends RoutesController {
   async getAll(req: any, res: any): Promise<void> {
     try {
       const beers = await this.beer.getAllDb<BeerDb>();
-      ApiResponser.responseSuccess(res, beers);
+      await ApiResponser.responseSuccess(res, beers);
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.OBJECT_MODEL.GET_ALL_QUERY);
     }
@@ -26,7 +26,7 @@ export default class BeerRoutesController extends RoutesController {
     try {
       const beerResponse = await this.beer.save<BeerDb>(req.body);
 
-      ApiResponser.responseSuccess(res, beerResponse);
+      await ApiResponser.responseSuccess(res, beerResponse);
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.OBJECT_MODEL.SAVE_QUERY);
     }
@@ -39,7 +39,7 @@ export default class BeerRoutesController extends RoutesController {
       this.beer.Id = parseInt(req.params.id, 10);
       await this.beer.delete();
 
-      ApiResponser.responseSuccess(res);
+      await ApiResponser.responseSuccess(res);
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.ROUTES.NO_VALID_ID_PARAM);
     }
@@ -52,7 +52,7 @@ export default class BeerRoutesController extends RoutesController {
       this.beer.Id = parseInt(req.params.id, 10);
       const beerResponse = await this.beer.getDb<BeerDb>();
 
-      ApiResponser.responseSuccess(res, beerResponse);
+      await ApiResponser.responseSuccess(res, beerResponse);
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.ROUTES.NO_VALID_ID_PARAM);
     }
@@ -66,7 +66,7 @@ export default class BeerRoutesController extends RoutesController {
         this.beer.Id = parseInt(req.params.id, 10);
         const beerResponse = await this.beer.update<BeerDb>(req.body);
 
-        ApiResponser.responseSuccess(res, beerResponse);
+        await ApiResponser.responseSuccess(res, beerResponse);
       } else {
         debugger;
       }

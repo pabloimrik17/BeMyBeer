@@ -18,7 +18,7 @@ export default class CategoryRoutesController extends RoutesController {
   async getAll(req: any, res: any): Promise<void> {
     try {
       const categories: CategoryDb[] = await container.get<Category>(classTypes.Category).getAllDb<CategoryDb>();
-      ApiResponser.responseSuccess(res, categories);
+      await ApiResponser.responseSuccess(res, categories);
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.OBJECT_MODEL.GET_ALL_QUERY);
     }
@@ -31,7 +31,7 @@ export default class CategoryRoutesController extends RoutesController {
       const category = container.get<Category>(classTypes.Category);
       const categoryResponse = await category.save<CategoryDb>(req.body);
 
-      ApiResponser.responseSuccess(res, categoryResponse);
+      await ApiResponser.responseSuccess(res, categoryResponse);
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.OBJECT_MODEL.SAVE_QUERY);
     }
@@ -46,7 +46,7 @@ export default class CategoryRoutesController extends RoutesController {
       category.Id = idCategory;
       await category.delete();
 
-      ApiResponser.responseSuccess(res);
+      await ApiResponser.responseSuccess(res);
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.ROUTES.NO_VALID_ID_PARAM);
     }
@@ -61,7 +61,7 @@ export default class CategoryRoutesController extends RoutesController {
       category.Id = idCategory;
       const categoryResponse = await category.getDb<CategoryDb>();
 
-      ApiResponser.responseSuccess(res, categoryResponse);
+      await ApiResponser.responseSuccess(res, categoryResponse);
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.ROUTES.NO_VALID_ID_PARAM);
     }
@@ -76,7 +76,7 @@ export default class CategoryRoutesController extends RoutesController {
       category.Id = idCategory;
       const categoryResponse = await category.update<CategoryDb>(req.body);
 
-      ApiResponser.responseSuccess(res, categoryResponse);
+      await ApiResponser.responseSuccess(res, categoryResponse);
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.OBJECT_MODEL.UPDATE_QUERY);
     }
