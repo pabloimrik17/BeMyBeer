@@ -1,7 +1,11 @@
+import faker from 'faker';
 import { forOwn, shuffle } from 'lodash';
+import moment from 'moment';
 import supertest from 'supertest';
 import CategoryDb from '../../../api/classes/CategoryDb';
+import DateModel from '../../../api/classes/DateModel';
 import { ICategoryDb } from '../../../api/interfaces/ICategoryDb';
+import { IDatabaseDate } from '../../../api/interfaces/IDatabaseDate';
 import { container } from '../../../api/ioc/ioc';
 import { classTypes } from '../../../api/ioc/types';
 import { createCategory, updateCategory } from '../../../api/schemas/category.schema';
@@ -9,26 +13,50 @@ import { apiErrors } from '../../../api/shared/apiResponser/ApiErrors';
 import ApiResponser, { ApiResponse } from '../../../api/shared/apiResponser/ApiResponser';
 import Database from '../../../api/shared/Database';
 import App from '../../../App';
-import faker = require('faker');
-import moment = require('moment');
 
 let app: App = undefined;
 let database: Database = undefined;
+const dateModel: DateModel = container.get<DateModel>(classTypes.DateModel);
+
+export function createCategoryName(): string {
+  return `${moment().unix().toString()}_${faker.commerce.productName()}`;
+}
+
+export async function createCategoryAndRetrieveId(): Promise<number> {
+  const category: ICategoryDb & IDatabaseDate = {
+    name: createCategoryName(),
+    idParent: null,
+    createdAt: dateModel.getCurrentDateTime(),
+    updatedAt: dateModel.getCurrentDateTime(),
+  };
+
+  const categoryQuery: string = 'INSERT INTO category SET ?';
+  const [categoryQueryResult]: [any, any] = await database.Pool.query(categoryQuery, category);
+
+  return categoryQueryResult.insertId;
+}
+
+export async function createManyCategoryAndRetrieveId(itemsToCreate: number): Promise<number[]> {
+  const categories: number[] = [];
+
+  if (itemsToCreate > 0) {
+    for (let i = 0; i < itemsToCreate; i++) {
+      categories.push(await createCategoryAndRetrieveId());
+    }
+  }
+  return categories;
+}
 
 describe('ENDPOINT /api/category', () => {
   beforeAll(async () => {
     jest.setTimeout(12000);
     jest.resetAllMocks();
-    faker.seed(parseInt(moment.utc().toString(), 10));
+    faker.seed(moment().unix());
 
     app = container.get<App>(classTypes.App);
     database = container.get<Database>(classTypes.Database);
 
     await app.run();
-  });
-
-  beforeEach(async () => {
-
   });
 
   afterAll(async () => {
@@ -96,14 +124,12 @@ describe('ENDPOINT /api/category', () => {
 
   describe('POST /', () => {
     test('Expect to create a category with only the required fields and server to return it', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [idCategoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(idCategoryRow.length).toBe(1);
-      expect(idCategoryRow[0].idCategory).toBeTruthy();
+      const idCategory = await createCategoryAndRetrieveId();
+      expect(idCategory).toBeTruthy();
 
       const reqBody: ICategoryDb = {
-        name: faker.commerce.productName(),
-        idParent: idCategoryRow[0].idCategory,
+        name: createCategoryName(),
+        idParent: idCategory,
       };
 
       const response: any = await supertest(app.app)
@@ -129,14 +155,12 @@ describe('ENDPOINT /api/category', () => {
     });
 
     test('Expect to create a category with all fields and server to return it', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [idCategoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(idCategoryRow.length).toBe(1);
-      expect(idCategoryRow[0].idCategory).toBeTruthy();
+      const idCategory = await createCategoryAndRetrieveId();
+      expect(idCategory).toBeTruthy();
 
       const reqBody: ICategoryDb = {
-        name: faker.commerce.productName(),
-        idParent: idCategoryRow[0].idCategory,
+        name: createCategoryName(),
+        idParent: idCategory,
       };
 
       const response: any = await supertest(app.app)
@@ -162,14 +186,12 @@ describe('ENDPOINT /api/category', () => {
     });
 
     test('Expect statusCode to be 500 cause no all required body fields supplied', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [categoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(categoryRow.length).toBe(1);
-      expect(categoryRow[0].idCategory).toBeTruthy();
+      const idCategory = await createCategoryAndRetrieveId();
+      expect(idCategory).toBeTruthy();
 
       const reqBody: ICategoryDb = {
-        name: faker.commerce.productName(),
-        idParent: categoryRow[0].idCategory,
+        name: createCategoryName(),
+        idParent: idCategory,
       };
 
       const randomReqBody: Object = {};
@@ -194,17 +216,16 @@ describe('ENDPOINT /api/category', () => {
     test('Expect statusCode to be 500 cause no valid body fields types supplied', async () => {
       let i: number = -1;
       const itemsToPick: number = Object.keys(createCategory.properties).length - 1;
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT ?';
-      const [categoryRows]: [any, any] = await database.Pool.query(idCategoryQuery, itemsToPick);
+      const categoryRows = await createManyCategoryAndRetrieveId(itemsToPick);
       expect(categoryRows.length).toBe(itemsToPick);
 
       [
         {
           name: 1,
-          idCategory: categoryRows[(i += 1)].idCategory,
+          idCategory: categoryRows[(i += 1)],
         },
         {
-          name: faker.commerce.productName(),
+          name: createCategoryName(),
           idCategory: 'idCategory',
         },
       ].forEach(async (reqBody: any) => {
@@ -224,14 +245,14 @@ describe('ENDPOINT /api/category', () => {
     });
 
     test('Expect statusCode to be 500 cause no idCategory body field supplied doest not exists', async () => {
-      const idCategoryQuery: string = 'SELECT MAX(idCategory + 10) as idCategory FROM category';
+      const idCategoryQuery: string = 'SELECT MAX(idCategory + 1000) as idCategory FROM category';
 
       const [categoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
       expect(categoryRow.length).toBe(1);
       expect(categoryRow[0].idCategory).toBeTruthy();
 
       const reqBody: ICategoryDb = {
-        name: faker.commerce.productName(),
+        name: createCategoryName(),
         idParent: categoryRow[0].idCategory,
       };
 
@@ -250,19 +271,17 @@ describe('ENDPOINT /api/category', () => {
     });
 
     test('Expect statusCode to be 500 cause duplicate category name', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category LIMIT 1';
-      const [idCategoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(idCategoryRow.length).toBe(1);
-      expect(idCategoryRow[0].idCategory).toBeTruthy();
+      const idCategory = await createCategoryAndRetrieveId();
+      expect(idCategory).toBeTruthy();
 
       const categoryNameQuery: string = 'SELECT name FROM category WHERE idCategory != ? LIMIT 1';
-      const [nameCategoryRow]: [any, any] = await database.Pool.query(categoryNameQuery, idCategoryRow[0].idCategory);
+      const [nameCategoryRow]: [any, any] = await database.Pool.query(categoryNameQuery, idCategory);
       expect(nameCategoryRow.length).toBe(1);
       expect(nameCategoryRow[0].name).toBeTruthy();
 
       const reqBody: ICategoryDb = {
         name: nameCategoryRow[0].name,
-        idParent: idCategoryRow[0].idCategory,
+        idParent: idCategory,
       };
 
       const response: any = await supertest(app.app)
@@ -282,18 +301,16 @@ describe('ENDPOINT /api/category', () => {
 
   describe('PUT /', () => {
     test('Expect to update a category and server to return it', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [idCategoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(idCategoryRow.length).toBe(1);
-      expect(idCategoryRow[0].idCategory).toBeTruthy();
+      const idCategory = await createCategoryAndRetrieveId();
+      expect(idCategory).toBeTruthy();
 
       const reqBody: ICategoryDb = {
-        name: faker.commerce.productName(),
-        idParent: idCategoryRow[0].idCategory,
+        name: createCategoryName(),
+        idParent: idCategory,
       };
 
       const response: any = await supertest(app.app)
-        .put(`/api/category/${idCategoryRow[0].idCategory}`)
+        .put(`/api/category/${idCategory}`)
         .send(reqBody)
         .set('Accept', ApiResponser.contentType);
 
@@ -302,7 +319,7 @@ describe('ENDPOINT /api/category', () => {
 
       expect(responseData.idCategory).toBeTruthy();
       const categoryQuery: string = 'SELECT * FROM category WHERE idCategory = ? LIMIT 1';
-      const [categoryRow]: [any, any] = await database.Pool.query(categoryQuery, idCategoryRow[0].idCategory);
+      const [categoryRow]: [any, any] = await database.Pool.query(categoryQuery, idCategory);
 
       expect(response.statusCode).toBe(200);
       expect(response.type).toBe(ApiResponser.contentType);
@@ -316,8 +333,7 @@ describe('ENDPOINT /api/category', () => {
 
     test('Expect statusCode to be 500 cause no valid body fields types supplied', async () => {
       const itemsToPick: number = Object.keys(updateCategory.properties).length - 1;
-      const idCategoryQuery: string = 'SELECT idBeer FROM beer ORDER BY RAND() LIMIT ?';
-      const [categoryRows]: [any, any] = await database.Pool.query(idCategoryQuery, itemsToPick);
+      const categoryRows = await createManyCategoryAndRetrieveId(itemsToPick);
       expect(categoryRows.length).toBe(itemsToPick);
 
       await [
@@ -344,12 +360,10 @@ describe('ENDPOINT /api/category', () => {
     });
 
     test('Expect statusCode to be 500 cause idCategory body field supplied doest not exists', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [idCategoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(idCategoryRow.length).toBe(1);
-      expect(idCategoryRow[0].idCategory).toBeTruthy();
+      const idCategory = await createCategoryAndRetrieveId();
+      expect(idCategory).toBeTruthy();
 
-      const idParentQuery: string = 'SELECT MAX(idCategory + 10) as idCategory FROM category';
+      const idParentQuery: string = 'SELECT MAX(idCategory + 1000) as idCategory FROM category';
       const [idParentRow]: [any, any] = await database.Pool.query(idParentQuery);
       expect(idParentRow.length).toBe(1);
       expect(idParentRow[0].idCategory).toBeTruthy();
@@ -359,7 +373,7 @@ describe('ENDPOINT /api/category', () => {
       };
 
       const response: any = await supertest(app.app)
-        .put(`/api/category/${idCategoryRow[0].idBeer}`)
+        .put(`/api/category/${idCategory}`)
         .send(reqBody)
         .set('Accept', ApiResponser.contentType);
 
@@ -373,13 +387,11 @@ describe('ENDPOINT /api/category', () => {
     });
 
     test('Expect statusCode to be 500 cause duplicate beer name', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [idCategoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(idCategoryRow.length).toBe(1);
-      expect(idCategoryRow[0].idCategory).toBeTruthy();
+      const idCategory = await createCategoryAndRetrieveId();
+      expect(idCategory).toBeTruthy();
 
       const categoryNameQuery: string = 'SELECT name FROM category WHERE idCategory != ? LIMIT 1';
-      const [nameCategoryRow]: [any, any] = await database.Pool.query(categoryNameQuery, idCategoryRow[0].idCategory);
+      const [nameCategoryRow]: [any, any] = await database.Pool.query(categoryNameQuery, idCategory);
       expect(nameCategoryRow.length).toBe(1);
       expect(nameCategoryRow[0].name).toBeTruthy();
 
@@ -388,7 +400,7 @@ describe('ENDPOINT /api/category', () => {
       };
 
       const response: any = await supertest(app.app)
-        .put(`/api/category/${idCategoryRow[0].idCategory}`)
+        .put(`/api/category/${idCategory}`)
         .send(reqBody)
         .set('Accept', ApiResponser.contentType);
 
@@ -404,13 +416,11 @@ describe('ENDPOINT /api/category', () => {
 
   describe('DELETE /', () => {
     test('Expect to delete a category', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [idCategoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(idCategoryRow.length).toBe(1);
-      expect(idCategoryRow[0].idCategory).toBeTruthy();
+      const idCategory = await createCategoryAndRetrieveId();
+      expect(idCategory).toBeTruthy();
 
       const response: any = await supertest(app.app)
-        .delete(`/api/category/${idCategoryRow[0].idCategory}`);
+        .delete(`/api/category/${idCategory}`);
 
       const body: ApiResponse = response.body;
 

@@ -193,7 +193,7 @@ export const createBeer = {
     },
     idCategory: {
       $id: '#/properties/idCategory',
-      type: 'integer',
+      type: ['integer', 'null'],
       title: 'The Idcategory Schema',
       default: 0,
       examples: [
@@ -282,7 +282,7 @@ export const updateBeer = {
     },
     idCategory: {
       $id: '#/properties/idCategory',
-      type: 'integer',
+      type: ['integer', 'null'],
       title: 'The Idcategory Schema',
       default: 0,
       examples: [

@@ -3,7 +3,10 @@ import * as mysql2Imported from 'mysql2/promise';
 import { Connection } from 'mysql2/promise';
 import DateModel from '../../../api/classes/DateModel';
 import ObjectModel from '../../../api/classes/ObjectModel';
+import { container } from '../../../api/ioc/ioc';
+import { classTypes } from '../../../api/ioc/types';
 import { apiErrors } from '../../../api/shared/apiResponser/ApiErrors';
+import CacheManager from '../../../api/shared/CacheManager';
 import Database from '../../../api/shared/Database';
 import SpyInstance = jest.SpyInstance;
 
@@ -12,6 +15,7 @@ jest.mock('../../../api/classes/DateModel');
 
 let database: Database;
 let dateModel: DateModel;
+let cacheManager: CacheManager;
 let mockedQuery: SpyInstance = undefined;
 
 const mockedSelectReturnedRows: Object[] = [<Object>{}, <Object>{}];
@@ -32,6 +36,7 @@ describe('Object Model', () => {
     });
 
     dateModel = new DateModel(importedMoment);
+    cacheManager = container.get<CacheManager>(classTypes.CacheManager);
   });
 
   describe('Constructor', () => {
@@ -51,6 +56,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
       objectModel.Id = idObject;
 
       const row = await objectModel.getDb<Object>();
@@ -66,6 +72,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       mockedQuery = jest.fn(() => new Promise((resolve, reject) => reject(undefined)));
 
@@ -79,6 +86,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
       objectModel.Id = idObject;
 
       mockedQuery = jest.fn(() => new Promise((resolve, reject) => reject(undefined)));
@@ -94,6 +102,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
       const rows = await objectModel.getAllDb<Object>();
 
       expect(database.Pool.query).toBeCalledTimes(1);
@@ -107,6 +116,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       mockedQuery = jest.fn(() => new Promise((resolve, reject) => reject(undefined)));
 
@@ -124,6 +134,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       const dataToInsert = { name: 'name' };
 
@@ -144,6 +155,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       mockedQuery = jest.fn(() => new Promise((resolve, reject) => reject(undefined)));
 
@@ -159,6 +171,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel(idObject);
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       mockedQuery = jest.fn((sqlQuery: string, values: []) => new Promise(resolve => resolve(undefined)));
       const dataToUpdate = { name: 'name' };
@@ -182,6 +195,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       await expect(objectModel.update({}))
         .rejects
@@ -193,6 +207,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel(idObject);
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       mockedQuery = jest.fn(() => new Promise((resolve, reject) => reject(undefined)));
 
@@ -208,6 +223,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel(idObject);
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       mockedQuery = jest.fn((sqlQuery: string, values: []) => new Promise(resolve => resolve(undefined)));
 
@@ -222,6 +238,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel();
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       await expect(objectModel.delete())
         .rejects
@@ -233,6 +250,7 @@ describe('Object Model', () => {
       const objectModel: ObjectModel = new ObjectModel(idObject);
       objectModel.Database = database;
       objectModel.DateModel = dateModel;
+      objectModel.CacheManager = cacheManager;
 
       mockedQuery = jest.fn(() => new Promise((resolve, reject) => reject(undefined)));
 

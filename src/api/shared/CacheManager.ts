@@ -3,6 +3,12 @@ import 'reflect-metadata';
 import { classTypes } from '../ioc/types';
 import Cache from './Cache';
 
+export enum ResourceType {
+  Get = 'GET',
+  Create = 'create',
+  Update = 'update',
+}
+
 @injectable()
 export default class CacheManager {
   @inject(classTypes.Cache)
@@ -41,11 +47,57 @@ export default class CacheManager {
     }
   }
 
-  public async delete(key: string): Promise<void> {
+  public async deleteResource(type: ResourceType, resourceName: string): Promise<void> {
+    try {
+      await this.startServerIfNotActive();
+
+      const keys: string[] = await this.getKeys(`${type}_*/${resourceName}`);
+      let test = await this.getKeys(`*`);
+
+      keys.forEach(async (key: string) => {
+        await this.delete(key);
+      });
+
+      test = await this.getKeys(`*`);
+    } catch (e) {
+      throw new Error('TODO DEL');
+    }
+  }
+
+  public async deleteResourceById(type: ResourceType, resourceName: string, resourceId: number): Promise<void> {
+    try {
+      await this.startServerIfNotActive();
+
+      const keys: string[] = await this.getKeys(`${type}_*/${resourceName}/${resourceId}`);
+      let test = await this.getKeys(`*`);
+      await this.deleteResource(type, resourceName);
+      test = await this.getKeys(`*`);
+
+      keys.forEach(async (key: string) => {
+        await this.delete(key);
+      });
+
+      test = await this.getKeys(`*`);
+    } catch (e) {
+      throw new Error('TODO DEL');
+    }
+  }
+
+  private async delete(key: string): Promise<void> {
     try {
       await this.startServerIfNotActive();
 
       await this.cache.del(key);
+    } catch (e) {
+      throw new Error('TODO DEL');
+    }
+  }
+
+  private async getKeys(key: string): Promise<string[]> {
+    try {
+      await this.startServerIfNotActive();
+
+      return await this.cache.keys(key);
     } catch (e) {
       throw new Error('TODO DEL');
     }

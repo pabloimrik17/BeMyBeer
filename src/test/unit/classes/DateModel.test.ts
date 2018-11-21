@@ -16,7 +16,7 @@ describe('Date Model', () => {
     });
   });
 
-  describe('getCurrentDate', () => {
+  describe('getCurrentDateTime', () => {
     const dateToCheck: string = '17/01/1992 07:00:00';
 
     test(`Expect getCurrentDate function to return ${dateToCheck}`, () => {
@@ -25,7 +25,7 @@ describe('Date Model', () => {
       const mockFormat = jest.spyOn(importedMoment.fn, 'format').mockImplementation((format: string) => dateToCheck);
 
       const dateModel: DateModel = new DateModel(importedMoment);
-      const currentDate: string = dateModel.getCurrentDate();
+      const currentDate: string = dateModel.getCurrentDateTime();
 
       expect(mockUtc).toBeCalledTimes(1);
       expect(mockFormat).toBeCalledTimes(1);

@@ -35,7 +35,7 @@ export default class ApiResponser {
         const cacheManager: CacheManager = container.get<CacheManager>(classTypes.CacheManager);
         const cachedData = await cacheManager.retrieve(res.req.originalUrl);
         if (!cachedData) {
-          cacheManager.storeWithExpiration(res.req.originalUrl, data);
+          await cacheManager.storeWithExpiration(res.req.originalUrl, data);
         }
       } catch (e) {
         throw new Error('TODO RESPONSE CACHE');

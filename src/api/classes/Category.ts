@@ -1,5 +1,6 @@
 import { container } from '../ioc/ioc';
 import { classTypes } from '../ioc/types';
+import { apiErrors } from '../shared/apiResponser/ApiErrors';
 import CategoryDb from './CategoryDb';
 import DateModel from './DateModel';
 import ObjectModel from './ObjectModel';
@@ -36,12 +37,14 @@ export default class Category extends ObjectModel {
       `;
 
       try {
-        await this.database.Pool.query(queryBeer, [container.get<DateModel>(classTypes.DateModel).getCurrentDate(), this.Id]);
-        await this.database.Pool.query(queryCategory, [container.get<DateModel>(classTypes.DateModel).getCurrentDate(), this.Id]);
+        await this.database.Pool.query(queryBeer, [container.get<DateModel>(classTypes.DateModel).getCurrentDateTime(), this.Id]);
+        await this.database.Pool.query(queryCategory, [container.get<DateModel>(classTypes.DateModel).getCurrentDateTime(), this.Id]);
         await super.delete();
       } catch (e) {
-        throw new Error('TODO');
+        throw new Error('CATEGORY DELETE QUERY TODO');
       }
+    } else {
+      throw new Error(apiErrors.CATEGORY.DELETE_NO_VALID_ID.message);
     }
   }
 }

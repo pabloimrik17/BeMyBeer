@@ -39,11 +39,11 @@ export default class App {
 
     this.app.use(process.env.API_ENTRY_POINT, routes);
 
-    const wantedEnvironment: string = process.env.NODE_ENV === process.env.TEST_ENV
-      ? process.env.DEV_ENV
-      : process.env.NODE_ENV;
+    // const wantedEnvironment: string = process.env.NODE_ENV === process.env.TEST_ENV
+    //   ? process.env.DEV_ENV
+    //   : process.env.NODE_ENV;
 
-    this.port = parseInt(EnviromentVariableHandler.getVariableByEnvironment('SERVER_PORT', wantedEnvironment), 10) || 3000;
+    this.port = parseInt(EnviromentVariableHandler.getVariableByEnvironment('SERVER_PORT', process.env.NODE_ENV), 10) || 3000;
     this.database = database;
   }
 
@@ -61,7 +61,6 @@ export default class App {
       console.error(e);
       throw new Error(apiErrors.APP.RUN.message);
     }
-
   }
 
   public async stop() {

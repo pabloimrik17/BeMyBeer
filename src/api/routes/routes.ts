@@ -6,10 +6,10 @@ import categoryRoutes from './category.routes';
 const router: Router = express.Router();
 
 // Root level middlewares
-router.use(getCacheMiddleware);
+// router.use(getCacheMiddleware);
 
 // Routes
-router.use('/category', categoryRoutes);
-router.use('/beer', beerRoutes);
+router.use('/category', getCacheMiddleware, categoryRoutes);
+router.use('/beer', getCacheMiddleware, beerRoutes);
 
 export default router;

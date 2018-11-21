@@ -67,8 +67,6 @@ export default class BeerRoutesController extends RoutesController {
         const beerResponse = await this.beer.update<BeerDb>(req.body);
 
         await ApiResponser.responseSuccess(res, beerResponse);
-      } else {
-        debugger;
       }
     } catch (error) {
       ApiResponser.responseError(res, apiErrors.OBJECT_MODEL.UPDATE_QUERY);

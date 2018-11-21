@@ -7,6 +7,7 @@ import { IDatabaseDate } from '../interfaces/IDatabaseDate';
 import IObjectModel from '../interfaces/IObjectModel';
 import { classTypes } from '../ioc/types';
 import { apiErrors } from '../shared/apiResponser/ApiErrors';
+import CacheManager, { ResourceType } from '../shared/CacheManager';
 import Database from '../shared/Database';
 import AbstractObjectModel from './AbstractObjectModel';
 import DateModel from './DateModel';
@@ -24,6 +25,8 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   protected database: Database;
   @inject(classTypes.DateModel)
   private dateModel: DateModel;
+  @inject(classTypes.CacheManager)
+  private cacheManager: CacheManager;
 
   constructor(id: number = 0) {
     super();
@@ -73,6 +76,10 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
     this.dateModel = value;
   }
 
+  public set CacheManager(value: CacheManager) {
+    this.cacheManager = value;
+  }
+
   public get Id(): number {
     return (<any>this)[this.primaryKey] || this.id;
   }
@@ -97,6 +104,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
 
       try {
         await this.Database.Pool.query(sql, [updateData, this.Id]);
+        await this.cacheManager.deleteResourceById(ResourceType.Update, this.tableName, this.Id);
 
         return await this.getDb<T>();
       } catch (e) {
@@ -136,6 +144,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
 
     try {
       const [result, error]: [any, any] = await this.Database.Pool.query(sql, insertData);
+      await this.cacheManager.deleteResource(ResourceType.Create, this.tableName);
 
       this.Id = result.insertId;
 
@@ -156,6 +165,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
 
       try {
         await this.Database.Pool.query(sql, [this.Id]);
+        await this.cacheManager.deleteResourceById(ResourceType.Get, this.tableName, this.Id);
       } catch (e) {
         console.error(e);
         throw new Error(apiErrors.OBJECT_MODEL.DELETE_QUERY.message);
@@ -173,7 +183,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   }
 
   private setDatabaseDates<T>(data: T & Object): T & IDatabaseDate {
-    const currentDate: string = this.DateModel.getCurrentDate();
+    const currentDate: string = this.DateModel.getCurrentDateTime();
 
     return Object.assign(Object.create(data), data, {
       createdAt: currentDate,
@@ -182,7 +192,7 @@ export default class ObjectModel extends AbstractObjectModel implements IObjectM
   }
 
   private setUpdatedDate<T>(data: T & Object): T & IDatabaseDate {
-    return Object.assign(Object.create(data), data, { updatedAt: this.DateModel.getCurrentDate() });
+    return Object.assign(Object.create(data), data, { updatedAt: this.DateModel.getCurrentDateTime() });
   }
 
   private getDbColumnsToQuery(): string {

@@ -9,6 +9,7 @@ import supertest from 'supertest';
 import BeerDb from '../../../api/classes/BeerDb';
 import DateModel from '../../../api/classes/DateModel';
 import { IBeerDb } from '../../../api/interfaces/IBeerDb';
+import { IDatabaseDate } from '../../../api/interfaces/IDatabaseDate';
 import { container } from '../../../api/ioc/ioc';
 import { classTypes } from '../../../api/ioc/types';
 import { createBeer } from '../../../api/schemas/beer.schema';
@@ -20,6 +21,42 @@ import App from '../../../App';
 
 let app: App = undefined;
 let database: Database = undefined;
+const dateModel: DateModel = container.get<DateModel>(classTypes.DateModel);
+
+export function createBeerName(): string {
+  return `${moment().unix().toString()}_${faker.commerce.productName()}`;
+}
+
+export async function createBeerAndRetrieveId(): Promise<number> {
+  const beer: IBeerDb & IDatabaseDate = {
+    name: createBeerName(),
+    graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
+    color: '#7D7D7D', // TODO FAKER RANDOM HEXA
+    score: faker.random.number(),
+    price: faker.random.number({ min: 0, max: 12, precision: 2 }),
+    idCategory: null,
+    datePurchased: moment().format(DateModel.DATE_FORMAT),
+    dateDrinked: moment().format(DateModel.DATE_FORMAT),
+    createdAt: dateModel.getCurrentDateTime(),
+    updatedAt: dateModel.getCurrentDateTime(),
+  };
+
+  const beerQuery: string = 'INSERT INTO beer SET ?';
+  const [beerQueryResult]: [any, any] = await database.Pool.query(beerQuery, beer);
+
+  return beerQueryResult.insertId;
+}
+
+export async function createManyBeerAndRetrieveId(itemsToCreate: number): Promise<number[]> {
+  const beers: number[] = [];
+
+  if (itemsToCreate > 0) {
+    for (let i = 0; i < itemsToCreate; i++) {
+      beers.push(await createBeerAndRetrieveId());
+    }
+  }
+  return beers;
+}
 
 describe('ENDPOINT /api/beer', () => {
   beforeAll(async () => {
@@ -31,16 +68,11 @@ describe('ENDPOINT /api/beer', () => {
     database = container.get<Database>(classTypes.Database);
 
     await app.run();
-
   });
 
   afterAll(async () => {
     await app.stop();
     jest.setTimeout(5000);
-  });
-
-  beforeEach(async () => {
-
   });
 
   describe('GET /', () => {
@@ -101,15 +133,10 @@ describe('ENDPOINT /api/beer', () => {
 
   describe('POST /', () => {
     test('Expect to create a beer with only the required fields and server to return it', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [categoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(categoryRow.length).toBe(1);
-      expect(categoryRow[0].idCategory).toBeTruthy();
-
       const reqBody: IBeerDb = {
-        name: faker.commerce.productName(),
+        name: createBeerName(),
         graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
-        idCategory: categoryRow[0].idCategory,
+        idCategory: null,
         datePurchased: moment().format(DateModel.DATE_FORMAT),
       };
 
@@ -136,18 +163,14 @@ describe('ENDPOINT /api/beer', () => {
     });
 
     test('Expect to create a beer with all fields and server to return it', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [categoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(categoryRow.length).toBe(1);
-      expect(categoryRow[0].idCategory).toBeTruthy();
 
       const reqBody: IBeerDb = {
-        name: faker.commerce.productName(),
+        name: createBeerName(),
         graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
         color: '#7D7D7D', // TODO FAKER RANDOM HEXA
         score: faker.random.number(),
         price: faker.random.number({ min: 0, max: 12, precision: 2 }),
-        idCategory: categoryRow[0].idCategory,
+        idCategory: null,
         datePurchased: moment().format(DateModel.DATE_FORMAT),
         dateDrinked: moment().format(DateModel.DATE_FORMAT),
       };
@@ -175,15 +198,11 @@ describe('ENDPOINT /api/beer', () => {
     });
 
     test('Expect statusCode to be 500 cause no all required body fields supplied', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [categoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(categoryRow.length).toBe(1);
-      expect(categoryRow[0].idCategory).toBeTruthy();
 
       const reqBody: IBeerDb = {
-        name: faker.commerce.productName(),
+        name: createBeerName(),
         graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
-        idCategory: categoryRow[0].idCategory,
+        idCategory: null,
         datePurchased: moment().format(DateModel.DATE_FORMAT),
       };
 
@@ -207,12 +226,6 @@ describe('ENDPOINT /api/beer', () => {
     });
 
     test('Expect statusCode to be 500 cause no valid body fields types supplied', async () => {
-      let i: number = -1;
-      const itemsToPick: number = Object.keys(createBeer.properties).length - 1;
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT ?';
-      const [categoryRows]: [any, any] = await database.Pool.query(idCategoryQuery, itemsToPick);
-      expect(categoryRows.length).toBe(itemsToPick);
-
       [
         {
           name: 1,
@@ -220,52 +233,52 @@ describe('ENDPOINT /api/beer', () => {
           color: '#7D7D7D', // TODO FAKER RANDOM HEXA
           score: faker.random.number(),
           price: faker.random.number({ min: 0, max: 12, precision: 2 }),
-          idCategory: categoryRows[(i += 1)].idCategory,
+          idCategory: null,
           datePurchased: moment().format(DateModel.DATE_FORMAT),
           dateDrinked: moment().format(DateModel.DATE_FORMAT),
         },
         {
-          name: faker.commerce.productName(),
+          name: createBeerName(),
           graduation: 'graduation',
           color: '#7D7D7D', // TODO FAKER RANDOM HEXA
           score: faker.random.number(),
           price: faker.random.number({ min: 0, max: 12, precision: 2 }),
-          idCategory: categoryRows[(i += 1)].idCategory,
+          idCategory: null,
           datePurchased: moment().format(DateModel.DATE_FORMAT),
           dateDrinked: moment().format(DateModel.DATE_FORMAT),
         },
         {
-          name: faker.commerce.productName(),
+          name: createBeerName(),
           graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
           color: 1, // TODO FAKER RANDOM HEXA
           score: faker.random.number(),
           price: faker.random.number({ min: 0, max: 12, precision: 2 }),
-          idCategory: categoryRows[(i += 1)].idCategory,
+          idCategory: null,
           datePurchased: moment().format(DateModel.DATE_FORMAT),
           dateDrinked: moment().format(DateModel.DATE_FORMAT),
         },
         {
-          name: faker.commerce.productName(),
+          name: createBeerName(),
           graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
           color: '#7D7D7D', // TODO FAKER RANDOM HEXA
           score: 'score',
           price: faker.random.number({ min: 0, max: 12, precision: 2 }),
-          idCategory: categoryRows[(i += 1)].idCategory,
+          idCategory: null,
           datePurchased: moment().format(DateModel.DATE_FORMAT),
           dateDrinked: moment().format(DateModel.DATE_FORMAT),
         },
         {
-          name: faker.commerce.productName(),
+          name: createBeerName(),
           graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
           color: '#7D7D7D', // TODO FAKER RANDOM HEXA
           score: faker.random.number(),
           price: 'price',
-          idCategory: categoryRows[(i += 1)].idCategory,
+          idCategory: null,
           datePurchased: moment().format(DateModel.DATE_FORMAT),
           dateDrinked: moment().format(DateModel.DATE_FORMAT),
         },
         {
-          name: faker.commerce.productName(),
+          name: createBeerName(),
           graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
           color: '#7D7D7D', // TODO FAKER RANDOM HEXA
           score: faker.random.number(),
@@ -275,22 +288,22 @@ describe('ENDPOINT /api/beer', () => {
           dateDrinked: moment().format(DateModel.DATE_FORMAT),
         },
         {
-          name: faker.commerce.productName(),
+          name: createBeerName(),
           graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
           color: '#7D7D7D', // TODO FAKER RANDOM HEXA
           score: faker.random.number(),
           price: faker.random.number({ min: 0, max: 12, precision: 2 }),
-          idCategory: categoryRows[(i += 1)].idCategory,
+          idCategory: null,
           datePurchased: 1,
           dateDrinked: moment().format(DateModel.DATE_FORMAT),
         },
         {
-          name: faker.commerce.productName(),
+          name: createBeerName(),
           graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
           color: '#7D7D7D', // TODO FAKER RANDOM HEXA
           score: faker.random.number(),
           price: faker.random.number({ min: 0, max: 12, precision: 2 }),
-          idCategory: categoryRows[(i += 1)].idCategory,
+          idCategory: null,
           datePurchased: moment().format(DateModel.DATE_FORMAT),
           dateDrinked: 1,
         },
@@ -311,14 +324,14 @@ describe('ENDPOINT /api/beer', () => {
     });
 
     test('Expect statusCode to be 500 cause no idCategory body field supplied doest not exists', async () => {
-      const idCategoryQuery: string = 'SELECT MAX(idCategory + 10) as idCategory FROM category';
+      const idCategoryQuery: string = 'SELECT MAX(idCategory + 1000) as idCategory FROM category';
 
       const [categoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
       expect(categoryRow.length).toBe(1);
       expect(categoryRow[0].idCategory).toBeTruthy();
 
       const reqBody: IBeerDb = {
-        name: faker.commerce.productName(),
+        name: createBeerName(),
         graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
         idCategory: categoryRow[0].idCategory,
         datePurchased: moment().format(DateModel.DATE_FORMAT),
@@ -339,10 +352,6 @@ describe('ENDPOINT /api/beer', () => {
     });
 
     test('Expect statusCode to be 500 cause duplicate category name', async () => {
-      const idCategoryQuery: string = 'SELECT idCategory FROM category LIMIT 1';
-      const [categoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(categoryRow.length).toBe(1);
-      expect(categoryRow[0].idCategory).toBeTruthy();
 
       const beerNameQuery: string = 'SELECT name FROM beer LIMIT 1';
       const [beerRow]: [any, any] = await database.Pool.query(beerNameQuery);
@@ -352,7 +361,7 @@ describe('ENDPOINT /api/beer', () => {
       const reqBody: IBeerDb = {
         name: beerRow[0].name,
         graduation: faker.random.number({ min: 0, max: 12, precision: 2 }),
-        idCategory: categoryRow[0].idCategory,
+        idCategory: null,
         datePurchased: moment().format(DateModel.DATE_FORMAT),
       };
 
@@ -373,15 +382,8 @@ describe('ENDPOINT /api/beer', () => {
 
   describe('PUT /', () => {
     test('Expect to update a beer and server to return it', async () => {
-      const idBeerQuery: string = 'SELECT idBeer FROM beer ORDER BY RAND() LIMIT 1';
-      const [idBeerRow]: [any, any] = await database.Pool.query(idBeerQuery);
-      expect(idBeerRow.length).toBe(1);
-      expect(idBeerRow[0].idBeer).toBeTruthy();
-
-      const idCategoryQuery: string = 'SELECT idCategory FROM category ORDER BY RAND() LIMIT 1';
-      const [idCategoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
-      expect(idCategoryRow.length).toBe(1);
-      expect(idCategoryRow[0].idCategory).toBeTruthy();
+      const idBeer = await createBeerAndRetrieveId();
+      expect(idBeer).toBeTruthy();
 
       const reqBody: IBeerDb = {
         name: faker.commerce.productName(),
@@ -389,13 +391,13 @@ describe('ENDPOINT /api/beer', () => {
         color: '#7D7D7D', // TODO FAKER RANDOM HEXA
         score: faker.random.number(),
         price: faker.random.number({ min: 0, max: 12, precision: 2 }),
-        idCategory: idCategoryRow[0].idCategory,
+        idCategory: null,
         datePurchased: moment().format(DateModel.DATE_FORMAT),
         dateDrinked: moment().format(DateModel.DATE_FORMAT),
       };
 
       const response: any = await supertest(app.app)
-        .put(`/api/beer/${idBeerRow[0].idBeer}`)
+        .put(`/api/beer/${idBeer}`)
         .send(reqBody)
         .set('Accept', ApiResponser.contentType);
 
@@ -404,7 +406,7 @@ describe('ENDPOINT /api/beer', () => {
 
       expect(responseData.idBeer).toBeTruthy();
       const beerQuery: string = 'SELECT * FROM beer WHERE idBeer = ? LIMIT 1';
-      const [beerRow]: [any, any] = await database.Pool.query(beerQuery, idBeerRow[0].idBeer);
+      const [beerRow]: [any, any] = await database.Pool.query(beerQuery, idBeer);
 
       expect(response.statusCode).toBe(200);
       expect(response.type).toBe(ApiResponser.contentType);
@@ -418,8 +420,7 @@ describe('ENDPOINT /api/beer', () => {
 
     test('Expect statusCode to be 500 cause no valid body fields types supplied', async () => {
       const itemsToPick: number = Object.keys(updateCategory.properties).length - 1;
-      const idBeerQuery: string = 'SELECT idBeer FROM beer ORDER BY RAND() LIMIT ?';
-      const [beerRows]: [any, any] = await database.Pool.query(idBeerQuery, itemsToPick);
+      const beerRows = await createManyBeerAndRetrieveId(itemsToPick);
       expect(beerRows.length).toBe(itemsToPick);
 
       await [
@@ -464,12 +465,10 @@ describe('ENDPOINT /api/beer', () => {
     });
 
     test('Expect statusCode to be 500 cause idCategory body field supplied doest not exists', async () => {
-      const idBeerQuery: string = 'SELECT idBeer FROM beer ORDER BY RAND() LIMIT 1';
-      const [idBeerRow]: [any, any] = await database.Pool.query(idBeerQuery);
-      expect(idBeerRow.length).toBe(1);
-      expect(idBeerRow[0].idBeer).toBeTruthy();
+      const idBeer = await createBeerAndRetrieveId();
+      expect(idBeer).toBeTruthy();
 
-      const idCategoryQuery: string = 'SELECT MAX(idCategory + 10) as idCategory FROM category';
+      const idCategoryQuery: string = 'SELECT MAX(idCategory + 1000) as idCategory FROM category';
       const [categoryRow]: [any, any] = await database.Pool.query(idCategoryQuery);
       expect(categoryRow.length).toBe(1);
       expect(categoryRow[0].idCategory).toBeTruthy();
@@ -479,7 +478,7 @@ describe('ENDPOINT /api/beer', () => {
       };
 
       const response: any = await supertest(app.app)
-        .put(`/api/beer/${idBeerRow[0].idBeer}`)
+        .put(`/api/beer/${idBeer}`)
         .send(reqBody)
         .set('Accept', ApiResponser.contentType);
 
@@ -493,13 +492,11 @@ describe('ENDPOINT /api/beer', () => {
     });
 
     test('Expect statusCode to be 500 cause duplicate beer name', async () => {
-      const idBeerQuery: string = 'SELECT idBeer FROM beer ORDER BY RAND() LIMIT 1';
-      const [idBeerRow]: [any, any] = await database.Pool.query(idBeerQuery);
-      expect(idBeerRow.length).toBe(1);
-      expect(idBeerRow[0].idBeer).toBeTruthy();
+      const idBeer = await createBeerAndRetrieveId();
+      expect(idBeer).toBeTruthy();
 
       const beerNameQuery: string = 'SELECT name FROM beer WHERE idBeer != ? LIMIT 1';
-      const [nameBeerRow]: [any, any] = await database.Pool.query(beerNameQuery, idBeerRow[0].idBeer);
+      const [nameBeerRow]: [any, any] = await database.Pool.query(beerNameQuery, idBeer);
       expect(nameBeerRow.length).toBe(1);
       expect(nameBeerRow[0].name).toBeTruthy();
 
@@ -508,7 +505,7 @@ describe('ENDPOINT /api/beer', () => {
       };
 
       const response: any = await supertest(app.app)
-        .put(`/api/beer/${idBeerRow[0].idBeer}`)
+        .put(`/api/beer/${idBeer}`)
         .send(reqBody)
         .set('Accept', ApiResponser.contentType);
 
@@ -524,13 +521,11 @@ describe('ENDPOINT /api/beer', () => {
 
   describe('DELETE /', () => {
     test('Expect to delete a beer', async () => {
-      const idBeerQuery: string = 'SELECT idBeer FROM beer ORDER BY RAND() LIMIT 1';
-      const [idBeerRow]: [any, any] = await database.Pool.query(idBeerQuery);
-      expect(idBeerRow.length).toBe(1);
-      expect(idBeerRow[0].idBeer).toBeTruthy();
+      const idBeer = await createBeerAndRetrieveId();
+      expect(idBeer).toBeTruthy();
 
       const response: any = await supertest(app.app)
-        .delete(`/api/beer/${idBeerRow[0].idBeer}`);
+        .delete(`/api/beer/${idBeer}`);
 
       const body: ApiResponse = response.body;
 

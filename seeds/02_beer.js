@@ -15,15 +15,22 @@ const numberOfItemsWithCategory = faker.random.number({
     max: maxNumberOfItemsWithCategory
 });
 
+let uniqueNameSet = new Set();
+while (uniqueNameSet.size < numberOfItems) {
+    uniqueNameSet.add(faker.commerce.productName())
+}
+let it = uniqueNameSet.values();
+
 const seed = async function seed(knex) {
     await knex('beer').update({idCategory: null}).whereNotNull('idCategory');
     await knex('beer').del();
+
 
     const beersWithCategory = [];
     for (let i = 0; i < numberOfItemsWithCategory; i++) {
         const [{idCategory}] = await knex('category').select('idCategory').limit(1).orderByRaw('RAND()');
         beersWithCategory.push({
-            name: faker.commerce.productName(),
+            name: it.next().value,
             graduation: faker.random.number({min: 0, max: 12, precision: 2}),
             color: '#7D7D7D', // TODO FAKER RANDOM HEXA
             score: faker.random.number(),
@@ -36,13 +43,16 @@ const seed = async function seed(knex) {
         });
     }
 
+    uniqueNameSet = new Set(Array.from(uniqueNameSet).slice(numberOfItemsWithCategory))
+    it = uniqueNameSet.values();
+
     await knex('beer').insert(beersWithCategory);
 
     const remainingNumberOfItemsToCreate = numberOfItems - numberOfItemsWithCategory;
 
-    const remainingBeers = new Array(remainingNumberOfItemsToCreate).fill(null).map(item => {
+    const remainingBeers = new Array(remainingNumberOfItemsToCreate).fill(null).map((item, index) => {
         return {
-            name: faker.commerce.productName(),
+            name: it.next().value,
             graduation: faker.random.number({min: 0, max: 12, precision: 2}),
             color: '#7D7D7D', // TODO FAKER RANDOM HEXA
             score: faker.random.number(),

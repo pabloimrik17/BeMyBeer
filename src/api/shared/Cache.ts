@@ -15,6 +15,7 @@ export default class Cache {
   private setexAsync: (key: string, durationInSecs: number, value: any) => Promise<void>;
   private setAsync: (key: string, value: any) => Promise<void>;
   private delAsync: (key: string) => Promise<void>;
+  private keysAsync: (key: string) => Promise<string[]>;
 
   constructor(@inject(npmTypes.Redis) redis: Redis) {
     this.redis = redis;
@@ -23,6 +24,7 @@ export default class Cache {
     this.setexAsync = undefined;
     this.setAsync = undefined;
     this.delAsync = undefined;
+    this.keysAsync = undefined;
   }
 
   public async connnect(): Promise<void> {
@@ -33,6 +35,7 @@ export default class Cache {
       this.setexAsync = promisify(this.client.setex).bind(this.client);
       this.setAsync = promisify(this.client.set).bind(this.client);
       this.delAsync = promisify(this.client.del).bind(this.client);
+      this.keysAsync = promisify(this.client.keys).bind(this.client);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -77,10 +80,18 @@ export default class Cache {
   }
 
   public async del(key: string): Promise<void> {
-    if (!this.setexAsync) {
+    if (!this.delAsync) {
       throw new Error('TODO DEL ASYNC');
     }
 
     await this.delAsync(key);
+  }
+
+  public async keys(key: string): Promise<string[]> {
+    if (!this.keysAsync) {
+      throw new Error('TODO KEYS ASYNC');
+    }
+
+    return await this.keysAsync(key);
   }
 }

@@ -32,7 +32,7 @@
 //   DEFAULT: IApiErrorDefault;
 //   APP: ApiErrorApp;
 //   OBJECT_MODEL: ApiErrorObjectModel;
-//   CATEGORY_MODEL: IApiErrorCategoryModel;
+//   CATEGORY: IApiErrorCategoryModel;
 // }
 
 export const apiErrors = {
@@ -55,7 +55,8 @@ export const apiErrors = {
     UPDATE_QUERY: { code: 5, message: 'Something wrong happened updating the element data' },
     DELETE_QUERY: { code: 6, message: 'Something wrong happened deleting the element' },
   },
-  CATEGORY_MODEL: {
-    CREATE_ERROR: { code: 2, message: 'Something wrong happened when creating a new category' },
+  CATEGORY: {
+    CREATE_ERROR: { code: 1, message: 'Something wrong happened when creating a new category' },
+    DELETE_NO_VALID_ID: { code: 2, message: 'No valid Id property' },
   },
 };
