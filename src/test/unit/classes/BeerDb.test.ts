@@ -1,15 +1,24 @@
 import BeerDb from '../../../api/classes/BeerDb';
+import { container } from '../../../api/ioc/ioc';
+import { classTypes } from '../../../api/ioc/types';
 
-let beerDb: BeerDb = undefined;
+const originalEnv = { ...process.env };
 
 describe('BeerDb', () => {
   beforeEach(() => {
+    container.snapshot();
     jest.clearAllMocks();
-    beerDb = new BeerDb();
+    jest.resetModules();
+    process.env = { ...originalEnv };
+  });
+
+  afterEach(() => {
+    container.restore();
   });
 
   describe('Constructor', () => {
     test('Expect object to be instantiated properly', () => {
+      const beerDb: BeerDb = container.get<BeerDb>(classTypes.BeerDb);
       expect(beerDb).toBeTruthy();
       expect(beerDb.idBeer).toBe(0);
       expect(beerDb.name).toBe('');
