@@ -1,12 +1,22 @@
-import * as importedMoment from 'moment';
+import moment from 'moment';
 import 'reflect-metadata';
 import DateModel from '../../../api/classes/DateModel';
+import { Moment } from '../../../api/ioc/interfaces';
 import { container } from '../../../api/ioc/ioc';
-import { classTypes } from '../../../api/ioc/types';
+import { classTypes, npmTypes } from '../../../api/ioc/types';
+
+const originalEnv = { ...process.env };
 
 describe('Date Model', () => {
   beforeEach(() => {
+    container.snapshot();
     jest.clearAllMocks();
+    jest.resetModules();
+    process.env = { ...originalEnv };
+  });
+
+  afterEach(() => {
+    container.restore();
   });
 
   describe('Constructor', () => {
@@ -17,20 +27,38 @@ describe('Date Model', () => {
   });
 
   describe('getCurrentDateTime', () => {
-    const dateToCheck: string = '17/01/1992 07:00:00';
+    test('Expect to return current date in datetime format', () => {
+      container.unbind(npmTypes.Moment);
+      const utcTime: string = '1992-01-17 06:00:00';
+      const utcMock = jest.fn(() => moment(utcTime));
+      const momentMock: Partial<Moment> = {
+        utc: utcMock,
+      };
+      container.bind<Partial<Moment>>(npmTypes.Moment).toConstantValue(momentMock);
 
-    test(`Expect getCurrentDate function to return ${dateToCheck}`, () => {
-      // moment.now = () => +new Date(1992, 1, 17, 7, 0, 0);
-      const mockUtc = jest.spyOn(importedMoment, 'utc');
-      const mockFormat = jest.spyOn(importedMoment.fn, 'format').mockImplementation((format: string) => dateToCheck);
-
-      const dateModel: DateModel = new DateModel(importedMoment);
+      const dateModel: DateModel = container.get<DateModel>(classTypes.DateModel);
       const currentDate: string = dateModel.getCurrentDateTime();
 
-      expect(mockUtc).toBeCalledTimes(1);
-      expect(mockFormat).toBeCalledTimes(1);
-      expect(mockFormat).toBeCalledWith(DateModel.DATE_TIME_FORMAT);
-      expect(currentDate).toBe(dateToCheck);
+      expect(utcMock).toBeCalledTimes(1);
+      expect(currentDate).toBe(utcTime);
+    });
+  });
+  describe('getCurrentDate', () => {
+    test('Expect to return current date in date format', () => {
+      container.unbind(npmTypes.Moment);
+      const utcTime: string = '1992-01-17 06:00:00';
+      const dateFormatedTime: string = '1992-01-17';
+      const utcMock = jest.fn(() => moment(utcTime));
+      const momentMock: Partial<Moment> = {
+        utc: utcMock,
+      };
+      container.bind<Partial<Moment>>(npmTypes.Moment).toConstantValue(momentMock);
+
+      const dateModel: DateModel = container.get<DateModel>(classTypes.DateModel);
+      const currentDate: string = dateModel.getCurrentDate();
+
+      expect(utcMock).toBeCalledTimes(1);
+      expect(currentDate).toBe(dateFormatedTime);
     });
   });
 });

@@ -4,5 +4,5 @@ node_js:
 cache:
   directories:
   - "node_modules"
-  services:
-  - redis-server
+before_script:
+  sudo redis-server /etc/redis/redis.conf --port 6379
