@@ -5,6 +5,7 @@ export const npmTypes = {
   Express: Symbol('Express'),
   BodyParser: Symbol('BodyParser'),
   Redis: Symbol('Redis'),
+  Promisify: Symbol('Promisify'),
 };
 
 export const classTypes = {

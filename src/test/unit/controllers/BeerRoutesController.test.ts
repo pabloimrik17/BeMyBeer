@@ -9,10 +9,6 @@ import { apiErrors } from '../../../api/shared/apiResponser/ApiErrors';
 import ApiResponser from '../../../api/shared/apiResponser/ApiResponser';
 import Database from '../../../api/shared/Database';
 
-jest.mock('express', () => {
-  return require('jest-express');
-});
-
 decorate(injectable(), Beer);
 decorate(injectable(), Database);
 decorate(injectable(), ApiResponser);
@@ -24,11 +20,20 @@ jest.mock('../../../api/shared/apiResponser/ApiResponser');
 let req: Request = undefined;
 let res: Response = undefined;
 
+const originalEnv = { ...process.env };
+
 describe('Beer Routes', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    container.snapshot();
+    jest.clearAllMocks();
+    jest.resetModules();
+    process.env = { ...originalEnv };
     req = new Request();
     res = new Response();
+  });
+
+  afterEach(() => {
+    container.restore();
   });
 
   describe('GET /', () => {

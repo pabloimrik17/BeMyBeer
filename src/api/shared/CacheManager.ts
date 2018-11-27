@@ -4,7 +4,7 @@ import { classTypes } from '../ioc/types';
 import Cache from './Cache';
 
 export enum ResourceType {
-  Get = 'GET',
+  Get = 'get',
   Create = 'create',
   Update = 'update',
 }
@@ -52,15 +52,15 @@ export default class CacheManager {
       await this.startServerIfNotActive();
 
       const keys: string[] = await this.getKeys(`${type}_*/${resourceName}`);
-      let test = await this.getKeys(`*`);
+      // let test = await this.getKeys(`*`);
 
-      keys.forEach(async (key: string) => {
+      for (const key of keys) {
         await this.delete(key);
-      });
+      }
 
-      test = await this.getKeys(`*`);
+      // test = await this.getKeys(`*`);
     } catch (e) {
-      throw new Error('TODO DEL');
+      throw new Error('TODO DELETERESOURCE');
     }
   }
 
@@ -69,17 +69,17 @@ export default class CacheManager {
       await this.startServerIfNotActive();
 
       const keys: string[] = await this.getKeys(`${type}_*/${resourceName}/${resourceId}`);
-      let test = await this.getKeys(`*`);
+      // let test = await this.getKeys(`*`);
       await this.deleteResource(type, resourceName);
-      test = await this.getKeys(`*`);
+      // test = await this.getKeys(`*`);
 
-      keys.forEach(async (key: string) => {
+      for (const key of keys) {
         await this.delete(key);
-      });
+      }
 
-      test = await this.getKeys(`*`);
+      // test = await this.getKeys(`*`);
     } catch (e) {
-      throw new Error('TODO DEL');
+      throw new Error('TODO DELETERESOURCEBYID');
     }
   }
 
@@ -89,7 +89,7 @@ export default class CacheManager {
 
       await this.cache.del(key);
     } catch (e) {
-      throw new Error('TODO DEL');
+      throw new Error('TODO DELETE');
     }
   }
 
@@ -99,14 +99,14 @@ export default class CacheManager {
 
       return await this.cache.keys(key);
     } catch (e) {
-      throw new Error('TODO DEL');
+      throw new Error('TODO GETKEYS');
     }
   }
 
   private async startServerIfNotActive(): Promise<void> {
     try {
       if (!this.cache.isServerActive()) {
-        await this.cache.connnect();
+        await this.cache.connect();
       }
     } catch (e) {
       throw new Error('TODO startServerIfNotActive');

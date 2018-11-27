@@ -5,6 +5,7 @@ import * as lodash from 'lodash';
 import * as moment from 'moment';
 import * as mysql2 from 'mysql2/promise';
 import * as redis from 'redis';
+import { promisify } from 'util';
 import App from '../../App';
 import Beer from '../classes/Beer';
 import BeerDb from '../classes/BeerDb';
@@ -18,7 +19,7 @@ import ApiResponser from '../shared/apiResponser/ApiResponser';
 import Cache from '../shared/Cache';
 import CacheManager from '../shared/CacheManager';
 import Database from '../shared/Database';
-import { BodyParser, Lodash, Moment, Mysql2, Redis } from './interfaces';
+import { BodyParser, Lodash, Moment, Mysql2, Promisify, Redis } from './interfaces';
 import { classTypes, npmTypes } from './types';
 
 const npmDependencies: ContainerModule = new ContainerModule((bind) => {
@@ -28,6 +29,7 @@ const npmDependencies: ContainerModule = new ContainerModule((bind) => {
   bind<Express>(npmTypes.Express).toConstantValue(express());
   bind<BodyParser>(npmTypes.BodyParser).toConstantValue(bodyParser);
   bind<Redis>(npmTypes.Redis).toConstantValue(redis);
+  bind<Promisify>(npmTypes.Promisify).toConstantValue(promisify);
 });
 
 const classDependencies: ContainerModule = new ContainerModule((bind) => {

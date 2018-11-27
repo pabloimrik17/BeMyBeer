@@ -1,13 +1,13 @@
 import { inject, injectable } from 'inversify';
 import { RedisClient } from 'redis';
-import { promisify } from 'util';
-import { Redis } from '../ioc/interfaces';
+import { Promisify, Redis } from '../ioc/interfaces';
 import { npmTypes } from '../ioc/types';
 
 // https://community.risingstack.com/redis-node-js-introduction-to-caching/
 
 @injectable()
 export default class Cache {
+  private promisify: Promisify;
   private redis: Redis;
   private client: RedisClient;
 
@@ -17,8 +17,11 @@ export default class Cache {
   private delAsync: (key: string) => Promise<void>;
   private keysAsync: (key: string) => Promise<string[]>;
 
-  constructor(@inject(npmTypes.Redis) redis: Redis) {
+  constructor(@inject(npmTypes.Redis) redis: Redis,
+              @inject(npmTypes.Promisify) promisify: Promisify) {
     this.redis = redis;
+    this.promisify = promisify;
+
     this.client = undefined;
     this.getAsync = undefined;
     this.setexAsync = undefined;
@@ -27,23 +30,23 @@ export default class Cache {
     this.keysAsync = undefined;
   }
 
-  public async connnect(): Promise<void> {
+  public async connect(): Promise<void> {
     try {
       this.client = await this.redis.createClient(6379);
 
-      this.getAsync = promisify(this.client.get).bind(this.client);
-      this.setexAsync = promisify(this.client.setex).bind(this.client);
-      this.setAsync = promisify(this.client.set).bind(this.client);
-      this.delAsync = promisify(this.client.del).bind(this.client);
-      this.keysAsync = promisify(this.client.keys).bind(this.client);
+      this.getAsync = this.promisify(this.client.get).bind(this.client);
+      this.setexAsync = this.promisify(this.client.setex).bind(this.client);
+      this.setAsync = this.promisify(this.client.set).bind(this.client);
+      this.delAsync = this.promisify(this.client.del).bind(this.client);
+      this.keysAsync = this.promisify(this.client.keys).bind(this.client);
     } catch (e) {
-      throw new Error(e.message);
+      throw new Error('TODO CONNECT');
     }
   }
 
-  public async disconnect(): Promise<void> {
+  /*public async disconnect(): Promise<void> {
     // TODO
-  }
+  }*/
 
   public isServerActive(): boolean {
     return this.client !== undefined;
